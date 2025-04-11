@@ -2,114 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>HR Risk Tool – Visual Prototype</title>
+  <title>HR Risk Tool – Full Visual Prototype</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; }
     h1, h2 { color: #003366; }
     .section { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     label { display: block; margin: 10px 0; }
-    button { padding: 10px 20px; margin-top: 20px; }
+    button { padding: 10px 20px; margin-top: 20px; margin-right: 10px; }
     .results { background: #fff; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; }
     canvas { max-width: 600px; margin-top: 20px; }
+    select { margin-left: 10px; }
   </style>
 </head>
 <body>
   <h1>HR Rapid Risk Identification Tool</h1>
   <form id="riskForm">
-    <div class="section">
-      <h2>A. Regulatory Compliance</h2>
-      <label>1. Complies with privacy policies?
-        <select name="reg1">
-          <option value="3">Yes</option>
-          <option value="1">No</option>
-          <option value="2">UNK</option>
-          <option value="0">N/A</option>
-        </select>
-      </label>
-      <label>2. Complies with labour laws?
-        <select name="reg2">
-          <option value="3">Yes</option>
-          <option value="1">No</option>
-          <option value="2">UNK</option>
-          <option value="0">N/A</option>
-        </select>
-      </label>
-    </div>
-
-    <div class="section">
-      <h2>B. Data Security & Privacy</h2>
-      <label>1. Implements encryption at rest and in transit?
-        <select name="sec1">
-          <option value="3">Yes</option>
-          <option value="1">No</option>
-          <option value="2">UNK</option>
-          <option value="0">N/A</option>
-        </select>
-      </label>
-      <label>2. Has access controls and user authentication?
-        <select name="sec2">
-          <option value="3">Yes</option>
-          <option value="1">No</option>
-          <option value="2">UNK</option>
-          <option value="0">N/A</option>
-        </select>
-      </label>
-    </div>
-
-    <div class="section">
-      <h2>C. HR Technology / Integration</h2>
-      <label>1. Integrates with existing IT systems?
-        <select name="tech1">
-          <option value="3">Yes</option>
-          <option value="1">No</option>
-          <option value="2">UNK</option>
-          <option value="0">N/A</option>
-        </select>
-      </label>
-      <label>2. Supports digital strategy?
-        <select name="tech2">
-          <option value="3">Yes</option>
-          <option value="1">No</option>
-          <option value="2">UNK</option>
-          <option value="0">N/A</option>
-        </select>
-      </label>
-    </div>
-
+    <div class="section" id="formSections"></div>
     <button type="button" onclick="generateVisualSummary()">Submit & View Feedback</button>
+    <button type="button" onclick="downloadPDF()">Download PDF Summary</button>
   </form>
 
   <div class="results" id="results">
     <h2>Visual Feedback</h2>
     <canvas id="riskChart"></canvas>
+    <div id="tooltipText"></div>
   </div>
 
   <script>
+    const sections = {
+      'Regulatory Compliance': ['Complies with privacy policies?', 'Complies with labour laws?'],
+      'Data Security & Privacy': ['Implements encryption?', 'Has access controls?'],
+      'HR Technology / Integration': ['Integrates with IT systems?', 'Supports digital strategy?'],
+      'User Adoption and Training': ['Intuitive interface and training?', 'Language/inclusion support?'],
+      'Cost-Benefit Analysis': ['Provides financial advantage?', 'Offers long-term savings?'],
+      'Vendor Reliability and Support': ['Proven vendor track record?', 'Provides prompt support?'],
+      'Workforce Planning and Development': ['Strategic workforce alignment?', 'Diversity in planning?'],
+      'Employee Engagement and Culture Change': ['Promotes positive workplace culture?'],
+      'Diversity and Inclusion Programs': ['Clear D&I goals and progress tracking?'],
+      'Organizational Restructuring': ['Manages change and morale impact?'],
+      'Policy Development and Implementation': ['Aligns with strategy and compliance?']
+    };
+
+    const tooltips = {
+      'Regulatory Compliance': 'Are legal and privacy frameworks followed?',
+      'Data Security & Privacy': 'Are data protection and privacy risks mitigated?',
+      'HR Technology / Integration': 'Is the solution technically compatible and future-proof?',
+      'User Adoption and Training': 'Are users supported and trained effectively?',
+      'Cost-Benefit Analysis': 'Is the initiative cost-effective?',
+      'Vendor Reliability and Support': 'Can the vendor deliver reliably over time?',
+      'Workforce Planning and Development': 'Is the workforce prepared for future needs?',
+      'Employee Engagement and Culture Change': 'Will the change be embraced positively?',
+      'Diversity and Inclusion Programs': 'Does the program support equity and inclusion?',
+      'Organizational Restructuring': 'Are impacts of structural changes well-managed?',
+      'Policy Development and Implementation': 'Are new policies strategic and compliant?'
+    };
+
+    const formContainer = document.getElementById('formSections');
+    Object.entries(sections).forEach(([category, questions], i) => {
+      const div = document.createElement('div');
+      div.className = 'section';
+      div.innerHTML = `<h2>${category}</h2>`;
+      questions.forEach((q, idx) => {
+        const name = `q_${i}_${idx}`;
+        div.innerHTML += `
+          <label>${q}
+            <select name="${name}" required>
+              <option value="3">Yes</option>
+              <option value="1">No</option>
+              <option value="2">UNK</option>
+              <option value="0">N/A</option>
+            </select>
+          </label>
+        `;
+      });
+      formContainer.appendChild(div);
+    });
+
     function generateVisualSummary() {
       const form = document.forms['riskForm'];
-      const scores = { Regulatory: 0, Security: 0, Technology: 0 };
-      const counts = { Regulatory: 0, Security: 0, Technology: 0 };
+      const categories = Object.keys(sections);
+      const scores = {};
+      const counts = {};
 
-      scores.Regulatory += parseInt(form['reg1'].value);
-      scores.Regulatory += parseInt(form['reg2'].value);
-      counts.Regulatory += 2;
+      categories.forEach((cat, i) => {
+        scores[cat] = 0;
+        counts[cat] = sections[cat].length;
+        sections[cat].forEach((_, j) => {
+          const val = parseInt(form[`q_${i}_${j}`].value);
+          scores[cat] += val;
+        });
+      });
 
-      scores.Security += parseInt(form['sec1'].value);
-      scores.Security += parseInt(form['sec2'].value);
-      counts.Security += 2;
-
-      scores.Technology += parseInt(form['tech1'].value);
-      scores.Technology += parseInt(form['tech2'].value);
-      counts.Technology += 2;
-
-      const labels = Object.keys(scores);
-      const values = labels.map(label => (scores[label] / counts[label]) * 100);
+      const labels = categories;
+      const values = labels.map(label => (scores[label] / (counts[label] * 3)) * 100);
 
       document.getElementById('results').style.display = 'block';
+      document.getElementById('tooltipText').innerHTML = labels.map(label => `<strong>${label}:</strong> ${tooltips[label]}`).join('<br><br>');
 
       const ctx = document.getElementById('riskChart').getContext('2d');
-      new Chart(ctx, {
+      if (window.riskChartInstance) window.riskChartInstance.destroy();
+      window.riskChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
           labels: labels,
@@ -131,6 +125,17 @@
           }
         }
       });
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text('HR Risk Assessment Summary', 10, 10);
+      doc.text(document.getElementById('tooltipText').innerText, 10, 20);
+      const canvas = document.getElementById('riskChart');
+      const imgData = canvas.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', 10, 80, 180, 100);
+      doc.save('HR_Risk_Assessment_Summary.pdf');
     }
   </script>
 </body>
