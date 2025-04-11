@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HR Rapid Risk Identification Tool</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+    h2 { color: #003366; }
+    fieldset { border: 1px solid #ccc; margin-bottom: 20px; padding: 10px; }
+    legend { font-weight: bold; }
+    label { display: block; margin: 5px 0; }
+    .section { margin-top: 30px; }
+    #results { white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; background: #f9f9f9; }
+    button { padding: 10px 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>HR Rapid Risk Identification Tool</h1>
+
+  <form id="riskForm">
+    <div class="section" id="regulatoryCompliance">
+      <fieldset>
+        <legend>A. Regulatory Compliance</legend>
+        <label>1. Complies with privacy policies?
+          <input type="radio" name="q1" value="Yes"> Yes
+          <input type="radio" name="q1" value="No"> No
+          <input type="radio" name="q1" value="UNK"> UNK
+          <input type="radio" name="q1" value="N/A"> N/A
+        </label>
+        <label>2. Complies with Canadian labour laws?
+          <input type="radio" name="q2" value="Yes"> Yes
+          <input type="radio" name="q2" value="No"> No
+          <input type="radio" name="q2" value="UNK"> UNK
+          <input type="radio" name="q2" value="N/A"> N/A
+        </label>
+      </fieldset>
+    </div>
+
+    <button type="button" onclick="generateSummary()">Generate Summary</button>
+    <button type="button" onclick="downloadResults()">Download Results</button>
+  </form>
+
+  <h2>Summary</h2>
+  <div id="results"></div>
+
+  <script>
+    function generateSummary() {
+      const form = document.forms['riskForm'];
+      const questions = form.querySelectorAll('fieldset');
+      let summary = "Risk Assessment Summary:\n\n";
+      let noCount = 0, unkCount = 0;
+
+      questions.forEach((fieldset) => {
+        const inputs = fieldset.querySelectorAll('input[type="radio"]');
+        let answered = false;
+        summary += `${fieldset.querySelector('legend').innerText}:\n`;
+
+        inputs.forEach(input => {
+          if (input.checked) {
+            answered = true;
+            summary += `- ${input.name}: ${input.value}\n`;
+            if (input.value === "No") noCount++;
+            if (input.value === "UNK") unkCount++;
+          }
+        });
+        if (!answered) summary += "- No answers provided.\n";
+        summary += "\n";
+      });
+
+      summary += `Total "No" Responses: ${noCount}\n`;
+      summary += `Total "UNK" Responses: ${unkCount}\n`;
+
+      document.getElementById('results').textContent = summary;
+    }
+
+    function downloadResults() {
+      const content = document.getElementById('results').textContent;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'HR_Risk_Assessment_Summary.txt';
+      a.click();
+    }
+  </script>
+</body>
+</html>
