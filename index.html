@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; color: #000; }
     h1, h2 { color: #003366; }
     .section { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     label { display: block; margin: 10px 0; }
@@ -14,19 +14,34 @@
     .results { background: #fff; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; }
     canvas { max-width: 600px; margin-top: 20px; }
     select { margin-left: 10px; }
+    fieldset { border: none; padding: 0; }
   </style>
 </head>
 <body>
   <h1>HR Rapid Risk Identification Tool</h1>
-  <form id="riskForm">
-    <div class="section" id="formSections"></div>
+
+  <section aria-labelledby="intro">
+    <h2 id="intro">Introduction</h2>
+    <p>Welcome to the Rapid Risk Identification Tool, crafted for departments and agencies within Canada's core public administration. This tool is your first step in reviewing proposed HR activities such as investments, initiatives, projects, and digital solutions. Our goal is to simplify the evaluation process, ensuring your HR projects align with all regulatory, operational, and strategic goals while effectively mitigating potential risks.</p>
+    <p>This tool acts as an early warning system, designed to spot potential risks across various domains such as regulatory compliance, workforce planning, and technology adoption. It provides a structured approach to assess the viability and safety of HR initiatives before committing significant resources.</p>
+    <p>It focuses exclusively on HR-related risk categories crucial for achieving the desired outcomes and benefits of your proposals. For risks outside these categories, we recommend engaging with your risk management teams for comprehensive guidance.</p>
+  </section>
+
+  <form id="riskForm" aria-label="HR Risk Identification Form">
+    <div class="section">
+      <h2>Select Relevant Risk Categories</h2>
+      <fieldset id="categorySelection">
+        <!-- Populated dynamically -->
+      </fieldset>
+    </div>
+    <div id="formSections"></div>
     <button type="button" onclick="generateVisualSummary()">Submit & View Feedback</button>
     <button type="button" onclick="downloadPDF()">Download PDF Summary</button>
   </form>
 
-  <div class="results" id="results">
+  <div class="results" id="results" aria-live="polite">
     <h2>Visual Feedback</h2>
-    <canvas id="riskChart"></canvas>
+    <canvas id="riskChart" role="img" aria-label="Radar chart showing relative scores per category"></canvas>
     <div id="tooltipText"></div>
   </div>
 
@@ -59,43 +74,59 @@
       'Policy Development and Implementation': 'Are new policies strategic and compliant?'
     };
 
+    const categorySelection = document.getElementById('categorySelection');
     const formContainer = document.getElementById('formSections');
-    Object.entries(sections).forEach(([category, questions], i) => {
+
+    Object.keys(sections).forEach((category, i) => {
+      const checkbox = document.createElement('label');
+      checkbox.innerHTML = `<input type="checkbox" name="cat" value="${category}" onchange="toggleSection('${category}', ${i})"> ${category}`;
+      categorySelection.appendChild(checkbox);
+    });
+
+    function toggleSection(category, i) {
+      const id = `section-${i}`;
+      const sectionEl = document.getElementById(id);
+      if (sectionEl) {
+        sectionEl.remove();
+        return;
+      }
+
       const div = document.createElement('div');
       div.className = 'section';
+      div.id = id;
       div.innerHTML = `<h2>${category}</h2>`;
-      questions.forEach((q, idx) => {
-        const name = `q_${i}_${idx}`;
+      sections[category].forEach((q, j) => {
+        const name = `q_${i}_${j}`;
         div.innerHTML += `
           <label>${q}
-            <select name="${name}" required>
+            <select name="${name}" aria-label="${q}">
               <option value="3">Yes</option>
               <option value="1">No</option>
-              <option value="2">UNK</option>
+              <option value="2" selected>UNK</option>
               <option value="0">N/A</option>
             </select>
           </label>
         `;
       });
       formContainer.appendChild(div);
-    });
+    }
 
     function generateVisualSummary() {
       const form = document.forms['riskForm'];
-      const categories = Object.keys(sections);
+      const selectedCats = [...form.querySelectorAll('input[name="cat"]:checked')].map(cb => cb.value);
       const scores = {};
       const counts = {};
 
-      categories.forEach((cat, i) => {
+      selectedCats.forEach((cat, i) => {
         scores[cat] = 0;
         counts[cat] = sections[cat].length;
         sections[cat].forEach((_, j) => {
-          const val = parseInt(form[`q_${i}_${j}`].value);
+          const val = parseInt(form[`q_${i}_${j}`]?.value || 0);
           scores[cat] += val;
         });
       });
 
-      const labels = categories;
+      const labels = selectedCats;
       const values = labels.map(label => (scores[label] / (counts[label] * 3)) * 100);
 
       document.getElementById('results').style.display = 'block';
@@ -120,7 +151,8 @@
           scales: {
             r: {
               suggestedMin: 0,
-              suggestedMax: 100
+              suggestedMax: 100,
+              pointLabels: { font: { size: 10 } }
             }
           }
         }
