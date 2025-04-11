@@ -1,173 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>HR Risk Tool – Full Visual Prototype</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <title>HR Risk Tool – Bilingual</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; color: #000; }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
     h1, h2 { color: #003366; }
     .section { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    label { display: block; margin: 10px 0; }
-    button { padding: 10px 20px; margin-top: 20px; margin-right: 10px; }
-    .results { background: #fff; padding: 20px; margin-top: 20px; border-radius: 8px; display: none; }
-    canvas { max-width: 600px; margin-top: 20px; }
-    select { margin-left: 10px; }
-    fieldset { border: none; padding: 0; }
+    .lang-toggle { margin-bottom: 20px; }
+    label, select { display: block; margin: 8px 0; }
+    .hidden { display: none; }
+    button { margin-top: 20px; padding: 10px 15px; }
   </style>
 </head>
 <body>
-  <h1>HR Rapid Risk Identification Tool</h1>
+  <div class="lang-toggle">
+    <label for="language-select">Language / Langue:</label>
+    <select id="language-select" onchange="toggleLanguage(this.value)">
+      <option value="en" selected>English</option>
+      <option value="fr">Français</option>
+    </select>
+  </div>
 
-  <section aria-labelledby="intro">
-    <h2 id="intro">Introduction</h2>
-    <p>Welcome to the Rapid Risk Identification Tool, crafted for departments and agencies within Canada's core public administration. This tool is your first step in reviewing proposed HR activities such as investments, initiatives, projects, and digital solutions. Our goal is to simplify the evaluation process, ensuring your HR projects align with all regulatory, operational, and strategic goals while effectively mitigating potential risks.</p>
-    <p>This tool acts as an early warning system, designed to spot potential risks across various domains such as regulatory compliance, workforce planning, and technology adoption. It provides a structured approach to assess the viability and safety of HR initiatives before committing significant resources.</p>
-    <p>It focuses exclusively on HR-related risk categories crucial for achieving the desired outcomes and benefits of your proposals. For risks outside these categories, we recommend engaging with your risk management teams for comprehensive guidance.</p>
-  </section>
-
-  <form id="riskForm" aria-label="HR Risk Identification Form">
+  <!-- ENGLISH VERSION -->
+  <div id="form-en">
+    <h1>HR Rapid Risk Identification Tool</h1>
     <div class="section">
-      <h2>Select Relevant Risk Categories</h2>
-      <fieldset id="categorySelection">
-        <!-- Populated dynamically -->
-      </fieldset>
+      <h2>Regulatory Compliance</h2>
+      <label>1. Complies with privacy policies?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>2. Complies with labour laws?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>3. Conforms to public sector data guidelines?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>4. Measures to maintain legal compliance?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>5. Compliance audits scheduled?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
     </div>
-    <div id="formSections"></div>
-    <button type="button" onclick="generateVisualSummary()">Submit & View Feedback</button>
-    <button type="button" onclick="downloadPDF()">Download PDF Summary</button>
-  </form>
 
-  <div class="results" id="results" aria-live="polite">
-    <h2>Visual Feedback</h2>
-    <canvas id="riskChart" role="img" aria-label="Radar chart showing relative scores per category"></canvas>
-    <div id="tooltipText"></div>
+    <div class="section">
+      <h2>Data Security & Privacy</h2>
+      <label>1. Encryption at rest and in transit?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>2. Access control measures in place?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>3. Data retention policy exists?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>4. Security audits conducted regularly?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>5. Incident response plan in place?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>HR Technology / Integration</h2>
+      <label>1. Integrates with IT systems?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>2. Supports digital strategy?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+      <label>3. Includes training and scaling plan?
+        <select><option>Yes</option><option>No</option><option selected>UNK</option><option>N/A</option></select>
+      </label>
+    </div>
+
+    <!-- Add sections for all remaining categories the same way -->
+
+  </div>
+
+  <!-- FRENCH VERSION -->
+  <div id="form-fr" class="hidden">
+    <h1>Outil de repérage rapide des risques en RH</h1>
+    <div class="section">
+      <h2>Conformité réglementaire</h2>
+      <label>1. Conforme aux politiques de confidentialité?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>2. Conforme aux lois du travail canadiennes?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>3. Respecte les lignes directrices du secteur public?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>4. Mesures en place pour rester conforme?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>5. Audits de conformité prévus?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>Sécurité des données et confidentialité</h2>
+      <label>1. Chiffrement des données en transit et au repos?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>2. Contrôles d'accès efficaces en place?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>3. Politique de conservation des données respectée?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>4. Audits de sécurité réguliers?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>5. Plan d'intervention en cas d'incident?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>Technologies RH et intégration</h2>
+      <label>1. S’intègre aux systèmes existants?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>2. Soutient la stratégie numérique?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+      <label>3. Plan de formation et d’adoption prévu?
+        <select><option>Oui</option><option>Non</option><option selected>INCONNU</option><option>S/O</option></select>
+      </label>
+    </div>
+
+    <!-- Add remaining French categories here following same format -->
+
   </div>
 
   <script>
-    const sections = {
-      'Regulatory Compliance': ['Complies with privacy policies?', 'Complies with labour laws?'],
-      'Data Security & Privacy': ['Implements encryption?', 'Has access controls?'],
-      'HR Technology / Integration': ['Integrates with IT systems?', 'Supports digital strategy?'],
-      'User Adoption and Training': ['Intuitive interface and training?', 'Language/inclusion support?'],
-      'Cost-Benefit Analysis': ['Provides financial advantage?', 'Offers long-term savings?'],
-      'Vendor Reliability and Support': ['Proven vendor track record?', 'Provides prompt support?'],
-      'Workforce Planning and Development': ['Strategic workforce alignment?', 'Diversity in planning?'],
-      'Employee Engagement and Culture Change': ['Promotes positive workplace culture?'],
-      'Diversity and Inclusion Programs': ['Clear D&I goals and progress tracking?'],
-      'Organizational Restructuring': ['Manages change and morale impact?'],
-      'Policy Development and Implementation': ['Aligns with strategy and compliance?']
-    };
-
-    const tooltips = {
-      'Regulatory Compliance': 'Are legal and privacy frameworks followed?',
-      'Data Security & Privacy': 'Are data protection and privacy risks mitigated?',
-      'HR Technology / Integration': 'Is the solution technically compatible and future-proof?',
-      'User Adoption and Training': 'Are users supported and trained effectively?',
-      'Cost-Benefit Analysis': 'Is the initiative cost-effective?',
-      'Vendor Reliability and Support': 'Can the vendor deliver reliably over time?',
-      'Workforce Planning and Development': 'Is the workforce prepared for future needs?',
-      'Employee Engagement and Culture Change': 'Will the change be embraced positively?',
-      'Diversity and Inclusion Programs': 'Does the program support equity and inclusion?',
-      'Organizational Restructuring': 'Are impacts of structural changes well-managed?',
-      'Policy Development and Implementation': 'Are new policies strategic and compliant?'
-    };
-
-    const categorySelection = document.getElementById('categorySelection');
-    const formContainer = document.getElementById('formSections');
-
-    Object.keys(sections).forEach((category, i) => {
-      const checkbox = document.createElement('label');
-      checkbox.innerHTML = `<input type="checkbox" name="cat" value="${category}" onchange="toggleSection('${category}', ${i})"> ${category}`;
-      categorySelection.appendChild(checkbox);
-    });
-
-    function toggleSection(category, i) {
-      const id = `section-${i}`;
-      const sectionEl = document.getElementById(id);
-      if (sectionEl) {
-        sectionEl.remove();
-        return;
-      }
-
-      const div = document.createElement('div');
-      div.className = 'section';
-      div.id = id;
-      div.innerHTML = `<h2>${category}</h2>`;
-      sections[category].forEach((q, j) => {
-        const name = `q_${i}_${j}`;
-        div.innerHTML += `
-          <label>${q}
-            <select name="${name}" aria-label="${q}">
-              <option value="3">Yes</option>
-              <option value="1">No</option>
-              <option value="2" selected>UNK</option>
-              <option value="0">N/A</option>
-            </select>
-          </label>
-        `;
-      });
-      formContainer.appendChild(div);
-    }
-
-    function generateVisualSummary() {
-      const form = document.forms['riskForm'];
-      const selectedCats = [...form.querySelectorAll('input[name="cat"]:checked')].map(cb => cb.value);
-      const scores = {};
-      const counts = {};
-
-      selectedCats.forEach((cat, i) => {
-        scores[cat] = 0;
-        counts[cat] = sections[cat].length;
-        sections[cat].forEach((_, j) => {
-          const val = parseInt(form[`q_${i}_${j}`]?.value || 0);
-          scores[cat] += val;
-        });
-      });
-
-      const labels = selectedCats;
-      const values = labels.map(label => (scores[label] / (counts[label] * 3)) * 100);
-
-      document.getElementById('results').style.display = 'block';
-      document.getElementById('tooltipText').innerHTML = labels.map(label => `<strong>${label}:</strong> ${tooltips[label]}`).join('<br><br>');
-
-      const ctx = document.getElementById('riskChart').getContext('2d');
-      if (window.riskChartInstance) window.riskChartInstance.destroy();
-      window.riskChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Risk Mitigation Score (%)',
-            data: values,
-            fill: true,
-            backgroundColor: 'rgba(0, 123, 255, 0.2)',
-            borderColor: 'rgba(0, 123, 255, 1)',
-            pointBackgroundColor: 'rgba(0, 123, 255, 1)'
-          }]
-        },
-        options: {
-          scales: {
-            r: {
-              suggestedMin: 0,
-              suggestedMax: 100,
-              pointLabels: { font: { size: 10 } }
-            }
-          }
-        }
-      });
-    }
-
-    async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text('HR Risk Assessment Summary', 10, 10);
-      doc.text(document.getElementById('tooltipText').innerText, 10, 20);
-      const canvas = document.getElementById('riskChart');
-      const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', 10, 80, 180, 100);
-      doc.save('HR_Risk_Assessment_Summary.pdf');
+    function toggleLanguage(lang) {
+      document.getElementById('form-en').classList.toggle('hidden', lang !== 'en');
+      document.getElementById('form-fr').classList.toggle('hidden', lang !== 'fr');
     }
   </script>
 </body>
