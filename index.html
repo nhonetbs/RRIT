@@ -4,122 +4,441 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RRIT – Rapid Risk Identification Tool</title>
-
-  <!-- GCWeb and WET-BOEW styles -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-theme-gcweb/css/theme.min.css" /> <!-- citeturn2search0 -->
+  <title><!-- Insert Page Title --></title>
+  <!-- GCWeb and WET-BOEW core styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-theme-gcweb/css/theme.min.css" />
 </head>
 <body>
   <header role="banner" id="wb-bnr">
-    <!-- Standard Canada.ca header omitted for brevity -->
+    <!-- Canada.ca header markup -->
   </header>
 
   <main class="container" id="wb-cont">
-    <div class="lang-toggle section">
-      <label for="lang">Language / Langue:
-        <select id="lang" onchange="toggleLanguage(this.value)">
-          <option value="en" selected>English</option>
-          <option value="fr">Français</option>
-        </select>
-      </label>
-    </div>
+    <body>
 
-    <div class="progress-bar section">
-      <div class="progress-bar-fill" id="progressFill"></div>
-    </div>
+  <div class="lang-toggle">
+    <label for="lang">Language / Langue:
+      <select id="lang" onchange="toggleLanguage(this.value)">
+        <option value="en" selected>English</option>
+        <option value="fr">Français</option>
+      </select>
+    </label>
+  </div>
 
-    <form id="rritForm" novalidate>
-      <!-- Existing risk identification sections (A–K) go here unchanged -->
+  <div class="progress-bar">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
 
-      <!-- Feedback and Report export section -->
-      <section class="section" id="feedback-export">
-        <h2>Feedback and Export</h2>
-        <!-- Feedback form -->
-        <div class="response-group">
-          <label for="userFeedback" class="question-label">Your feedback on this tool:</label><br />
-          <textarea id="userFeedback" rows="4" class="gc-input" placeholder="Enter your comments here..."></textarea>
-          <button type="button" class="gc-button" onclick="submitFeedback()">Submit Feedback</button>
+  <main id="formArea">
+    <!-- MAIN SECTION -->
+    <section class="section" id="rrit-intro">
+      <div data-lang="en">
+        <h1>Welcome to the HR Rapid Risk Identification Tool (RRIT)</h1>
+        <p>The RRIT is designed to assist departments and agencies within Canada’s core public administration in identifying risks in HR initiatives — such as regulatory compliance, workforce planning, technology adoption, and data security — at the initial stage of a proposal.</p>
+        <p>This tool supports early-stage project planning by helping departmental HR teams, project managers, and decision-makers explore whether their proposal may pose a potential risk. It can be completed individually or as a group, and reused or adapted to support internal planning, presentations to senior management, or funding proposals.</p>
+        <p>The tool includes 11 HR-related risk categories. Categories A and B are mandatory and always shown. You may select other categories (C–K) that apply to your initiative. Each selected category will display questions with four possible responses:</p>
+        <ul>
+          <li><strong>Yes</strong>: There is no present risk or the condition does not apply.</li>
+          <li><strong>No</strong>: There is a risk or a condition that could lead to a risk.</li>
+          <li><strong>UNK (Unknown)</strong>: More information is needed or the risk status is unclear.</li>
+          <li><strong>N/A (Not Applicable)</strong>: The question or category does not apply.</li>
+        </ul>
+        <p><em>All questions default to “UNK” to help highlight unknowns or unconfirmed areas. Please update where appropriate.</em></p>
+      </div>
+
+      <div data-lang="fr" class="hidden">
+        <h1>Bienvenue dans l’outil de repérage rapide des risques en RH (RRIT)</h1>
+        <p>Le RRIT aide les ministères et organismes de l’administration publique centrale du Canada à cerner les risques liés aux initiatives en ressources humaines, notamment la conformité réglementaire, la planification de la main-d’œuvre, l’adoption de technologies et la sécurité des données, dès l’étape initiale d’une proposition.</p>
+        <p>L’outil appuie la planification de projets en aidant les équipes RH, les gestionnaires de projet et les décideurs à déterminer si une proposition présente un risque potentiel. Il peut être rempli individuellement ou en groupe, et peut être réutilisé ou adapté pour soutenir la planification interne, les présentations à la haute direction ou les demandes de financement.</p>
+        <p>L’outil comprend 11 catégories de risques liés aux RH. Les catégories A et B sont obligatoires. Vous pouvez également sélectionner d’autres catégories (C à K) selon votre initiative. Chaque catégorie sélectionnée présentera des questions avec quatre réponses possibles :</p>
+        <ul>
+          <li><strong>Oui</strong> : Aucun risque présent ou la condition ne s’applique pas.</li>
+          <li><strong>Non</strong> : Il existe un risque ou une condition qui pourrait entraîner un risque.</li>
+          <li><strong>INC (Inconnu)</strong> : Davantage d’information est requise ou le risque n’est pas clair.</li>
+          <li><strong>S/O (Sans objet)</strong> : La question ou la catégorie ne s’applique pas.</li>
+        </ul>
+        <p><em>Toutes les questions ont la valeur par défaut « INC » afin de mettre en évidence les zones inconnues ou non confirmées. Veuillez les mettre à jour si possible.</em></p>
+      </div>
+    </section>
+    <section class="section" id="step0-select">
+        <!-- English -->
+        <div data-lang="en">
+          <h2>Step 0: Select Additional Risk Categories</h2>
+          <p>Categories A and B (Regulatory Compliance, Data Security & Privacy) are mandatory and always included. Please select any other categories that apply to your HR initiative.</p>
+          <form id="categoryFormEN">
+            <label><input type="checkbox" value="C"> C – HR Technology / Integration</label><br>
+            <label><input type="checkbox" value="D"> D – User Adoption and Training</label><br>
+            <label><input type="checkbox" value="E"> E – Cost-Benefit Analysis</label><br>
+            <label><input type="checkbox" value="F"> F – Vendor Reliability and Support</label><br>
+            <label><input type="checkbox" value="G"> G – Workforce Planning and Development</label><br>
+            <label><input type="checkbox" value="H"> H – Employee Engagement and Culture Change</label><br>
+            <label><input type="checkbox" value="I"> I – Diversity and Inclusion Programs</label><br>
+            <label><input type="checkbox" value="J"> J – Organizational Restructuring</label><br>
+            <label><input type="checkbox" value="K"> K – Policy Development and Implementation</label><br>
+          </form>
+          <button onclick="collectSelectedCategories()">Continue</button>
         </div>
-
-        <!-- Export buttons -->
-        <div class="response-group">
-          <button type="button" class="gc-button" onclick="downloadReport()">Download Report</button>
-          <button type="button" class="gc-button" onclick="printReport()">Print Report</button>
+      
+        <!-- French -->
+        <div data-lang="fr" class="hidden">
+          <h2>Étape 0 : Sélection des catégories de risques supplémentaires</h2>
+          <p>Les catégories A et B (Conformité réglementaire, Sécurité et confidentialité des données) sont obligatoires et toujours incluses. Veuillez sélectionner les autres catégories qui s’appliquent à votre initiative en RH.</p>
+          <form id="categoryFormFR">
+            <label><input type="checkbox" value="C"> C – Technologie RH / Intégration</label><br>
+            <label><input type="checkbox" value="D"> D – Adoption et formation des utilisateurs</label><br>
+            <label><input type="checkbox" value="E"> E – Analyse coûts-avantages</label><br>
+            <label><input type="checkbox" value="F"> F – Fiabilité et soutien du fournisseur</label><br>
+            <label><input type="checkbox" value="G"> G – Planification et développement de la main-d'œuvre</label><br>
+            <label><input type="checkbox" value="H"> H – Mobilisation des employés et changement de culture</label><br>
+            <label><input type="checkbox" value="I"> I – Programmes de diversité et d’inclusion</label><br>
+            <label><input type="checkbox" value="J"> J – Restructuration organisationnelle</label><br>
+            <label><input type="checkbox" value="K"> K – Élaboration et mise en œuvre des politiques</label><br>
+          </form>
+          <button onclick="collectSelectedCategories()">Continuer</button>
         </div>
       </section>
-    </form>
+      <!-- STEP A: Regulatory Compliance -->
+<section class="section" id="stepA">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepA-content-en" id="stepA-header-en" onclick="toggleAccordion(this)">
+        A – Regulatory Compliance
+      </button>
+      <div id="stepA-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepA-header-en">
+        <p class="question-label">1. Does the HR solution comply with the Policy on Privacy Protection and other pertinent privacy regulations?</p>
+        <label><input type="radio" name="catAq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catAq1" value="No"> No</label>
+        <label><input type="radio" name="catAq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catAq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. Is the solution in line with Canadian labour laws, ensuring equitable treatment and non-discrimination?</p>
+        <label><input type="radio" name="catAq2" value="Yes"> Yes</label>
+        <label><input type="radio" name="catAq2" value="No"> No</label>
+        <label><input type="radio" name="catAq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catAq2" value="N/A"> N/A</label>
+  
+        <p class="question-label">3. Does the system conform to public sector-specific guidelines for data management and employee information?</p>
+        <label><input type="radio" name="catAq3" value="Yes"> Yes</label>
+        <label><input type="radio" name="catAq3" value="No"> No</label>
+        <label><input type="radio" name="catAq3" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catAq3" value="N/A"> N/A</label>
+  
+        <p class="question-label">4. Are proactive measures in place to maintain compliance with changing legal and regulatory frameworks?</p>
+        <label><input type="radio" name="catAq4" value="Yes"> Yes</label>
+        <label><input type="radio" name="catAq4" value="No"> No</label>
+        <label><input type="radio" name="catAq4" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catAq4" value="N/A"> N/A</label>
+  
+        <p class="question-label">5. Is there a structured process for conducting regular compliance audits and checks?</p>
+        <label><input type="radio" name="catAq5" value="Yes"> Yes</label>
+        <label><input type="radio" name="catAq5" value="No"> No</label>
+        <label><input type="radio" name="catAq5" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catAq5" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepA-content-fr" id="stepA-header-fr" onclick="toggleAccordion(this)">
+        A – Conformité réglementaire
+      </button>
+      <div id="stepA-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepA-header-fr">
+        <p class="question-label">1. La solution RH est-elle conforme à la Politique sur la protection de la vie privée et à d'autres réglementations pertinentes en matière de confidentialité?</p>
+        <label><input type="radio" name="catAq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catAq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catAq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catAq1f" value="S/O"> S/O</label>
+  
+        <p class="question-label">2. La solution est-elle conforme aux lois du travail canadiennes, assurant un traitement équitable et non discriminatoire?</p>
+        <label><input type="radio" name="catAq2f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catAq2f" value="Non"> Non</label>
+        <label><input type="radio" name="catAq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catAq2f" value="S/O"> S/O</label>
+  
+        <p class="question-label">3. Le système est-il conforme aux directives spécifiques au secteur public pour la gestion des données et des informations des employés?</p>
+        <label><input type="radio" name="catAq3f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catAq3f" value="Non"> Non</label>
+        <label><input type="radio" name="catAq3f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catAq3f" value="S/O"> S/O</label>
+  
+        <p class="question-label">4. Des mesures proactives sont-elles en place pour maintenir la conformité avec les cadres légaux et réglementaires changeants?</p>
+        <label><input type="radio" name="catAq4f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catAq4f" value="Non"> Non</label>
+        <label><input type="radio" name="catAq4f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catAq4f" value="S/O"> S/O</label>
+  
+        <p class="question-label">5. Existe-t-il un processus structuré pour réaliser des audits et des vérifications de conformité régulières?</p>
+        <label><input type="radio" name="catAq5f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catAq5f" value="Non"> Non</label>
+        <label><input type="radio" name="catAq5f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catAq5f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+  
+<!-- STEP B: Data Security and Privacy -->
+<section class="section" id="stepB">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepB-content-en" id="stepB-header-en" onclick="toggleAccordion(this)">
+        B – Data Security and Privacy
+      </button>
+      <div id="stepB-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepB-header-en">
+        <p class="question-label">1. Is there a comprehensive data retention and deletion policy that complies with Canadian privacy laws?</p>
+        <label><input type="radio" name="catBq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catBq1" value="No"> No</label>
+        <label><input type="radio" name="catBq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catBq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. Are personal and HR data encrypted in transit and at rest?</p>
+        <label><input type="radio" name="catBq2" value="Yes"> Yes</label>
+        <label><input type="radio" name="catBq2" value="No"> No</label>
+        <label><input type="radio" name="catBq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catBq2" value="N/A"> N/A</label>
+  
+        <p class="question-label">3. Are appropriate access controls and security protocols in place?</p>
+        <label><input type="radio" name="catBq3" value="Yes"> Yes</label>
+        <label><input type="radio" name="catBq3" value="No"> No</label>
+        <label><input type="radio" name="catBq3" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catBq3" value="N/A"> N/A</label>
+  
+        <p class="question-label">4. Does the system undergo regular security audits and vulnerability assessments to identify and mitigate potential risks?</p>
+        <label><input type="radio" name="catBq4" value="Yes"> Yes</label>
+        <label><input type="radio" name="catBq4" value="No"> No</label>
+        <label><input type="radio" name="catBq4" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catBq4" value="N/A"> N/A</label>
+  
+        <p class="question-label">5. Are there incident response plans and mechanisms for data breach notifications in line with Canadian regulations?</p>
+        <label><input type="radio" name="catBq5" value="Yes"> Yes</label>
+        <label><input type="radio" name="catBq5" value="No"> No</label>
+        <label><input type="radio" name="catBq5" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catBq5" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepB-content-fr" id="stepB-header-fr" onclick="toggleAccordion(this)">
+        B – Sécurité des données et confidentialité
+      </button>
+      <div id="stepB-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepB-header-fr">
+        <p class="question-label">1. Existe-t-il une politique complète de conservation et de suppression des données conforme aux lois canadiennes sur la protection de la vie privée?</p>
+        <label><input type="radio" name="catBq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catBq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catBq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catBq1f" value="S/O"> S/O</label>
+  
+        <p class="question-label">2. Les données personnelles et RH sont-elles chiffrées en transit et au repos?</p>
+        <label><input type="radio" name="catBq2f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catBq2f" value="Non"> Non</label>
+        <label><input type="radio" name="catBq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catBq2f" value="S/O"> S/O</label>
+  
+        <p class="question-label">3. Des contrôles d’accès et des protocoles de sécurité appropriés sont-ils en place?</p>
+        <label><input type="radio" name="catBq3f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catBq3f" value="Non"> Non</label>
+        <label><input type="radio" name="catBq3f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catBq3f" value="S/O"> S/O</label>
+  
+        <p class="question-label">4. Le système fait-il l’objet d’audits de sécurité et d’évaluations de vulnérabilité réguliers pour identifier et atténuer les risques potentiels?</p>
+        <label><input type="radio" name="catBq4f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catBq4f" value="Non"> Non</label>
+        <label><input type="radio" name="catBq4f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catBq4f" value="S/O"> S/O</label>
+  
+        <p class="question-label">5. Des plans d’intervention en cas d’incident et des mécanismes de notification des violations de données conformes à la réglementation canadienne sont-ils en place?</p>
+        <label><input type="radio" name="catBq5f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catBq5f" value="Non"> Non</label>
+        <label><input type="radio" name="catBq5f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catBq5f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+<!-- STEP C: HR Technology / Integration -->
+<section class="section hidden" id="stepC">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepC-content-en" id="stepC-header-en" onclick="toggleAccordion(this)">
+        C – HR Technology / Integration
+      </button>
+      <div id="stepC-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepC-header-en">
+        <p class="question-label">1. Does the HR solution seamlessly integrate with our IT infrastructure, meet data exchange standards, and is compatible with critical software for easy customization?</p>
+        <label><input type="radio" name="catCq1" value="Yes"> YES</label>
+        <label><input type="radio" name="catCq1" value="No"> NO</label>
+        <label><input type="radio" name="catCq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catCq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. Does the technology support our digital strategy and improve data analytics and decision-making?</p>
+        <label><input type="radio" name="catCq2" value="Yes"> YES</label>
+        <label><input type="radio" name="catCq2" value="No"> NO</label>
+        <label><input type="radio" name="catCq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catCq2" value="N/A"> N/A</label>
+  
+        <p class="question-label">3. Is there a plan for comprehensive training and scaling, with ongoing impact monitoring and evaluation?</p>
+        <label><input type="radio" name="catCq3" value="Yes"> YES</label>
+        <label><input type="radio" name="catCq3" value="No"> NO</label>
+        <label><input type="radio" name="catCq3" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catCq3" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepC-content-fr" id="stepC-header-fr" onclick="toggleAccordion(this)">
+        C – Technologie RH / Intégration
+      </button>
+      <div id="stepC-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepC-header-fr">
+        <p class="question-label">1. La solution RH s'intègre-t-elle de manière transparente à notre infrastructure TI, respecte-t-elle les normes d'échange de données et est-elle compatible avec les logiciels critiques pour une personnalisation facile ?</p>
+        <label><input type="radio" name="catCq1f" value="Oui"> OUI</label>
+        <label><input type="radio" name="catCq1f" value="Non"> NON</label>
+        <label><input type="radio" name="catCq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catCq1f" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. La technologie soutient-elle notre stratégie numérique et améliore-t-elle l'analyse de données et la prise de décision ?</p>
+        <label><input type="radio" name="catCq2f" value="Oui"> OUI</label>
+        <label><input type="radio" name="catCq2f" value="Non"> NON</label>
+        <label><input type="radio" name="catCq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catCq2f" value="N/A"> N/A</label>
+  
+        <p class="question-label">3. Existe-t-il un plan pour une formation complète et une mise à l'échelle, avec un suivi et une évaluation continus de l'impact ?</p>
+        <label><input type="radio" name="catCq3f" value="Oui"> OUI</label>
+        <label><input type="radio" name="catCq3f" value="Non"> NON</label>
+        <label><input type="radio" name="catCq3f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catCq3f" value="N/A"> N/A</label>
+      </div>
+    </div>
+  </section>
+  
+<!-- STEP D: User Adoption and Training -->
+<section class="section hidden" id="stepD">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepD-content-en" id="stepD-header-en" onclick="toggleAccordion(this)">
+        D – User Adoption and Training
+      </button>
+      <div id="stepD-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepD-header-en">
+        <p class="question-label">1. Does the HR solution offer an intuitive interface, comprehensive training resources, and customization options to support user adoption and fit diverse needs?</p>
+        <label><input type="radio" name="catDq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catDq1" value="No"> No</label>
+        <label><input type="radio" name="catDq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catDq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. Are the training programs comprehensive, aligned with organizational skill development goals, and supportive of all employees, including language accommodations?</p>
+        <label><input type="radio" name="catDq2" value="Yes"> Yes</label>
+        <label><input type="radio" name="catDq2" value="No"> No</label>
+        <label><input type="radio" name="catDq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catDq2" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepD-content-fr" id="stepD-header-fr" onclick="toggleAccordion(this)">
+        D – Adoption et formation des utilisateurs
+      </button>
+      <div id="stepD-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepD-header-fr">
+        <p class="question-label">1. La solution RH offre-t-elle une interface intuitive, des ressources de formation complètes et des options de personnalisation pour soutenir l’adoption par les utilisateurs et répondre à des besoins diversifiés ?</p>
+        <label><input type="radio" name="catDq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catDq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catDq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catDq1f" value="S/O"> S/O</label>
+  
+        <p class="question-label">2. Les programmes de formation sont-ils complets, alignés sur les objectifs de développement des compétences organisationnelles et soutiennent-ils tous les employés, y compris les adaptations linguistiques ?</p>
+        <label><input type="radio" name="catDq2f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catDq2f" value="Non"> Non</label>
+        <label><input type="radio" name="catDq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catDq2f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+  
+  <!-- STEP E: Cost-Benefit Analysis -->
+<section class="section hidden" id="stepE">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepE-content-en" id="stepE-header-en" onclick="toggleAccordion(this)">
+        E – Cost-Benefit Analysis
+      </button>
+      <div id="stepE-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepE-header-en">
+        <p class="question-label">1. Has a cost-benefit analysis been conducted for the initiative?</p>
+        <label><input type="radio" name="catEq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catEq1" value="No"> No</label>
+        <label><input type="radio" name="catEq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catEq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. Are both tangible and intangible benefits clearly defined?</p>
+        <label><input type="radio" name="catEq2" value="Yes"> Yes</label>
+        <label><input type="radio" name="catEq2" value="No"> No</label>
+        <label><input type="radio" name="catEq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catEq2" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepE-content-fr" id="stepE-header-fr" onclick="toggleAccordion(this)">
+        E – Analyse coûts-avantages
+      </button>
+      <div id="stepE-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepE-header-fr">
+        <p class="question-label">1. Une analyse coûts-avantages a-t-elle été effectuée pour l’initiative?</p>
+        <label><input type="radio" name="catEq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catEq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catEq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catEq1f" value="S/O"> S/O</label>
+  
+        <p class="question-label">2. Les avantages tangibles et intangibles sont-ils clairement définis?</p>
+        <label><input type="radio" name="catEq2f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catEq2f" value="Non"> Non</label>
+        <label><input type="radio" name="catEq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catEq2f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+<!-- STEP F: Vendor Reliability and Support -->
+<section class="section hidden" id="stepF">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepF-content-en" id="stepF-header-en" onclick="toggleAccordion(this)">
+        F – Vendor Reliability and Support
+      </button>
+      <div id="stepF-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepF-header-en">
+        <p class="question-label">Has the vendor demonstrated long-term reliability and a positive reputation through industry reviews, client testimonials, and evidence of stability over the past three years?</p>
+        <label><input type="radio" name="catFq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catFq1" value="No"> No</label>
+        <label><input type="radio" name="catFq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catFq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">Does the vendor offer effective, prompt support and maintenance services, including regular updates and improvements to their solutions?</p>
+        <label><input type="radio" name="catFq2" value="Yes"> Yes</label>
+        <label><input type="radio" name="catFq2" value="No"> No</label>
+        <label><input type="radio" name="catFq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catFq2" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepF-content-fr" id="stepF-header-fr" onclick="toggleAccordion(this)">
+        F – Fiabilité et support du fournisseur
+      </button>
+      <div id="stepF-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepF-header-fr">
+        <p class="question-label">Le fournisseur a-t-il démontré une fiabilité à long terme et une réputation positive à travers des revues de l'industrie, des témoignages de clients et des preuves de stabilité au cours des trois dernières années ?</p>
+        <label><input type="radio" name="catFq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catFq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catFq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catFq1f" value="S/O"> S/O</label>
+  
   </main>
 
   <footer role="contentinfo" id="wb-info">
-    <!-- Standard Canada.ca footer omitted for brevity -->
+    <!-- Canada.ca footer markup -->
   </footer>
 
-  <!-- Core scripts for GCWeb and WET-BOEW -->
-  <script src="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-wet-boew/js/wet-boew.min.js"></script> <!-- citeturn2search0 -->
-  <script src="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-theme-gcweb/js/theme.min.js"></script> <!-- citeturn2search0 -->
-
-  <!-- Custom script for report generation, download, print, and feedback -->
-  <script>
-    function collectAnswers() {
-      const data = {};
-      // Collect radio inputs for each question
-      document.querySelectorAll('input[type="radio"]').forEach(r => {
-        if (r.checked) {
-          data[r.name] = r.value;
-        }
-      });
-      data.timestamp = new Date().toISOString();
-      return data;
-    }
-
-    function generateReportHTML(data) {
-      let html = '<!DOCTYPE html><html><head><title>RRIT Report</title></head><body>';
-      html += '<h1>RRIT Results</h1>';
-      html += '<p><strong>Generated:</strong> ' + data.timestamp + '</p>';
-      html += '<ul>';
-      Object.keys(data).forEach(key => {
-        if (key !== 'timestamp') {
-          html += '<li><strong>' + key + ':</strong> ' + data[key] + '</li>';
-        }
-      });
-      html += '</ul>';
-      html += '</body></html>';
-      return html;
-    }
-
-    function downloadReport() {
-      const data = collectAnswers();
-      const blob = new Blob([generateReportHTML(data)], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'RRIT-report.html';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    function printReport() {
-      const data = collectAnswers();
-      const reportWindow = window.open('', '_blank');
-      reportWindow.document.write(generateReportHTML(data));
-      reportWindow.document.close();
-      reportWindow.focus();
-      reportWindow.print();
-      reportWindow.close();
-    }
-
-    function submitFeedback() {
-      const feedback = document.getElementById('userFeedback').value;
-      if (!feedback) {
-        alert('Please enter your feedback.');
-        return;
-      }
-      // Here, integrate with a feedback endpoint or email link
-      alert('Thank you for your feedback!');
-      document.getElementById('userFeedback').value = '';
-    }
-  </script>
+  <!-- WET-BOEW and GCWeb core scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-wet-boew/js/wet-boew.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-theme-gcweb/js/theme.min.js"></script>
 </body>
 </html>
