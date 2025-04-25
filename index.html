@@ -1,3 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RRIT – Rapid Risk Identification Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #000;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #003366;
+    }
+    .lang-toggle {
+      margin-bottom: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .section {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .progress-bar {
+      height: 20px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #0078d4;
+      width: 0%;
+      transition: width 0.3s ease-in-out;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+    .question-label {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .response-group {
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
 <body>
 
   <div class="lang-toggle">
@@ -415,3 +470,245 @@
         <label><input type="radio" name="catFq1f" value="INC" checked> INC</label>
         <label><input type="radio" name="catFq1f" value="S/O"> S/O</label>
   
+        <p class="question-label">Le fournisseur offre-t-il des services de support et de maintenance efficaces et rapides, incluant des mises à jour régulières et des améliorations de leurs solutions ?</p>
+        <label><input type="radio" name="catFq2f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catFq2f" value="Non"> Non</label>
+        <label><input type="radio" name="catFq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catFq2f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+ <!-- STEP G: Workforce Planning and Development -->
+<section class="section hidden" id="stepG">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepG-content-en" id="stepG-header-en" onclick="toggleAccordion(this)">
+        G – Workforce Planning and Development
+      </button>
+      <div id="stepG-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepG-header-en">
+        <p class="question-label">1. Does the initiative have a comprehensive workforce strategy that aligns with strategic goals, includes skill development, and incorporates a robust succession planning process to address future challenges and demographic changes?</p>
+        <label><input type="radio" name="catGq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catGq1" value="No"> No</label>
+        <label><input type="radio" name="catGq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catGq1" value="N/A"> N/A</label>
+  
+        <p class="question-label">2. Is there a systematic approach to assessing current workforce capabilities, identifying critical gaps, and promoting diversity and inclusion within workforce planning and development efforts?</p>
+        <label><input type="radio" name="catGq2" value="Yes"> Yes</label>
+        <label><input type="radio" name="catGq2" value="No"> No</label>
+        <label><input type="radio" name="catGq2" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catGq2" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepG-content-fr" id="stepG-header-fr" onclick="toggleAccordion(this)">
+        G – Planification et développement de la main-d'œuvre
+      </button>
+      <div id="stepG-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepG-header-fr">
+        <p class="question-label">1. L'initiative dispose-t-elle d'une stratégie globale de main-d'œuvre qui s'aligne sur les objectifs stratégiques, inclut le développement des compétences et intègre un processus de planification de la relève robuste pour répondre aux défis futurs et aux changements démographiques ?</p>
+        <label><input type="radio" name="catGq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catGq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catGq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catGq1f" value="S/O"> S/O</label>
+  
+        <p class="question-label">2. Existe-t-il une approche systématique pour évaluer les capacités actuelles de la main-d'œuvre, identifier les lacunes critiques et promouvoir la diversité et l'inclusion dans les efforts de planification et de développement de la main-d'œuvre ?</p>
+        <label><input type="radio" name="catGq2f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catGq2f" value="Non"> Non</label>
+        <label><input type="radio" name="catGq2f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catGq2f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+<!-- STEP H: Employee Engagement and Culture Change -->
+<section class="section hidden" id="stepH">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepH-content-en" id="stepH-header-en" onclick="toggleAccordion(this)">
+        H – Employee Engagement and Culture Change
+      </button>
+      <div id="stepH-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepH-header-en">
+        <p class="question-label">Does the initiative cultivate a positive workplace culture by addressing well-being, encouraging feedback and participation, enhancing communication and collaboration, recognizing contributions, and supporting work-life balance?</p>
+        <label><input type="radio" name="catHq1" value="YES"> YES</label>
+        <label><input type="radio" name="catHq1" value="NO"> NO</label>
+        <label><input type="radio" name="catHq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catHq1" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepH-content-fr" id="stepH-header-fr" onclick="toggleAccordion(this)">
+        H – Engagement des employés et changement de culture
+      </button>
+      <div id="stepH-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepH-header-fr">
+        <p class="question-label">L'initiative cultive-t-elle une culture de travail positive en s'adressant au bien-être, en encourageant les retours et la participation, en améliorant la communication et la collaboration, en reconnaissant les contributions et en soutenant l'équilibre entre vie professionnelle et vie privée ?</p>
+        <label><input type="radio" name="catHq1f" value="OUI"> OUI</label>
+        <label><input type="radio" name="catHq1f" value="NON"> NON</label>
+        <label><input type="radio" name="catHq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catHq1f" value="N/A"> N/A</label>
+      </div>
+    </div>
+  </section>
+  
+<!-- STEP I: Diversity and Inclusion Programs -->
+<section class="section hidden" id="stepI">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepI-content-en" id="stepI-header-en" onclick="toggleAccordion(this)">
+        I – Diversity and Inclusion Programs
+      </button>
+      <div id="stepI-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepI-header-en">
+        <p class="question-label">Does the program establish clear diversity and inclusion goals, implement strategies for diverse recruitment and retention, offer inclusivity training, address unconscious bias, and regularly evaluate progress?</p>
+        <label><input type="radio" name="catIq1" value="Yes"> YES</label>
+        <label><input type="radio" name="catIq1" value="No"> NO</label>
+        <label><input type="radio" name="catIq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catIq1" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepI-content-fr" id="stepI-header-fr" onclick="toggleAccordion(this)">
+        I – Programmes de diversité et d'inclusion
+      </button>
+      <div id="stepI-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepI-header-fr">
+        <p class="question-label">Le programme établit-il des objectifs clairs de diversité et d'inclusion, met-il en œuvre des stratégies pour un recrutement et une rétention diversifiée, offre-t-il des formations sur l'inclusivité, aborde-t-il les biais inconscients et évalue-t-il régulièrement les progrès ?</p>
+        <label><input type="radio" name="catIq1f" value="Oui"> OUI</label>
+        <label><input type="radio" name="catIq1f" value="Non"> NON</label>
+        <label><input type="radio" name="catIq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catIq1f" value="N/A"> N/A</label>
+      </div>
+    </div>
+  </section>
+  
+ <!-- STEP J: Organizational Restructuring -->
+<section class="section hidden" id="stepJ">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepJ-content-en" id="stepJ-header-en" onclick="toggleAccordion(this)">
+        J – Organizational Restructuring
+      </button>
+      <div id="stepJ-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepJ-header-en">
+        <p class="question-label">1. Does the restructuring align with strategic objectives, include clear communication and transition management plans, thoroughly assess and address impacts on employee roles and workloads, and incorporate strategies to maintain or improve morale and engagement?</p>
+        <label><input type="radio" name="catJq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catJq1" value="No"> No</label>
+        <label><input type="radio" name="catJq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catJq1" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepJ-content-fr" id="stepJ-header-fr" onclick="toggleAccordion(this)">
+        J – Restructuration organisationnelle
+      </button>
+      <div id="stepJ-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepJ-header-fr">
+        <p class="question-label">1. La restructuration est-elle alignée sur les objectifs stratégiques, inclut-elle des plans clairs de communication et de gestion de la transition, évalue-t-elle et adresse-t-elle en profondeur les impacts sur les rôles et les charges de travail des employés, et intègre-t-elle des stratégies pour maintenir ou améliorer le moral et l'engagement ?</p>
+        <label><input type="radio" name="catJq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catJq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catJq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catJq1f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+<!-- STEP K: Policy Development and Implementation -->
+<section class="section hidden" id="stepK">
+    <!-- English -->
+    <div data-lang="en" class="accordion">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepK-content-en" id="stepK-header-en" onclick="toggleAccordion(this)">
+        K – Policy Development and Implementation
+      </button>
+      <div id="stepK-content-en" class="accordion-panel hidden" role="region" aria-labelledby="stepK-header-en">
+        <p class="question-label">Do the new policies align with strategic goals, comply with laws and standards, and have plans for communication, employee training, and monitoring effectiveness?</p>
+        <label><input type="radio" name="catKq1" value="Yes"> Yes</label>
+        <label><input type="radio" name="catKq1" value="No"> No</label>
+        <label><input type="radio" name="catKq1" value="UNK" checked> UNK</label>
+        <label><input type="radio" name="catKq1" value="N/A"> N/A</label>
+      </div>
+    </div>
+  
+    <!-- French -->
+    <div data-lang="fr" class="accordion hidden">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="stepK-content-fr" id="stepK-header-fr" onclick="toggleAccordion(this)">
+        K – Développement et mise en œuvre des politiques
+      </button>
+      <div id="stepK-content-fr" class="accordion-panel hidden" role="region" aria-labelledby="stepK-header-fr">
+        <p class="question-label">Les nouvelles politiques sont-elles alignées sur les objectifs stratégiques, respectent-elles les lois et les normes, et incluent-elles des plans pour la communication, la formation des employés et le suivi de l’efficacité ?</p>
+        <label><input type="radio" name="catKq1f" value="Oui"> Oui</label>
+        <label><input type="radio" name="catKq1f" value="Non"> Non</label>
+        <label><input type="radio" name="catKq1f" value="INC" checked> INC</label>
+        <label><input type="radio" name="catKq1f" value="S/O"> S/O</label>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+  
+  
+      
+  </main>
+
+  <script>
+    function toggleLanguage(lang) {
+      document.querySelectorAll('[data-lang="en"]').forEach(el =>
+        el.classList.toggle('hidden', lang !== 'en')
+      );
+      document.querySelectorAll('[data-lang="fr"]').forEach(el =>
+        el.classList.toggle('hidden', lang !== 'fr')
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const lang = document.getElementById('lang').value;
+      toggleLanguage(lang);
+    });
+  </script>
+<script>
+    function collectSelectedCategories() {
+      const lang = document.getElementById('lang').value;
+      const formId = lang === 'en' ? 'categoryFormEN' : 'categoryFormFR';
+      const checkboxes = document.querySelectorAll(`#${formId} input[type="checkbox"]:checked`);
+      const selected = Array.from(checkboxes).map(cb => cb.value);
+      const allCategories = ['A', 'B', ...selected];
+  
+      // Show selected category sections
+      allCategories.forEach(cat => {
+        const stepSection = document.getElementById(`step${cat}`);
+        if (stepSection) {
+          stepSection.classList.remove('hidden');
+        }
+      });
+  
+      // Optionally scroll to the first shown category (optional UX improvement)
+      const firstVisible = document.getElementById(`step${allCategories[0]}`);
+      if (firstVisible) {
+        firstVisible.scrollIntoView({ behavior: "smooth" });
+      }
+  
+      // Alert (optional, keep or remove)
+      alert((lang === 'en' ? 'You selected: ' : 'Vous avez sélectionné : ') + allCategories.join(', '));
+    }
+  </script>
+  
+  <script>
+    function toggleAccordion(button) {
+      const expanded = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!expanded));
+  
+      const contentId = button.getAttribute("aria-controls");
+      const content = document.getElementById(contentId);
+  
+      if (content) {
+        content.classList.toggle("hidden", expanded);
+      }
+    }
+  </script>
+  
+
+</body>
+</html>
