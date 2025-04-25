@@ -7,12 +7,18 @@
   <!-- GCWeb / WET-BOEW 16.5.0 -->
 <link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
 <link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
-  <style>
-    .hidden{display:none!important}
-    fieldset{border:1px solid #d9d9d9;padding:1rem;margin:0 0 1rem}
-    legend{font-weight:700}
-    .rrit-status{margin-top:1rem;font-weight:700}
-  </style>
+ <style>
+  .hidden { display: none !important; }
+  fieldset { border: 1px solid #d9d9d9; padding: 1rem; margin: 0 0 1rem; }
+  legend { font-weight: 700; }
+  .rrit-status { margin-top: 1rem; font-weight: 700; }
+
+  /* NEW: extra space between radio button responses */
+  .radio-spacing { 
+    display: block; 
+    margin-bottom: 8px; 
+  }
+</style>
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
@@ -212,10 +218,10 @@
     <!-- EN -->
     <details class="wb-accordion" data-lang="en"><summary>English questions</summary>
       <fieldset><legend>Policy on Privacy Protection compliance</legend>
-         <label><input type="radio" name="catAq4" value="Yes">&nbsp; Yes</label>
-      <label><input type="radio" name="catAq4" value="No">&nbsp;– No</label>
-      <label><input type="radio" name="catAq4" value="Unknown" checked>&nbsp; Unknown</label>
-      <label><input type="radio" name="catAq4" value="Not Applicable">&nbsp; Not Applicable</label>
+         <label class="radio-spacing"><input type="radio" name="catAq1" value="Yes">&nbsp; Yes</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1" value="No">&nbsp; No</label>
+     <label class="radio-spacing">input type="radio" name="catAq1" value="Unknown" checked>&nbsp; Unknown</label>
+     <label class="radio-spacing"><input type="radio" name="catAq1" value="Not Applicable">&nbsp; Not Applicable</label>
       </fieldset>
       <fieldset><legend>Alignment with Canadian labour laws</legend>
         <label><input type="radio" name="en_catAq2" value="Yes">Yes</label>
