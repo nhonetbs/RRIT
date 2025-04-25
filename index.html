@@ -539,23 +539,44 @@
 
 <!-- ===== RRIT logic -->
 <script>
-function toggleLanguage(lang){
-  document.getElementById('langSel').value=lang;
-  document.querySelectorAll('[data-lang]').forEach(el=>{
-    const hide=el.getAttribute('data-lang')!==lang;
-    el.classList.toggle('hidden',hide);
-    el.setAttribute('aria-hidden',hide);
+/*  ==== RRIT logic – revised (no #langSel element needed) ====  */
+
+/* keep the current language in a simple variable */
+let currentLang = "en";
+
+/* show/hide all bilingual elements */
+function toggleLanguage(lang) {
+  currentLang = lang;                          /* remember the choice */
+
+  document.querySelectorAll("[data-lang]").forEach(el => {
+    const hide = el.getAttribute("data-lang") !== lang;
+    el.classList.toggle("hidden", hide);
+    el.setAttribute("aria-hidden", hide);
   });
 }
-function collectCategories(){
-  const lang=document.getElementById('langSel').value;
-  const formId=(lang==='en')?'categoryFormEN':'categoryFormFR';
-  const chosen=[...document.querySelectorAll('#'+formId+' input:checked')].map(cb=>cb.value);
-  const cats=['A','B',...chosen];
-  cats.forEach(c=>{const s=document.getElementById('step'+c);if(s)s.classList.remove('hidden');});
-  document.getElementById('statusMsg').textContent=(lang==='en'?'Categories shown: ':'Catégories affichées : ')+cats.join(', ');
+
+/* reveal the category panels the user selected in Step-0 */
+function collectCategories() {
+  /* use the variable we just set instead of reading #langSel */
+  const lang   = currentLang;
+  const formId = (lang === "en") ? "categoryFormEN" : "categoryFormFR";
+
+  const chosen = [...document.querySelectorAll("#" + formId + " input:checked")]
+                 .map(cb => cb.value);
+
+  const cats = ["A", "B", ...chosen];
+  cats.forEach(c => {
+    const sec = document.getElementById("step" + c);
+    if (sec) sec.classList.remove("hidden");
+  });
+
+  document.getElementById("statusMsg").textContent =
+    (lang === "en" ? "Categories shown: " : "Catégories affichées : ") +
+    cats.join(", ");
 }
-document.addEventListener('DOMContentLoaded',()=>toggleLanguage('en'));
+
+/* default to English when the page loads */
+document.addEventListener("DOMContentLoaded", () => toggleLanguage("en"));
 </script>
   <script src="gcweb/wet-boew/js/wet-boew.min.js"></script>
 <script src="gcweb/gcweb/js/theme.min.js"></script>
