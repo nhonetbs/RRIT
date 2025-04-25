@@ -314,75 +314,101 @@
 
 </section>
 
-<!-- ========= B ======================================================= -->
+<!-- B ----------------------------------------------------------------->
 <section id="stepB" class="panel panel-default">
-  <header class="panel-heading"><h3 class="panel-title">B – Data Security &amp; Privacy</h3></header>
-  <div class="panel-body">
-    <details class="wb-accordion" data-lang="en"><summary>English questions</summary>
-      <fieldset><legend>Data retention &amp; deletion policy</legend>
-        <label><input type="radio" name="en_catBq1" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catBq1" value="No">No</label>
-        <label><input type="radio" name="en_catBq1" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catBq1" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Encryption in transit &amp; at rest</legend>
-        <label><input type="radio" name="en_catBq2" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catBq2" value="No">No</label>
-        <label><input type="radio" name="en_catBq2" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catBq2" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Access controls &amp; security protocols</legend>
-        <label><input type="radio" name="en_catBq3" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catBq3" value="No">No</label>
-        <label><input type="radio" name="en_catBq3" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catBq3" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Security audits &amp; vulnerability assessments</legend>
-        <label><input type="radio" name="en_catBq4" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catBq4" value="No">No</label>
-        <label><input type="radio" name="en_catBq4" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catBq4" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Incident response &amp; breach notifications</legend>
-        <label><input type="radio" name="en_catBq5" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catBq5" value="No">No</label>
-        <label><input type="radio" name="en_catBq5" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catBq5" value="N/A">N/A</label>
-      </fieldset>
-    </details>
-    <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true"><summary>Questions – Français</summary>
-      <fieldset><legend>Politique de conservation / suppression des données</legend>
-        <label><input type="radio" name="fr_catBq1f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catBq1f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catBq1f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catBq1f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Chiffrement en transit et au repos</legend>
-        <label><input type="radio" name="fr_catBq2f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catBq2f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catBq2f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catBq2f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Contrôles d’accès &amp; protocoles de sécurité</legend>
-        <label><input type="radio" name="fr_catBq3f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catBq3f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catBq3f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catBq3f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Audits de sécurité &amp; évaluations de vulnérabilité</legend>
-        <label><input type="radio" name="fr_catBq4f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catBq4f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catBq4f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catBq4f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Plans d’intervention et notifications de violations</legend>
-        <label><input type="radio" name="fr_catBq5f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catBq5f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catBq5f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catBq5f" value="S/O">S/O</label>
-      </fieldset>
-    </details>
-  </div>
+  
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>B. Data Security and Privacy</strong> – Protects sensitive employee information against unauthorized access, complying with Canadian privacy laws and maintaining trust. <em>(mandatory)</em></summary>
+    <div>
+      <p><strong>1. Does the solution implement strong encryption for data both at rest and in transit?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq1" value="Yes"> Yes</label>
+        <label class="radio-spacing"><input type="radio" name="catBq1" value="No"> No</label>
+        <label class="radio-spacing"><input type="radio" name="catBq1" value="Unknown"> Unknown</label>
+        <label class="radio-spacing"><input type="radio" name="catBq1" value="Not Applicable"> Not Applicable</label>
+      </div>
+
+      <p><strong>2. Are effective user authentication and access control measures in place, aligning with departmental and broader enterprise security standards?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq2" value="Yes"> Yes</label>
+        <label class="radio-spacing"><input type="radio" name="catBq2" value="No"> No</label>
+        <label class="radio-spacing"><input type="radio" name="catBq2" value="Unknown"> Unknown</label>
+        <label class="radio-spacing"><input type="radio" name="catBq2" value="Not Applicable"> Not Applicable</label>
+      </div>
+
+      <p><strong>3. Is there a comprehensive data retention and deletion policy that complies with Canadian privacy laws?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq3" value="Yes"> Yes</label>
+        <label class="radio-spacing"><input type="radio" name="catBq3" value="No"> No</label>
+        <label class="radio-spacing"><input type="radio" name="catBq3" value="Unknown"> Unknown</label>
+        <label class="radio-spacing"><input type="radio" name="catBq3" value="Not Applicable"> Not Applicable</label>
+      </div>
+
+      <p><strong>4. Does the system undergo regular security audits and vulnerability assessments to identify and mitigate potential risks?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq4" value="Yes"> Yes</label>
+        <label class="radio-spacing"><input type="radio" name="catBq4" value="No"> No</label>
+        <label class="radio-spacing"><input type="radio" name="catBq4" value="Unknown"> Unknown</label>
+        <label class="radio-spacing"><input type="radio" name="catBq4" value="Not Applicable"> Not Applicable</label>
+      </div>
+
+      <p><strong>5. Are there incident response plans and mechanisms for data breach notifications in line with Canadian regulations?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq5" value="Yes"> Yes</label>
+        <label class="radio-spacing"><input type="radio" name="catBq5" value="No"> No</label>
+        <label class="radio-spacing"><input type="radio" name="catBq5" value="Unknown"> Unknown</label>
+        <label class="radio-spacing"><input type="radio" name="catBq5" value="Not Applicable"> Not Applicable</label>
+      </div>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>B. Sécurité des données et confidentialité</strong> – Protège les renseignements sensibles des employés contre l’accès non autorisé et respecte les lois canadiennes sur la protection de la vie privée. <em>(obligatoire)</em></summary>
+    <div>
+      <p><strong>1. La solution met-elle en œuvre un chiffrement solide des données, tant au repos qu’en transit?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq1f" value="Oui"> Oui</label>
+        <label class="radio-spacing"><input type="radio" name="catBq1f" value="Non"> Non</label>
+        <label class="radio-spacing"><input type="radio" name="catBq1f" value="Inconnu"> Inconnu</label>
+        <label class="radio-spacing"><input type="radio" name="catBq1f" value="Sans objet"> Sans objet</label>
+      </div>
+
+      <p><strong>2. Des mesures efficaces d’authentification et de contrôle d’accès sont-elles mises en place, en conformité avec les normes de sécurité ministérielles et organisationnelles?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq2f" value="Oui"> Oui</label>
+        <label class="radio-spacing"><input type="radio" name="catBq2f" value="Non"> Non</label>
+        <label class="radio-spacing"><input type="radio" name="catBq2f" value="Inconnu"> Inconnu</label>
+        <label class="radio-spacing"><input type="radio" name="catBq2f" value="Sans objet"> Sans objet</label>
+      </div>
+
+      <p><strong>3. Existe-t-il une politique complète de conservation et de suppression des données conforme aux lois canadiennes sur la confidentialité?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq3f" value="Oui"> Oui</label>
+        <label class="radio-spacing"><input type="radio" name="catBq3f" value="Non"> Non</label>
+        <label class="radio-spacing"><input type="radio" name="catBq3f" value="Inconnu"> Inconnu</label>
+        <label class="radio-spacing"><input type="radio" name="catBq3f" value="Sans objet"> Sans objet</label>
+      </div>
+
+      <p><strong>4. Le système fait-il l’objet d’audits de sécurité et d’évaluations de vulnérabilités réguliers afin d’identifier et d’atténuer les risques potentiels?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq4f" value="Oui"> Oui</label>
+        <label class="radio-spacing"><input type="radio" name="catBq4f" value="Non"> Non</label>
+        <label class="radio-spacing"><input type="radio" name="catBq4f" value="Inconnu"> Inconnu</label>
+        <label class="radio-spacing"><input type="radio" name="catBq4f" value="Sans objet"> Sans objet</label>
+      </div>
+
+      <p><strong>5. Des plans d’intervention et des mécanismes de notification des violations de données sont-ils en place, conformément aux règlements canadiens?</strong></p>
+      <div class="rrit-responses">
+        <label class="radio-spacing"><input type="radio" name="catBq5f" value="Oui"> Oui</label>
+        <label class="radio-spacing"><input type="radio" name="catBq5f" value="Non"> Non</label>
+        <label class="radio-spacing"><input type="radio" name="catBq5f" value="Inconnu"> Inconnu</label>
+        <label class="radio-spacing"><input type="radio" name="catBq5f" value="Sans objet"> Sans objet</label>
+      </div>
+    </div>
+  </details>
+
 </section>
 
 <!-- ========= C (starts hidden) ====================================== -->
