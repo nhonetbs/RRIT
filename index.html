@@ -213,76 +213,81 @@
 
 <!-- A ----------------------------------------------------------------->
 <section id="stepA" class="panel panel-default">
-  <header class="panel-heading"><h3 class="panel-title">A – Regulatory Compliance</h3></header>
-  <div class="panel-body">
-    <!-- EN -->
-    <details class="wb-accordion" data-lang="en"><summary>English questions</summary>
-      <fieldset><legend>Policy on Privacy Protection compliance</legend>
-         <label class="radio-spacing"><input type="radio" name="catAq1" value="Yes">&nbsp; Yes</label>
-      <label class="radio-spacing"><input type="radio" name="catAq1" value="No">&nbsp; No</label>
-     <label class="radio-spacing">input type="radio" name="catAq1" value="Unknown" checked>&nbsp; Unknown</label>
-     <label class="radio-spacing"><input type="radio" name="catAq1" value="Not Applicable">&nbsp; Not Applicable</label>
-      </fieldset>
-      <fieldset><legend>Alignment with Canadian labour laws</legend>
-        <label><input type="radio" name="en_catAq2" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catAq2" value="No">No</label>
-        <label><input type="radio" name="en_catAq2" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catAq2" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Public-sector data-management guidelines</legend>
-        <label><input type="radio" name="en_catAq3" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catAq3" value="No">No</label>
-        <label><input type="radio" name="en_catAq3" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catAq3" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Measures for changing regulations</legend>
-        <label><input type="radio" name="en_catAq4" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catAq4" value="No">No</label>
-        <label><input type="radio" name="en_catAq4" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catAq4" value="N/A">N/A</label>
-      </fieldset>
-      <fieldset><legend>Regular compliance audits</legend>
-        <label><input type="radio" name="en_catAq5" value="Yes">Yes</label>
-        <label><input type="radio" name="en_catAq5" value="No">No</label>
-        <label><input type="radio" name="en_catAq5" value="UNK" checked>UNK</label>
-        <label><input type="radio" name="en_catAq5" value="N/A">N/A</label>
-      </fieldset>
-    </details>
-    <!-- FR -->
-    <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true"><summary>Questions – Français</summary>
-      <fieldset><legend>Conformité à la Politique sur la protection de la vie privée</legend>
-        <label><input type="radio" name="fr_catAq1f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catAq1f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catAq1f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catAq1f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Conformité aux lois du travail canadiennes</legend>
-        <label><input type="radio" name="fr_catAq2f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catAq2f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catAq2f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catAq2f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Directives de gestion des données – secteur public</legend>
-        <label><input type="radio" name="fr_catAq3f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catAq3f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catAq3f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catAq3f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Mesures proactives pour cadres changeants</legend>
-        <label><input type="radio" name="fr_catAq4f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catAq4f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catAq4f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catAq4f" value="S/O">S/O</label>
-      </fieldset>
-      <fieldset><legend>Audits de conformité réguliers</legend>
-        <label><input type="radio" name="fr_catAq5f" value="Oui">Oui</label>
-        <label><input type="radio" name="fr_catAq5f" value="Non">Non</label>
-        <label><input type="radio" name="fr_catAq5f" value="INC" checked>INC</label>
-        <label><input type="radio" name="fr_catAq5f" value="S/O">S/O</label>
-      </fieldset>
-    </details>
-  </div>
+  
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>A. Regulatory Compliance</strong> – Ensures HR initiatives comply with Canadian labour laws, privacy regulations (e.g., PIPEDA), and other relevant guidelines. <em>(mandatory)</em></summary>
+    <div>
+      <p>1. Does the HR solution comply with the Policy on Privacy Protection and other pertinent privacy regulations?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq1" value="Yes"> Yes</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1" value="No"> No</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1" value="Unknown"> Unknown</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1" value="Not Applicable"> Not Applicable</label>
+
+      <p>2. Is the solution in line with Canadian labour laws, ensuring equitable treatment and non-discrimination?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq2" value="Yes"> Yes</label>
+      <label class="radio-spacing"><input type="radio" name="catAq2" value="No"> No</label>
+      <label class="radio-spacing"><input type="radio" name="catAq2" value="Unknown"> Unknown</label>
+      <label class="radio-spacing"><input type="radio" name="catAq2" value="Not Applicable"> Not Applicable</label>
+
+      <p>3. Does the system conform to public sector-specific guidelines for data management and employee information?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq3" value="Yes"> Yes</label>
+      <label class="radio-spacing"><input type="radio" name="catAq3" value="No"> No</label>
+      <label class="radio-spacing"><input type="radio" name="catAq3" value="Unknown"> Unknown</label>
+      <label class="radio-spacing"><input type="radio" name="catAq3" value="Not Applicable"> Not Applicable</label>
+
+      <p>4. Are proactive measures in place to maintain compliance with changing legal and regulatory frameworks?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq4" value="Yes"> Yes</label>
+      <label class="radio-spacing"><input type="radio" name="catAq4" value="No"> No</label>
+      <label class="radio-spacing"><input type="radio" name="catAq4" value="Unknown"> Unknown</label>
+      <label class="radio-spacing"><input type="radio" name="catAq4" value="Not Applicable"> Not Applicable</label>
+
+      <p>5. Is there a structured process for conducting regular compliance audits and checks?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq5" value="Yes"> Yes</label>
+      <label class="radio-spacing"><input type="radio" name="catAq5" value="No"> No</label>
+      <label class="radio-spacing"><input type="radio" name="catAq5" value="Unknown"> Unknown</label>
+      <label class="radio-spacing"><input type="radio" name="catAq5" value="Not Applicable"> Not Applicable</label>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>A. Conformité réglementaire</strong> – Assure que les initiatives RH respectent les lois du travail canadiennes, les règlements de confidentialité (ex. LPRPDE) et autres lignes directrices pertinentes. <em>(obligatoire)</em></summary>
+    <div>
+      <p>1. La solution RH est-elle conforme à la Politique sur la protection de la vie privée et aux autres réglementations pertinentes?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq1f" value="Oui"> Oui</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1f" value="Non"> Non</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1f" value="Inconnu"> Inconnu</label>
+      <label class="radio-spacing"><input type="radio" name="catAq1f" value="Sans objet"> Sans objet</label>
+
+      <p>2. La solution est-elle conforme aux lois du travail canadiennes, assurant un traitement équitable et non discriminatoire?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq2f" value="Oui"> Oui</label>
+      <label class="radio-spacing"><input type="radio" name="catAq2f" value="Non"> Non</label>
+      <label class="radio-spacing"><input type="radio" name="catAq2f" value="Inconnu"> Inconnu</label>
+      <label class="radio-spacing"><input type="radio" name="catAq2f" value="Sans objet"> Sans objet</label>
+
+      <p>3. Le système est-il conforme aux directives spécifiques au secteur public pour la gestion des données et des informations des employés?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq3f" value="Oui"> Oui</label>
+      <label class="radio-spacing"><input type="radio" name="catAq3f" value="Non"> Non</label>
+      <label class="radio-spacing"><input type="radio" name="catAq3f" value="Inconnu"> Inconnu</label>
+      <label class="radio-spacing"><input type="radio" name="catAq3f" value="Sans objet"> Sans objet</label>
+
+      <p>4. Des mesures proactives sont-elles en place pour maintenir la conformité aux cadres légaux et réglementaires changeants?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq4f" value="Oui"> Oui</label>
+      <label class="radio-spacing"><input type="radio" name="catAq4f" value="Non"> Non</label>
+      <label class="radio-spacing"><input type="radio" name="catAq4f" value="Inconnu"> Inconnu</label>
+      <label class="radio-spacing"><input type="radio" name="catAq4f" value="Sans objet"> Sans objet</label>
+
+      <p>5. Existe-t-il un processus structuré pour réaliser des audits et vérifications de conformité réguliers?</p>
+      <label class="radio-spacing"><input type="radio" name="catAq5f" value="Oui"> Oui</label>
+      <label class="radio-spacing"><input type="radio" name="catAq5f" value="Non"> Non</label>
+      <label class="radio-spacing"><input type="radio" name="catAq5f" value="Inconnu"> Inconnu</label>
+      <label class="radio-spacing"><input type="radio" name="catAq5f" value="Sans objet"> Sans objet</label>
+    </div>
+  </details>
+
 </section>
+
 
 <!-- ========= B ======================================================= -->
 <section id="stepB" class="panel panel-default">
