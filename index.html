@@ -902,19 +902,19 @@
 
 <hr class="brdr-bttm mrgn-tp-xl">
 
-<section id="risk-summary" class="panel panel-default">
+<!-- ===== Risk Summary Section (Bilingual) ===== -->
+<section id="rrit-summary" class="panel panel-default hidden">
   <header class="panel-heading">
     <h2 class="panel-title" data-lang="en">Risk Profile Summary</h2>
     <h2 class="panel-title hidden" data-lang="fr">Résumé du profil de risque</h2>
   </header>
   <div class="panel-body">
-    <p data-lang="en">After answering the questions, click below to generate a summary by category.</p>
+    <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
+    <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
 
-    <button class="btn btn-primary" onclick="generateRiskSummary()">Generate Summary</button>
-
-    <div id="riskSummaryTable" class="table-responsive mrgn-tp-lg hidden" aria-hidden="true">
-      <table class="table table-bordered table-striped">
+    <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th data-lang="en">Category</th>
@@ -925,77 +925,78 @@
             <th data-lang="fr" class="hidden">Statut de risque</th>
           </tr>
         </thead>
-        <tbody id="riskSummaryBody">
-          <!-- Summary rows will be added here -->
-        </tbody>
+        <tbody id="summaryTableBody"></tbody>
       </table>
     </div>
   </div>
 </section>
 
 <script>
-function generateRiskSummary() {
-  const summary = [
-    { id: 'A', name: 'Regulatory Compliance (Mandatory)' },
-    { id: 'B', name: 'Data Security and Privacy (Mandatory)' },
-    { id: 'C', name: 'HR Technology / Integration' },
-    { id: 'D', name: 'User Adoption and Training' },
-    { id: 'E', name: 'Cost-Benefit Analysis' },
-    { id: 'F', name: 'Vendor Reliability and Support' },
-    { id: 'G', name: 'Workforce Planning and Development' },
-    { id: 'H', name: 'Employee Engagement and Culture Change' },
-    { id: 'I', name: 'Diversity and Inclusion Programs' },
-    { id: 'J', name: 'Organizational Restructuring' },
-    { id: 'K', name: 'Policy Development and Implementation' }
-  ];
+function generateSummary() {
+  // Define bilingual labels
+  const categories = {
+    A: { en: "Regulatory Compliance (Mandatory)", fr: "Conformité réglementaire (Obligatoire)" },
+    B: { en: "Data Security and Privacy (Mandatory)", fr: "Sécurité des données et confidentialité (Obligatoire)" },
+    C: { en: "HR Technology / Integration", fr: "Technologie RH / Intégration" },
+    D: { en: "User Adoption and Training", fr: "Adoption et formation des utilisateurs" },
+    E: { en: "Cost-Benefit Analysis", fr: "Analyse coûts-avantages" },
+    F: { en: "Vendor Reliability and Support", fr: "Fiabilité et soutien du fournisseur" },
+    G: { en: "Workforce Planning and Development", fr: "Planification et développement de la main-d'œuvre" },
+    H: { en: "Employee Engagement and Culture Change", fr: "Mobilisation des employés et changement de culture" },
+    I: { en: "Diversity and Inclusion Programs", fr: "Programmes de diversité et d'inclusion" },
+    J: { en: "Organizational Restructuring", fr: "Restructuration organisationnelle" },
+    K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
+  };
 
-  const scoreMap = {}; // Category => Score (higher = worse)
-  const riskMap = {};  // Category => Risk Status (text + color)
+  const riskLabels = {
+    high: { en: "Requires Risk Mitigation", fr: "Requiert une atténuation des risques" },
+    medium: { en: "Further research required", fr: "Recherche supplémentaire requise" },
+    low: { en: "Risks Mitigated / N/A", fr: "Risques atténués / N/A" }
+  };
 
-  // Initialize scores
-  summary.forEach(cat => {
-    scoreMap[cat.id] = 0;
-  });
+  // Determine current language
+  const lang = currentLang || "en";
 
-  // Count "No" = +3 points, "Unknown" = +2 points
-  document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
-    const name = input.name;
-    const value = input.value;
-    const cat = name.substring(3, 4); // like A, B, C, etc.
+  const summaryBody = document.getElementById('summaryTableBody');
+  summaryBody.innerHTML = ""; // clear any previous
 
-    if (value === 'No' || value === 'Non') scoreMap[cat] += 3;
-    if (value === 'Unknown' || value === 'Inconnu') scoreMap[cat] += 2;
-  });
+  const categoryKeys = Object.keys(categories);
 
-  // Determine risk levels
-  for (const cat in scoreMap) {
-    if (scoreMap[cat] >= 3) {
-      riskMap[cat] = { label: "Requires Risk Mitigation", color: "danger" }; // Red
-    } else if (scoreMap[cat] > 0) {
-      riskMap[cat] = { label: "Further research required", color: "warning" }; // Yellow
+  categoryKeys.forEach(cat => {
+    let score = 0;
+
+    // Count "No" and "Unknown" answers for each category
+    document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
+      if (input.value === "No" || input.value === "Unknown") score++;
+    });
+    document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
+      if (input.value === "Non" || input.value === "Inconnu") score++;
+    });
+
+    // Determine risk level
+    let riskStatus = "";
+    let color = "";
+    if (score >= 3) {
+      riskStatus = riskLabels.high[lang];
+      color = "#f8d7da"; // light red
+    } else if (score === 2) {
+      riskStatus = riskLabels.medium[lang];
+      color = "#fff3cd"; // light yellow
     } else {
-      riskMap[cat] = { label: "Risks Mitigated / N/A", color: "success" }; // Green
+      riskStatus = riskLabels.low[lang];
+      color = "#d4edda"; // light green
     }
-  }
 
-  // Fill the table
-  const tbody = document.getElementById('riskSummaryBody');
-  tbody.innerHTML = ""; // clear previous
-
-  summary.forEach(cat => {
-    const score = scoreMap[cat.id];
-    const risk = riskMap[cat.id];
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${cat.name}</td>
+    const row = `<tr>
+      <td>${categories[cat][lang]}</td>
       <td>${score}</td>
-      <td><span class="label label-${risk.color}">${risk.label}</span></td>
-    `;
-    tbody.appendChild(tr);
+      <td style="background-color: ${color}; font-weight: bold;">${riskStatus}</td>
+    </tr>`;
+
+    summaryBody.insertAdjacentHTML('beforeend', row);
   });
 
-  document.getElementById('riskSummaryTable').classList.remove('hidden');
-  document.getElementById('riskSummaryTable').setAttribute('aria-hidden', 'false');
+  document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
 </script>
   
