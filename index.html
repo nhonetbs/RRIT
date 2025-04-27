@@ -38,10 +38,57 @@
 }
 
 /* Summary Table style */
- /* Force RRIT table to use normal font size */
-  #summaryTableContainer table {
-    font-size: 1rem; /* or 1.1rem depending on what you want */
-  }
+/* ===== Risk Profile Summary Table Polished WET-BOEW Styles ===== */
+
+/* Ensure the table uses standard readable font size */
+table.table {
+  font-size: 1rem; /* Matches normal body text */
+}
+
+/* Make headers a little bolder and easier to scan */
+table.table th {
+  font-weight: 700; /* strong but still GCWeb style */
+  font-size: 1.05rem; /* slight emphasis */
+}
+
+/* Add more padding for breathing space */
+table.table th, 
+table.table td {
+  padding: 0.75rem; /* instead of default tighter padding */
+  vertical-align: middle; /* centers vertically */
+}
+
+/* Colorize risk status cells for easy scanning */
+table.table td.risk-high {
+  background-color: #f8d7da; /* light red */
+  font-weight: bold;
+  color: #721c24; /* dark red text */
+}
+
+table.table td.risk-medium {
+  background-color: #fff3cd; /* light yellow */
+  font-weight: bold;
+  color: #856404; /* dark yellow text */
+}
+
+table.table td.risk-low {
+  background-color: #d4edda; /* light green */
+  font-weight: bold;
+  color: #155724; /* dark green text */
+}
+
+/* Optional: Give the whole table a soft border and slight rounding */
+table.table {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  overflow: hidden; /* needed for border-radius to clip */
+}
+
+/* Optional: Add slight background color to header for clarity */
+table.table thead {
+  background-color: #f1f1f1;
+}
+</style>
 </style>
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
