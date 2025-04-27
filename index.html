@@ -900,6 +900,75 @@
 
 </section>
 
+<!-- ===== Risk Summary ===== -->
+<section class="panel panel-default">
+  <header class="panel-heading">
+    <h2 class="panel-title">Risk Profile Summary</h2>
+  </header>
+  <div class="panel-body">
+
+    <button class="btn btn-primary" onclick="generateRiskSummary()">Generate Summary</button>
+
+    <div id="risk-summary-table" class="mrgn-tp-lg hidden">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Risk Score</th>
+            <th>Risk Status</th>
+          </tr>
+        </thead>
+        <tbody id="risk-summary-body">
+          <!-- Risk results will go here -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<script>
+// Risk calculation logic (Mini version)
+function generateRiskSummary() {
+  const categories = [
+    { id: 'A', name: 'Regulatory Compliance (Mandatory)' },
+    { id: 'B', name: 'Data Security and Privacy (Mandatory)' },
+    { id: 'C', name: 'HR Technology / Integration' }
+    // 👉 Add more categories (D–K) later
+  ];
+
+  let summaryHtml = '';
+
+  categories.forEach(cat => {
+    let radios = document.querySelectorAll(`input[name^="cat${cat.id}q"]:checked`);
+    let riskPoints = 0;
+
+    radios.forEach(radio => {
+      if (radio.value === "No" || radio.value === "Unknown") {
+        riskPoints += 1;
+      }
+    });
+
+    let status = "N/A";
+    if (riskPoints === 1) status = "Risks Mitigated";
+    else if (riskPoints === 2) status = "Further Research Required";
+    else if (riskPoints >= 3) status = "Requires Risk Mitigation";
+
+    summaryHtml += `
+      <tr>
+        <td><strong>${cat.id}</strong> ${cat.name}</td>
+        <td class="text-center">${riskPoints}</td>
+        <td>${status}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById('risk-summary-body').innerHTML = summaryHtml;
+  document.getElementById('risk-summary-table').classList.remove('hidden');
+}
+</script>
+</section>
+  
 </main></div></div>
 
 <!-- ===== Footer placeholder (optional) -->
