@@ -1026,7 +1026,13 @@ function toggleLanguage(lang) {
     el.setAttribute("aria-hidden", hide);
   });
 
-  // 💡 If the summary table is visible, regenerate it in the right language
+  // Update the Generate Summary button text bilingualy
+  const genButton = document.querySelector('button[onclick="generateSummary()"]');
+  if (genButton) {
+    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
+  }
+
+  // If the summary table is showing, regenerate it to update the language
   const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
   if (summaryVisible) {
     generateSummary();
