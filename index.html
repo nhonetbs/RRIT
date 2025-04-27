@@ -1018,13 +1018,19 @@ let currentLang = "en";
 
 /* show/hide all bilingual elements */
 function toggleLanguage(lang) {
-  currentLang = lang;                          /* remember the choice */
+  currentLang = lang; /* remember the choice */
 
   document.querySelectorAll("[data-lang]").forEach(el => {
     const hide = el.getAttribute("data-lang") !== lang;
     el.classList.toggle("hidden", hide);
     el.setAttribute("aria-hidden", hide);
   });
+
+  // 💡 If the summary table is visible, regenerate it in the right language
+  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
+  if (summaryVisible) {
+    generateSummary();
+  }
 }
 
 /* reveal the category panels the user selected in Step-0 */
