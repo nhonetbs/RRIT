@@ -900,74 +900,104 @@
 
 </section>
 
-<!-- ===== Risk Summary ===== -->
-<section class="panel panel-default">
+<hr class="brdr-bttm mrgn-tp-xl">
+
+<section id="risk-summary" class="panel panel-default">
   <header class="panel-heading">
-    <h2 class="panel-title">Risk Profile Summary</h2>
+    <h2 class="panel-title" data-lang="en">Risk Profile Summary</h2>
+    <h2 class="panel-title hidden" data-lang="fr">Résumé du profil de risque</h2>
   </header>
   <div class="panel-body">
+    <p data-lang="en">After answering the questions, click below to generate a summary by category.</p>
+    <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
 
     <button class="btn btn-primary" onclick="generateRiskSummary()">Generate Summary</button>
 
-    <div id="risk-summary-table" class="mrgn-tp-lg hidden">
-      <table class="table table-striped table-bordered">
+    <div id="riskSummaryTable" class="table-responsive mrgn-tp-lg hidden" aria-hidden="true">
+      <table class="table table-bordered table-striped">
         <thead>
           <tr>
-            <th>Category</th>
-            <th>Risk Score</th>
-            <th>Risk Status</th>
+            <th data-lang="en">Category</th>
+            <th data-lang="fr" class="hidden">Catégorie</th>
+            <th data-lang="en">Risk Score</th>
+            <th data-lang="fr" class="hidden">Score de risque</th>
+            <th data-lang="en">Risk Status</th>
+            <th data-lang="fr" class="hidden">Statut de risque</th>
           </tr>
         </thead>
-        <tbody id="risk-summary-body">
-          <!-- Risk results will go here -->
+        <tbody id="riskSummaryBody">
+          <!-- Summary rows will be added here -->
         </tbody>
       </table>
     </div>
-
   </div>
 </section>
 
 <script>
-// Risk calculation logic (Mini version)
 function generateRiskSummary() {
-  const categories = [
+  const summary = [
     { id: 'A', name: 'Regulatory Compliance (Mandatory)' },
     { id: 'B', name: 'Data Security and Privacy (Mandatory)' },
-    { id: 'C', name: 'HR Technology / Integration' }
-    // 👉 Add more categories (D–K) later
+    { id: 'C', name: 'HR Technology / Integration' },
+    { id: 'D', name: 'User Adoption and Training' },
+    { id: 'E', name: 'Cost-Benefit Analysis' },
+    { id: 'F', name: 'Vendor Reliability and Support' },
+    { id: 'G', name: 'Workforce Planning and Development' },
+    { id: 'H', name: 'Employee Engagement and Culture Change' },
+    { id: 'I', name: 'Diversity and Inclusion Programs' },
+    { id: 'J', name: 'Organizational Restructuring' },
+    { id: 'K', name: 'Policy Development and Implementation' }
   ];
 
-  let summaryHtml = '';
+  const scoreMap = {}; // Category => Score (higher = worse)
+  const riskMap = {};  // Category => Risk Status (text + color)
 
-  categories.forEach(cat => {
-    let radios = document.querySelectorAll(`input[name^="cat${cat.id}q"]:checked`);
-    let riskPoints = 0;
-
-    radios.forEach(radio => {
-      if (radio.value === "No" || radio.value === "Unknown") {
-        riskPoints += 1;
-      }
-    });
-
-    let status = "N/A";
-    if (riskPoints === 1) status = "Risks Mitigated";
-    else if (riskPoints === 2) status = "Further Research Required";
-    else if (riskPoints >= 3) status = "Requires Risk Mitigation";
-
-    summaryHtml += `
-      <tr>
-        <td><strong>${cat.id}</strong> ${cat.name}</td>
-        <td class="text-center">${riskPoints}</td>
-        <td>${status}</td>
-      </tr>
-    `;
+  // Initialize scores
+  summary.forEach(cat => {
+    scoreMap[cat.id] = 0;
   });
 
-  document.getElementById('risk-summary-body').innerHTML = summaryHtml;
-  document.getElementById('risk-summary-table').classList.remove('hidden');
+  // Count "No" = +3 points, "Unknown" = +2 points
+  document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+    const name = input.name;
+    const value = input.value;
+    const cat = name.substring(3, 4); // like A, B, C, etc.
+
+    if (value === 'No' || value === 'Non') scoreMap[cat] += 3;
+    if (value === 'Unknown' || value === 'Inconnu') scoreMap[cat] += 2;
+  });
+
+  // Determine risk levels
+  for (const cat in scoreMap) {
+    if (scoreMap[cat] >= 3) {
+      riskMap[cat] = { label: "Requires Risk Mitigation", color: "danger" }; // Red
+    } else if (scoreMap[cat] > 0) {
+      riskMap[cat] = { label: "Further research required", color: "warning" }; // Yellow
+    } else {
+      riskMap[cat] = { label: "Risks Mitigated / N/A", color: "success" }; // Green
+    }
+  }
+
+  // Fill the table
+  const tbody = document.getElementById('riskSummaryBody');
+  tbody.innerHTML = ""; // clear previous
+
+  summary.forEach(cat => {
+    const score = scoreMap[cat.id];
+    const risk = riskMap[cat.id];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${cat.name}</td>
+      <td>${score}</td>
+      <td><span class="label label-${risk.color}">${risk.label}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('riskSummaryTable').classList.remove('hidden');
+  document.getElementById('riskSummaryTable').setAttribute('aria-hidden', 'false');
 }
 </script>
-</section>
   
 </main></div></div>
 
