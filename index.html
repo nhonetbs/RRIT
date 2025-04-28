@@ -1169,12 +1169,14 @@ function generateSummary() {
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
   //=========== Prepare Print =======================>
-  function preparePrint() {
+ function preparePrint() {
   const lang = currentLang || "en";
 
-  // Update print section contents
-  document.getElementById('printResponses').innerHTML = document.getElementById('summaryTableContainer').innerHTML;
+  // Only copy the summary once
   document.getElementById('printSummary').innerHTML = document.getElementById('summaryTableContainer').innerHTML;
+
+  // Clear printResponses (or put real question-by-question responses here later)
+  document.getElementById('printResponses').innerHTML = "";
 
   // Unhide the print container temporarily
   const printContainer = document.getElementById('printContainer');
