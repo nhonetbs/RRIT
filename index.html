@@ -96,14 +96,95 @@ table.table thead {
   body * {
     visibility: hidden;
   }
+
   #printContainer, #printContainer * {
     visibility: visible;
   }
+
   #printContainer {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hide web-specific elements */
+  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
+    display: none !important;
+  }
+
+  /* Remove margins and default padding */
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+  }
+
+  /* Risk Profile Table Enhancements */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+
+  thead {
+    background-color: #f1f1f1;
+    font-weight: bold;
+  }
+
+  /* Risk level background colors */
+  .risk-high {
+    background-color: #f8d7da !important; /* light red */
+    color: #721c24 !important;
+    font-weight: bold;
+  }
+  .risk-medium {
+    background-color: #fff3cd !important; /* light yellow */
+    color: #856404 !important;
+    font-weight: bold;
+  }
+  .risk-low {
+    background-color: #d4edda !important; /* light green */
+    color: #155724 !important;
+    font-weight: bold;
+  }
+
+  /* Border fallback if background printing is disabled */
+  tr.risk-high td {
+    border-left: 5px solid #dc3545;
+  }
+  tr.risk-medium td {
+    border-left: 5px solid #ffc107;
+  }
+  tr.risk-low td {
+    border-left: 5px solid #28a745;
+  }
+
+  /* Heading spacing */
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 16pt;
+    font-weight: bold;
+  }
+
+  /* "Generated on" footer */
+  .generated-on {
+    font-size: 10pt;
+    margin-top: 3rem;
+    text-align: right;
+    color: #666;
   }
 </style>
 
