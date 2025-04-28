@@ -997,72 +997,105 @@ table.table thead {
 </section>
 
 <script>
+// ===== CONFIGURATION BLOCK =====
+
+const questionWeights = {
+  "No": 1,
+  "Unknown": 0.5,
+  "Non": 1,           // French "No"
+  "Inconnu": 0.5      // French "Unknown"
+};
+
+const riskLabels = {
+  high: { en: "Requires Risk Mitigation", fr: "Requiert une atténuation des risques" },
+  medium: { en: "Further research required", fr: "Recherche supplémentaire requise" },
+  low: { en: "Risks Mitigated / N/A", fr: "Risques atténués / N/A" },
+  notReviewed: { en: "Not reviewed", fr: "Non examiné" }
+};
+
+const riskThresholds = {
+  high: 0.4,    // High if ≥ 40% "bad" weight
+  medium: 0.2   // Medium if ≥ 20% but < 40%
+  // Otherwise Low
+};
+
+const categories = {
+  A: { en: "Regulatory Compliance (Mandatory)", fr: "Conformité réglementaire (Obligatoire)" },
+  B: { en: "Data Security and Privacy (Mandatory)", fr: "Sécurité des données et confidentialité (Obligatoire)" },
+  C: { en: "HR Technology / Integration", fr: "Technologie RH / Intégration" },
+  D: { en: "User Adoption and Training", fr: "Adoption et formation des utilisateurs" },
+  E: { en: "Cost-Benefit Analysis", fr: "Analyse coûts-avantages" },
+  F: { en: "Vendor Reliability and Support", fr: "Fiabilité et soutien du fournisseur" },
+  G: { en: "Workforce Planning and Development", fr: "Planification et développement de la main-d'œuvre" },
+  H: { en: "Employee Engagement and Culture Change", fr: "Mobilisation des employés et changement de culture" },
+  I: { en: "Diversity and Inclusion Programs", fr: "Programmes de diversité et d'inclusion" },
+  J: { en: "Organizational Restructuring", fr: "Restructuration organisationnelle" },
+  K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
+};
+
+// ===== END CONFIGURATION =====
+
+
+// ===== generateSummary FUNCTION =====
+
 function generateSummary() {
-  const categories = {
-    A: { en: "Regulatory Compliance (Mandatory)", fr: "Conformité réglementaire (Obligatoire)" },
-    B: { en: "Data Security and Privacy (Mandatory)", fr: "Sécurité des données et confidentialité (Obligatoire)" },
-    C: { en: "HR Technology / Integration", fr: "Technologie RH / Intégration" },
-    D: { en: "User Adoption and Training", fr: "Adoption et formation des utilisateurs" },
-    E: { en: "Cost-Benefit Analysis", fr: "Analyse coûts-avantages" },
-    F: { en: "Vendor Reliability and Support", fr: "Fiabilité et soutien du fournisseur" },
-    G: { en: "Workforce Planning and Development", fr: "Planification et développement de la main-d'œuvre" },
-    H: { en: "Employee Engagement and Culture Change", fr: "Mobilisation des employés et changement de culture" },
-    I: { en: "Diversity and Inclusion Programs", fr: "Programmes de diversité et d'inclusion" },
-    J: { en: "Organizational Restructuring", fr: "Restructuration organisationnelle" },
-    K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
-  };
-
-  const riskLabels = {
-    high: { en: "Requires Risk Mitigation", fr: "Requiert une atténuation des risques" },
-    medium: { en: "Further Research Required", fr: "Recherche supplémentaire requise" },
-    low: { en: "Risks Mitigated / N/A", fr: "Risques atténués / N/A" }
-  };
-
   const lang = currentLang || "en";
+
   const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = ""; // clear old results
+  summaryBody.innerHTML = ""; // clear previous
 
-  Object.keys(categories).forEach(cat => {
-    let badAnswers = 0;
-    let totalQuestions = 0;
+  const categoryKeys = Object.keys(categories);
 
-    // English fields
+  categoryKeys.forEach(cat => {
+    let totalPossibleWeight = 0;
+    let accumulatedWeight = 0;
+
+    // English radio buttons
     document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-      totalQuestions++;
-      if (input.value === "No" || input.value === "Unknown") badAnswers++;
+      const value = input.value;
+      if (value in questionWeights) {
+        accumulatedWeight += questionWeights[value];
+      }
+      totalPossibleWeight += 1;
     });
 
-    // French fields
+    // French radio buttons
     document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-      totalQuestions++;
-      if (input.value === "Non" || input.value === "Inconnu") badAnswers++;
+      const value = input.value;
+      if (value in questionWeights) {
+        accumulatedWeight += questionWeights[value];
+      }
+      totalPossibleWeight += 1;
     });
-
-    if (totalQuestions === 0) return; // Skip if no answers at all
-
-    const badRatio = badAnswers / totalQuestions;
 
     let riskStatus = "";
     let riskClass = "";
 
-    if (badRatio >= 0.5) {
-      riskStatus = riskLabels.high[lang];
-      riskClass = "risk-high";
-    } else if (badRatio >= 0.3) {
-      riskStatus = riskLabels.medium[lang];
-      riskClass = "risk-medium";
+    if (totalPossibleWeight === 0) {
+      // No answers selected at all
+      riskStatus = riskLabels.notReviewed[lang];
+      riskClass = "text-muted"; // muted appearance
     } else {
-      riskStatus = riskLabels.low[lang];
-      riskClass = "risk-low";
+      const riskRatio = accumulatedWeight / totalPossibleWeight;
+
+      if (riskRatio >= riskThresholds.high) {
+        riskStatus = riskLabels.high[lang];
+        riskClass = "risk-high";
+      } else if (riskRatio >= riskThresholds.medium) {
+        riskStatus = riskLabels.medium[lang];
+        riskClass = "risk-medium";
+      } else {
+        riskStatus = riskLabels.low[lang];
+        riskClass = "risk-low";
+      }
     }
 
-    const row = `
-      <tr>
-        <td>${categories[cat][lang]}</td>
-        <td>${badAnswers} / ${totalQuestions}</td>
-        <td class="${riskClass}">${riskStatus}</td>
-      </tr>
-    `;
+    const row = `<tr class="${riskClass}">
+      <td>${categories[cat][lang]}</td>
+      <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
+      <td class="${riskClass}">${riskStatus}</td>
+    </tr>`;
+
     summaryBody.insertAdjacentHTML('beforeend', row);
   });
 
