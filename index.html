@@ -88,8 +88,25 @@ table.table {
 table.table thead {
   background-color: #f1f1f1;
 }
+
+
 </style>
 
+<style media="print">
+  body * {
+    visibility: hidden;
+  }
+  #printContainer, #printContainer * {
+    visibility: visible;
+  }
+  #printContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+</style>
+  
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
@@ -977,6 +994,7 @@ table.table thead {
     <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
     <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+    <button class="btn btn-secondary" onclick="preparePrint()">Print / Save as PDF</button>
 
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
@@ -994,6 +1012,17 @@ table.table thead {
       </table>
     </div>
   </div>
+  <div id="printContainer" class="hidden" style="margin-top:2rem;">
+  <h2 data-lang="en">Risk Assessment Details</h2>
+  <h2 data-lang="fr" class="hidden">Détails de l’évaluation des risques</h2>
+
+  <div id="printResponses"></div>
+
+  <h2 data-lang="en" style="margin-top:2rem;">Risk Profile Summary</h2>
+  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Résumé du profil de risque</h2>
+
+  <div id="printSummary"></div>
+</div>
 </section>
 
 <script>
@@ -1101,6 +1130,7 @@ function generateSummary() {
 
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
+  //=========== Prepare Print =======================>
 </script>
   
 </main></div></div>
