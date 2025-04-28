@@ -1111,26 +1111,32 @@ function generateSummary() {
   const summaryBody = document.getElementById('summaryTableBody');
   summaryBody.innerHTML = ""; // clear previous
 
+  const printResponses = []; // <-- NEW: Array to collect responses for printing
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
     let totalPossibleWeight = 0;
     let accumulatedWeight = 0;
+    let questions = [];
 
-    // English radio buttons
+    // English responses
     document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-      const value = input.value;
-      if (value in questionWeights) {
-        accumulatedWeight += questionWeights[value];
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) {
+        accumulatedWeight += questionWeights[answer];
       }
       totalPossibleWeight += 1;
     });
 
-    // French radio buttons
+    // French responses
     document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-      const value = input.value;
-      if (value in questionWeights) {
-        accumulatedWeight += questionWeights[value];
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) {
+        accumulatedWeight += questionWeights[answer];
       }
       totalPossibleWeight += 1;
     });
@@ -1139,12 +1145,10 @@ function generateSummary() {
     let riskClass = "";
 
     if (totalPossibleWeight === 0) {
-      // No answers selected at all
       riskStatus = riskLabels.notReviewed[lang];
-      riskClass = "text-muted"; // muted appearance
+      riskClass = "text-muted";
     } else {
       const riskRatio = accumulatedWeight / totalPossibleWeight;
-
       if (riskRatio >= riskThresholds.high) {
         riskStatus = riskLabels.high[lang];
         riskClass = "risk-high";
@@ -1157,6 +1161,7 @@ function generateSummary() {
       }
     }
 
+    // Create Risk Summary Row
     const row = `<tr class="${riskClass}">
       <td>${categories[cat][lang]}</td>
       <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
@@ -1164,7 +1169,18 @@ function generateSummary() {
     </tr>`;
 
     summaryBody.insertAdjacentHTML('beforeend', row);
+
+    // Save detailed responses if user reviewed this category
+    if (questions.length > 0) {
+      printResponses.push({
+        category: categories[cat][lang],
+        questions: questions
+      });
+    }
   });
+
+  // Save the collected responses in a global variable for printing
+  window.collectedResponses = printResponses;
 
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
