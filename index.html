@@ -1131,6 +1131,24 @@ function generateSummary() {
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
   //=========== Prepare Print =======================>
+  function preparePrint() {
+  const lang = currentLang || "en";
+
+  // Update print section contents
+  document.getElementById('printResponses').innerHTML = document.getElementById('summaryTableContainer').innerHTML;
+  document.getElementById('printSummary').innerHTML = document.getElementById('summaryTableContainer').innerHTML;
+
+  // Unhide the print container temporarily
+  const printContainer = document.getElementById('printContainer');
+  printContainer.classList.remove('hidden');
+
+  window.print(); // Open print dialog
+
+  // Re-hide the print container after printing
+  setTimeout(() => {
+    printContainer.classList.add('hidden');
+  }, 1000);
+}
 </script>
   
 </main></div></div>
@@ -1164,6 +1182,12 @@ function toggleLanguage(lang) {
   if (genButton) {
     genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
   }
+
+  // Update the Print button bilingualy
+const printButton = document.querySelector('button[onclick="preparePrint()"]');
+if (printButton) {
+  printButton.textContent = (lang === "en") ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
+}
 
   // If the summary table is showing, regenerate it to update the language
   const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
