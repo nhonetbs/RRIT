@@ -1185,14 +1185,27 @@ function generateSummary() {
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
   //=========== Prepare Print =======================>
- function preparePrint() {
+function preparePrint() {
   const lang = currentLang || "en";
 
-  // Only copy the summary once
+  // Fill the Risk Profile Summary
   document.getElementById('printSummary').innerHTML = document.getElementById('summaryTableContainer').innerHTML;
 
-  // Clear printResponses (or put real question-by-question responses here later)
-  document.getElementById('printResponses').innerHTML = "";
+  // Build the User Responses section
+  let responsesHTML = "";
+  if (window.collectedResponses && window.collectedResponses.length > 0) {
+    window.collectedResponses.forEach(cat => {
+      responsesHTML += `<h3 style="margin-top:2rem;">${cat.category}</h3><ul>`;
+      cat.questions.forEach(q => {
+        responsesHTML += `<li><strong>${q.question}</strong><br>Answer: ${q.answer}</li>`;
+      });
+      responsesHTML += `</ul>`;
+    });
+  } else {
+    responsesHTML = `<p>${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
+  }
+
+  document.getElementById('printResponses').innerHTML = responsesHTML;
 
   // Unhide the print container temporarily
   const printContainer = document.getElementById('printContainer');
@@ -1200,7 +1213,7 @@ function generateSummary() {
 
   window.print(); // Open print dialog
 
-  // Re-hide the print container after printing
+  // Re-hide after printing
   setTimeout(() => {
     printContainer.classList.add('hidden');
   }, 1000);
