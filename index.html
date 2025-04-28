@@ -1193,16 +1193,37 @@ function preparePrint() {
 
   // Build the User Responses section
   let responsesHTML = "";
+
   if (window.collectedResponses && window.collectedResponses.length > 0) {
     window.collectedResponses.forEach(cat => {
-      responsesHTML += `<h3 style="margin-top:2rem;">${cat.category}</h3><ul>`;
+      responsesHTML += `
+        <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
+              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
       cat.questions.forEach(q => {
-        responsesHTML += `<li><strong>${q.question}</strong><br>Answer: ${q.answer}</li>`;
+        responsesHTML += `
+          <tr>
+            <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
+            <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
+          </tr>
+        `;
       });
-      responsesHTML += `</ul>`;
+
+      responsesHTML += `
+          </tbody>
+        </table>
+      `;
     });
   } else {
-    responsesHTML = `<p>${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
+    responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
   }
 
   document.getElementById('printResponses').innerHTML = responsesHTML;
