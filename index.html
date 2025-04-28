@@ -1235,7 +1235,18 @@ function preparePrint() {
     <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
     ${responsesHTML}
   `;
+  // 3b. Add Generated on date
+  const now = new Date();
+  const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
+    dateStyle: "long",
+    timeStyle: "short"
+  });
 
+  printContainer.innerHTML += `
+    <p style="text-align:right; font-size:0.9rem; color:#666; margin-top:3rem;">
+      ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
+    </p>
+  `;
   // 4. Unhide and trigger Print
   printContainer.classList.remove('hidden');
   window.print();
