@@ -1188,10 +1188,10 @@ function generateSummary() {
 function preparePrint() {
   const lang = currentLang || "en";
 
-  // Fill the Risk Profile Summary
-  document.getElementById('printSummary').innerHTML = document.getElementById('summaryTableContainer').innerHTML;
+  // 1. Get Risk Profile Summary
+  const summaryHTML = document.getElementById('summaryTableContainer').innerHTML;
 
-  // Build the User Responses section
+  // 2. Build User Responses
   let responsesHTML = "";
 
   if (window.collectedResponses && window.collectedResponses.length > 0) {
@@ -1226,15 +1226,21 @@ function preparePrint() {
     responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
   }
 
-  document.getElementById('printResponses').innerHTML = responsesHTML;
-
-  // Unhide the print container temporarily
+  // 3. Now: PrintContainer = Summary FIRST, then Responses
   const printContainer = document.getElementById('printContainer');
+  printContainer.innerHTML = `
+    <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
+    ${summaryHTML}
+
+    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
+    ${responsesHTML}
+  `;
+
+  // 4. Unhide and trigger Print
   printContainer.classList.remove('hidden');
+  window.print();
 
-  window.print(); // Open print dialog
-
-  // Re-hide after printing
+  // 5. Re-hide after printing
   setTimeout(() => {
     printContainer.classList.add('hidden');
   }, 1000);
