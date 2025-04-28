@@ -224,6 +224,46 @@ table.table thead {
     page-break-inside: avoid;
   }
 }
+
+   /* Risk Profile Summary table cleanup */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+
+  td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-weight: normal;
+  }
+
+  .risk-high {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    font-weight: bold;
+  }
+
+  .risk-medium {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    font-weight: bold;
+  }
+
+  .risk-low {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    font-weight: bold;
+  }
+
 </style>
   
 </head>
@@ -1243,12 +1283,11 @@ function generateSummary() {
     }
 
     // Create Risk Summary Row
-    const row = `<tr class="${riskClass}">
-      <td>${categories[cat][lang]}</td>
-      <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
-      <td class="${riskClass}">${riskStatus}</td>
-    </tr>`;
-
+const row = `<tr>
+  <td>${categories[cat][lang]}</td>
+  <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
+  <td class="${riskClass}">${riskStatus}</td>
+</tr>`;
     summaryBody.insertAdjacentHTML('beforeend', row);
 
     // Save detailed responses if user reviewed this category
