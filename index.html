@@ -1,215 +1,1464 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js" dir="ltr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>RRIT – Rapid Risk Identification Tool</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/wet-boew/themes-cdn@4.0.27-theme-gcweb/css/theme.min.css">
-  <style>
-    body {
-      font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- GCWeb / WET-BOEW 16.5.0 -->
+<link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
+<link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
+<style>
+  /* === SCREEN STYLES === */
+  .hidden {
+    display: none !important;
+  }
 
-    .hidden {
-      display: none !important;
-    }
+  fieldset {
+    border: 1px solid #d9d9d9;
+    padding: 1rem;
+    margin: 0 0 1rem;
+  }
 
-    fieldset {
-      border: 1px solid #d9d9d9;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
+  legend {
+    font-weight: 700;
+  }
 
-    legend {
-      font-weight: bold;
-    }
+  .rrit-status {
+    margin-top: 1rem;
+    font-weight: 700;
+  }
 
-    .rrit-responses {
-      margin-bottom: 1.5rem;
-    }
+  .radio-spacing {
+    display: inline-block;
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+  }
 
-    .radio-spacing {
-      display: inline-block;
-      margin-right: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
+  .rrit-responses {
+    margin-bottom: 1.5rem;
+  }
 
-    #summaryTableContainer table {
-      font-size: 1rem;
-      border-collapse: collapse;
-      width: 100%;
-    }
+  #summaryTableContainer table td {
+    vertical-align: middle;
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
 
-    #summaryTableContainer th,
-    #summaryTableContainer td {
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-    }
+  #summaryTableContainer table tr {
+    transition: background-color 0.3s ease;
+  }
 
-    #summaryTableContainer thead {
-      background-color: #f1f1f1;
-      font-weight: bold;
-    }
+  table.table {
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
 
-    .risk-high {
-      background-color: #f8d7da !important;
-      color: #721c24 !important;
-    }
+  table.table th {
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 0.75rem;
+    vertical-align: middle;
+    background-color: #f1f1f1;
+  }
 
-    .risk-medium {
-      background-color: #fff3cd !important;
-      color: #856404 !important;
-    }
+  table.table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+  }
 
-    .risk-low {
-      background-color: #d4edda !important;
-      color: #155724 !important;
-    }
+  table.table td.risk-high {
+    background-color: #f8d7da;
+    font-weight: bold;
+    color: #721c24;
+  }
 
-    @media print {
-      body * {
-        visibility: hidden;
-      }
+  table.table td.risk-medium {
+    background-color: #fff3cd;
+    font-weight: bold;
+    color: #856404;
+  }
 
-      #printContainer, #printContainer * {
-        visibility: visible;
-      }
+  table.table td.risk-low {
+    background-color: #d4edda;
+    font-weight: bold;
+    color: #155724;
+  }
 
-      #printContainer {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        page-break-inside: avoid;
-      }
+  .generated-on {
+    font-size: 0.875rem;
+    text-align: right;
+    color: #666;
+    margin-top: 2rem;
+  }
+</style>
 
-      header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
-        display: none !important;
-      }
+<style media="print">
+  /* === PRINT STYLES === */
 
-      html, body {
-        margin: 0;
-        padding: 0;
-        font-size: 11pt;
-        line-height: 1.4;
-        color: #000;
-      }
+  /* Hide everything initially */
+  body * {
+    display: none !important;
+  }
 
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        margin-bottom: 1rem;
-      }
+  /* Show only the print container */
+  #printContainer, #printContainer * {
+    display: block !important;
+    visibility: visible !important;
+  }
 
-      th, td {
-        border: 1px solid #ccc;
-        padding: 8px;
-        text-align: left;
-      }
+  #printContainer {
+    margin: 0;
+    padding: 0;
+    page-break-inside: avoid;
+  }
 
-      .generated-on {
-        font-size: 10pt;
-        margin-top: 2rem;
-        text-align: right;
-        color: #666;
-      }
-    }
-  </style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+  }
+
+  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
+    display: none !important;
+  }
+
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 16pt;
+    font-weight: bold;
+  }
+
+  /* Table formatting */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 11pt;
+  }
+
+  th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+
+  td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-weight: normal;
+  }
+
+  .risk-high {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    font-weight: bold;
+  }
+
+  .risk-medium {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    font-weight: bold;
+  }
+
+  .risk-low {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    font-weight: bold;
+  }
+
+  tr.risk-high td {
+    border-left: 5px solid #dc3545;
+  }
+
+  tr.risk-medium td {
+    border-left: 5px solid #ffc107;
+  }
+
+  tr.risk-low td {
+    border-left: 5px solid #28a745;
+  }
+
+  .generated-on {
+    font-size: 10pt;
+    margin-top: 3rem;
+    text-align: right;
+    color: #666;
+  }
+</style>
+
+  
 </head>
-<body>
-  <main>
-    <h1>RRIT – Rapid Risk Identification Tool</h1>
-    <p>This version is simplified for print testing only. Full functionality will be restored in production build.</p>
+<body vocab="http://schema.org/" typeof="WebPage">
 
-    <section>
-      <button onclick="generateSummary()">Generate Summary</button>
-      <button onclick="preparePrint()">Print / Save as PDF</button>
+<!-- ===== Skip links -->
+<nav id="wb-tphp"><h2 class="wb-inv">Skip links</h2><ul>
+  <li><a class="wb-inv" href="#wb-cont">Skip to main</a></li>
+</ul></nav>
+
+<!-- ===== Header -->
+<header id="wb-bnr" class="container" role="banner">
+  <div class="row">
+    <div class="brand col-xs-5 col-md-4">
+      <a href="https://www.canada.ca/en.html">
+        <img src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/sig-eng.svg" alt="Government of Canada">
+      </a>
+    </div>
+    <section id="wb-lng" class="col-xs-7 col-md-8 text-right">
+      <h2 class="wb-inv">Language selection</h2>
+      <ul class="list-inline mrgn-bttm-0">
+        <li><a href="#" lang="fr" onclick="toggleLanguage('fr');return false;">Français</a></li>
+        <li><a href="#" lang="en" onclick="toggleLanguage('en');return false;">English</a></li>
+      </ul>
     </section>
+  </div>
+</header>
 
-    <section id="summaryTableContainer" class="hidden">
-      <h2>Risk Profile Summary</h2>
-      <table>
+<!-- ===== Main -->
+<div class="container"><div class="row">
+<main id="wb-cont" role="main" class="col-xs-12">
+
+
+
+<!-- INTRO -->
+<!------- RRIT INTRO – clean version (no citations) ----->
+<section id="rrit-intro" class="panel panel-default">
+  <header class="panel-heading">
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives</h1>
+    <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
+  </header>
+
+  <div class="panel-body">
+
+    <!-- ============ English ============ -->
+    <div data-lang="en">
+      <p><strong>The RRIT is a first-pass screen to spot risks in proposed HR investments, initiatives, projects and digital solutions.</strong> It helps ensure your proposal aligns with regulatory, operational and strategic goals while mitigating potential issues early.</p>
+
+      <details class="wb-accordion">
+        <summary><strong>Purpose – Early-warning system</strong></summary>
+        <p>The tool systematically flags risks in areas such as regulatory compliance, workforce planning and technology adoption <em>before</em> you commit significant resources. Use it alongside your existing enterprise risk-management (ERM) processes for identification, assessment, response, communication and monitoring.</p>
+      </details>
+
+      <details class="wb-accordion">
+        <summary><strong>Usage – Four simple steps</strong></summary>
+        <ol class="lst-num">
+          <li><strong>Review</strong> each relevant category.</li>
+          <li><strong>Answer</strong> every question (<em>Yes / No / UNK / N A</em>).</li>
+          <li><strong>Analyse</strong> the outcome to locate high-risk areas.</li>
+          <li><strong>Decide</strong> next steps or mitigations.</li>
+        </ol>
+      </details>
+
+      <details class="wb-accordion">
+        <summary><strong>Implications of each response</strong></summary>
+        <ul>
+          <li><strong>Yes</strong> – no present risk or not applicable.</li>
+          <li><strong>No</strong> – potential risk; investigate / act.</li>
+          <li><strong>UNK</strong> – information missing; clarify.</li>
+          <li><strong>N/A</strong> – not relevant to this initiative.</li>
+        </ul>
+      </details>
+
+<details class="wb-accordion">
+  <summary><strong>Structure – 11 HR-specific categories</strong></summary>
+  <p>Categories A and B are mandatory; select any of C–K that apply.</p>
+  <ul class="lst-spcd">
+    <li><strong>A. Regulatory Compliance</strong> – Ensures HR initiatives comply with Canadian labour laws, privacy regulations (e.g. PIPEDA) and other relevant guidelines. <em>(mandatory)</em></li>
+    <li><strong>B. Data Security &amp; Privacy</strong> – Protects sensitive employee information against unauthorized access, reinforcing trust through robust data-security measures. <em>(mandatory)</em></li>
+    <li><strong>C. HR Technology / Integration</strong> – Assesses new HR technologies for integration challenges, compatibility and alignment with your digital strategy.</li>
+    <li><strong>D. User Adoption &amp; Training</strong> – Focuses on user-friendliness and training effectiveness to promote smooth transitions and broad adoption.</li>
+    <li><strong>E. Cost-Benefit Analysis</strong> – Evaluates financial implications and ROI, ensuring initiatives are cost-effective and sustainable.</li>
+    <li><strong>F. Vendor Reliability &amp; Support</strong> – Examines vendor reputation, stability and support quality for long-term service effectiveness.</li>
+    <li><strong>G. Workforce Planning &amp; Development</strong> – Aligns workforce capabilities with future needs, supporting talent-management strategies.</li>
+    <li><strong>H. Employee Engagement &amp; Culture Change</strong> – Reviews initiatives aimed at enhancing workplace culture and employee well-being.</li>
+    <li><strong>I. Diversity &amp; Inclusion Programs</strong> – Assesses the effectiveness of diversity and inclusivity strategies.</li>
+    <li><strong>J. Organizational Restructuring</strong> – Evaluates the impact of organizational changes on strategic alignment and communication.</li>
+    <li><strong>K. Policy Development &amp; Implementation</strong> – Ensures new HR policies align with goals and compliance requirements.</li>
+  </ul>
+</details>
+    </div>
+
+    <!-- ============ Français ============ -->
+    <div data-lang="fr" class="hidden" aria-hidden="true">
+      <p><strong>L’OIRR est un outil de présélection pour détecter les risques associés aux investissements, initiatives, projets et solutions numériques en RH.</strong> Il vise à assurer l’alignement de votre proposition avec les objectifs réglementaires, opérationnels et stratégiques, tout en atténuant les risques potentiels dès le départ.</p>
+
+      <details class="wb-accordion">
+        <summary><strong>Objectif – Système d’alerte précoce</strong></summary>
+        <p>L’outil signale systématiquement les risques (conformité, planification de la main-d’œuvre, adoption technologique, etc.) <em>avant</em> l’engagement de ressources importantes. Il complète vos processus existants de gestion des risques (IGR) pour l’identification, l’évaluation, la réponse, la communication et le suivi.</p>
+      </details>
+
+      <details class="wb-accordion">
+        <summary><strong>Utilisation – Quatre étapes</strong></summary>
+        <ol class="lst-num">
+          <li><strong>Examiner</strong> chaque catégorie pertinente.</li>
+          <li><strong>Répondre</strong> aux questions (<em>Oui / Non / INC / N A</em>).</li>
+          <li><strong>Analyser</strong> les résultats pour repérer les zones à haut risque.</li>
+          <li><strong>Décider</strong> des mesures ou projets subséquents.</li>
+        </ol>
+      </details>
+
+      <details class="wb-accordion">
+        <summary><strong>Implications de chaque réponse</strong></summary>
+        <ul>
+          <li><strong>Oui</strong> – aucun risque ou non pertinent.</li>
+          <li><strong>Non</strong> – risque potentiel ; enquête / action.</li>
+          <li><strong>INC</strong> – information manquante ; clarifier.</li>
+          <li><strong>N/A</strong> – hors du champ de l’initiative.</li>
+        </ul>
+      </details>
+
+    <details class="wb-accordion">
+  <summary><strong>Structure – 11 catégories RH</strong></summary>
+  <p>Les catégories A et B sont obligatoires ; sélectionnez, parmi C à K, celles qui s’appliquent.</p>
+  <ul class="lst-spcd">
+    <li><strong>A. Conformité réglementaire</strong> – Assure que les initiatives RH respectent les lois du travail canadiennes, les règlements de confidentialité (ex. LPRPDE) et autres lignes directrices pertinentes. <em>(obligatoire)</em></li>
+    <li><strong>B. Sécurité des données &amp; confidentialité</strong> – Protège les renseignements sensibles des employés contre l’accès non autorisé au moyen de mesures robustes. <em>(obligatoire)</em></li>
+    <li><strong>C. Technologie RH / Intégration</strong> – Évalue les nouvelles technologies RH pour les défis d’intégration, la compatibilité et l’alignement avec la stratégie numérique.</li>
+    <li><strong>D. Adoption et formation des utilisateurs</strong> – Se concentre sur la convivialité et l’efficacité des programmes de formation pour favoriser l’adoption.</li>
+    <li><strong>E. Analyse coûts-avantages</strong> – Analyse les implications financières et le ROI pour garantir la rentabilité et la durabilité.</li>
+    <li><strong>F. Fiabilité &amp; soutien du fournisseur</strong> – Examine la réputation, la stabilité et la qualité du support du fournisseur pour un service durable.</li>
+    <li><strong>G. Planification &amp; développement de la main-d’œuvre</strong> – Aligne les capacités de la main-d’œuvre sur les besoins futurs et appuie la gestion des talents.</li>
+    <li><strong>H. Mobilisation des employés &amp; changement de culture</strong> – Évalue les initiatives visant à améliorer la culture du lieu de travail et le bien-être.</li>
+    <li><strong>I. Programmes de diversité &amp; d’inclusion</strong> – Évalue l’efficacité des stratégies visant la diversité et l’inclusivité.</li>
+    <li><strong>J. Restructuration organisationnelle</strong> – Évalue l’impact des changements organisationnels sur l’alignement stratégique et la communication.</li>
+    <li><strong>K. Élaboration &amp; mise en œuvre des politiques</strong> – Garantit que les politiques RH sont alignées sur les objectifs et la conformité.</li>
+  </ul>
+</details>
+
+
+    </div>
+  </div>
+</section>
+<!------- end RRIT INTRO ----->
+
+
+<!-- STEP-0 ----------------------------------------------------------------->
+<section class="panel panel-default" id="step0">
+  <header class="panel-heading">
+    <h2 class="panel-title" data-lang="en">Step 0 — Select additional categories</h2>
+    <h2 class="panel-title hidden" data-lang="fr">Étape 0 — Sélection des catégories supplémentaires</h2>
+  </header>
+  <div class="panel-body">
+    <!-- EN form -->
+    <div data-lang="en">
+      <p>Categories A and B are always included.</p>
+      <form id="categoryFormEN" class="checkbox">
+        <label><input type="checkbox" value="C"> C – HR Technology / Integration</label><br>
+        <label><input type="checkbox" value="D"> D – User Adoption and Training</label><br>
+        <label><input type="checkbox" value="E"> E – Cost-Benefit Analysis</label><br>
+        <label><input type="checkbox" value="F"> F – Vendor Reliability and Support</label><br>
+        <label><input type="checkbox" value="G"> G – Workforce Planning and Development</label><br>
+        <label><input type="checkbox" value="H"> H – Employee Engagement & Culture Change</label><br>
+        <label><input type="checkbox" value="I"> I – Diversity and Inclusion Programs</label><br>
+        <label><input type="checkbox" value="J"> J – Organizational Restructuring</label><br>
+        <label><input type="checkbox" value="K"> K – Policy Development & Implementation</label><br>
+      </form>
+      <button class="btn btn-primary" onclick="collectCategories()">Continue</button>
+    </div>
+    <!-- FR form -->
+    <div data-lang="fr" class="hidden" aria-hidden="true">
+      <p>Les catégories A et B sont toujours incluses.</p>
+      <form id="categoryFormFR" class="checkbox">
+        <label><input type="checkbox" value="C"> C – Technologie RH / Intégration</label><br>
+        <label><input type="checkbox" value="D"> D – Adoption et formation des utilisateurs</label><br>
+        <label><input type="checkbox" value="E"> E – Analyse coûts-avantages</label><br>
+        <label><input type="checkbox" value="F"> F – Fiabilité et soutien du fournisseur</label><br>
+        <label><input type="checkbox" value="G"> G – Planification et développement de la main-d’œuvre</label><br>
+        <label><input type="checkbox" value="H"> H – Mobilisation des employés</label><br>
+        <label><input type="checkbox" value="I"> I – Programmes de diversité et d’inclusion</label><br>
+        <label><input type="checkbox" value="J"> J – Restructuration organisationnelle</label><br>
+        <label><input type="checkbox" value="K"> K – Élaboration et mise en œuvre des politiques</label><br>
+      </form>
+      <button class="btn btn-primary" onclick="collectCategories()">Continuer</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     CATEGORY PANELS A – K
+     C–K start with class="hidden" and are shown by collectCategories().
+     Each panel: English & French <details class="wb-accordion"> blocks.
+=======================================================================-->
+
+<!-- A ----------------------------------------------------------------->
+<section id="stepA" class="panel panel-default">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>A. Regulatory Compliance</strong> – Ensures HR initiatives comply with Canadian labour laws, privacy regulations (e.g., PIPEDA), and other relevant guidelines. <em>(mandatory)</em></summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the HR solution comply with the Policy on Privacy Protection and other pertinent privacy regulations?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catAq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catAq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catAq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Is the solution in line with Canadian labour laws, ensuring equitable treatment and non-discrimination?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catAq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catAq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catAq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>3. Does the system conform to public sector-specific guidelines for data management and employee information?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq3" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catAq3" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catAq3" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catAq3" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>4. Are proactive measures in place to maintain compliance with changing legal and regulatory frameworks?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq4" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catAq4" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catAq4" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catAq4" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>5. Is there a structured process for conducting regular compliance audits and checks?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq5" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catAq5" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catAq5" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catAq5" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>A. Conformité réglementaire</strong> – Assure que les initiatives RH respectent les lois du travail canadiennes, les règlements de confidentialité (ex. LPRPDE) et autres lignes directrices pertinentes. <em>(obligatoire)</em></summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. La solution RH est-elle conforme à la Politique sur la protection de la vie privée et aux autres réglementations pertinentes?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catAq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catAq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catAq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. La solution est-elle conforme aux lois du travail canadiennes, assurant un traitement équitable et non discriminatoire?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catAq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catAq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catAq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>3. Le système est-il conforme aux directives spécifiques au secteur public pour la gestion des données et des informations des employés?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq3f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catAq3f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catAq3f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catAq3f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>4. Des mesures proactives sont-elles en place pour maintenir la conformité aux cadres légaux et réglementaires changeants?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq4f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catAq4f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catAq4f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catAq4f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>5. Existe-t-il un processus structuré pour réaliser des audits et vérifications de conformité réguliers?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catAq5f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catAq5f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catAq5f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catAq5f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+<!-- B ----------------------------------------------------------------->
+<section id="stepB" class="panel panel-default">
+
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>B. Data Security and Privacy</strong> – Protects sensitive employee information against unauthorized access, complying with Canadian privacy laws and maintaining trust. <em>(mandatory)</em></summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the solution implement strong encryption for data both at rest and in transit?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catBq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catBq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catBq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Are effective user authentication and access control measures in place, aligning with departmental and broader enterprise security standards?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catBq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catBq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catBq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>3. Is there a comprehensive data retention and deletion policy that complies with Canadian privacy laws?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq3" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catBq3" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catBq3" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catBq3" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>4. Does the system undergo regular security audits and vulnerability assessments to identify and mitigate potential risks?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq4" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catBq4" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catBq4" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catBq4" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>5. Are there incident response plans and mechanisms for data breach notifications in line with Canadian regulations?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq5" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catBq5" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catBq5" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catBq5" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+<details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>B. Sécurité des données et confidentialité</strong> – Protège les renseignements sensibles des employés contre l’accès non autorisé et respecte les lois canadiennes sur la protection de la vie privée. <em>(obligatoire)</em></summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. La solution met-elle en œuvre un chiffrement solide des données, tant au repos qu’en transit?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catBq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catBq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catBq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Des mesures efficaces d’authentification et de contrôle d’accès sont-elles mises en place, en conformité avec les normes de sécurité ministérielles et organisationnelles?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catBq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catBq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catBq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>3. Existe-t-il une politique complète de conservation et de suppression des données conforme aux lois canadiennes sur la confidentialité?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq3f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catBq3f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catBq3f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catBq3f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>4. Le système fait-il l’objet d’audits de sécurité et d’évaluations de vulnérabilités réguliers afin d’identifier et d’atténuer les risques potentiels?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq4f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catBq4f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catBq4f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catBq4f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>5. Des plans d’intervention et des mécanismes de notification des violations de données sont-ils en place, conformément aux règlements canadiens?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catBq5f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catBq5f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catBq5f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catBq5f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- C ----------------------------------------------------------------->
+<section id="stepC" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>C. HR Technology / Integration</strong> – Evaluates HR technologies for integration challenges, compatibility, and alignment with your digital strategy, ensuring seamless adoption.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the HR solution seamlessly integrate with our IT infrastructure, meet data exchange standards, and is it compatible with critical software for easy customization?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catCq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catCq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catCq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catCq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Does the technology support our digital strategy and improve data analytics and decision-making?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catCq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catCq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catCq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catCq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>3. Is there a plan for comprehensive training and scaling, with ongoing impact monitoring and evaluation?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catCq3" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catCq3" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catCq3" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catCq3" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>C. Technologie RH / Intégration</strong> – Évalue les nouvelles technologies RH pour les défis d’intégration, la compatibilité et l’alignement avec la stratégie numérique.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. La solution RH s'intègre-t-elle de manière transparente à notre infrastructure TI, respecte-t-elle les normes d’échange de données et est-elle compatible avec les logiciels critiques pour une personnalisation facile?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catCq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catCq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catCq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catCq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. La technologie soutient-elle notre stratégie numérique et améliore-t-elle l’analyse de données et la prise de décision?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catCq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catCq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catCq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catCq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>3. Existe-t-il un plan pour une formation complète et une mise à l’échelle, avec un suivi et une évaluation continus de l’impact?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catCq3f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catCq3f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catCq3f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catCq3f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- D ----------------------------------------------------------------->
+<section id="stepD" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>D. User Adoption and Training</strong> – Focuses on the user-friendliness of HR solutions and the effectiveness of training programs, promoting smooth transitions and broad adoption.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the HR solution offer an intuitive interface, comprehensive training resources, and customization options to support user adoption and fit diverse needs?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catDq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catDq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catDq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catDq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Are the training programs comprehensive, aligned with organizational skill development goals, and supportive of all employees, including language accommodations?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catDq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catDq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catDq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catDq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>D. Adoption et formation des utilisateurs</strong> – Se concentre sur la convivialité des solutions RH et l’efficacité des programmes de formation pour favoriser l’adoption.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. La solution RH offre-t-elle une interface intuitive, des ressources de formation complètes et des options de personnalisation pour soutenir l’adoption par les utilisateurs et répondre à des besoins diversifiés?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catDq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catDq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catDq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catDq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Les programmes de formation sont-ils complets, alignés sur les objectifs de développement des compétences organisationnelles et soutiennent-ils tous les employés, y compris les adaptations linguistiques?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catDq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catDq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catDq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catDq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+  <!-- E ----------------------------------------------------------------->
+<section id="stepE" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>E. Cost-Benefit Analysis</strong> – Analyzes financial implications and return on investment, considering public sector budget constraints.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the HR solution demonstrate a clear financial advantage by improving operational efficiency, staying within budget, and offering long-term savings?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catEq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catEq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catEq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catEq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Does the HR solution provide financial advantages within budget constraints, enhance operational efficiency, and offer long-term savings?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catEq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catEq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catEq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catEq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>E. Analyse coûts-avantages</strong> – Analyse les implications financières et le rendement des investissements, en tenant compte des contraintes budgétaires du secteur public.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. La solution RH démontre-t-elle un avantage financier clair en améliorant l’efficacité opérationnelle, en respectant les limites budgétaires et en offrant des épargnes à long terme?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catEq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catEq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catEq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catEq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. La solution RH fournit-elle des avantages financiers dans le cadre des contraintes budgétaires, améliore-t-elle l’efficacité opérationnelle et offre-t-elle des épargnes à long terme?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catEq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catEq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catEq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catEq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- F ----------------------------------------------------------------->
+<section id="stepF" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>F. Vendor Reliability and Support</strong> – Evaluates vendor reputation, stability, and quality of support for sustained HR service effectiveness.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Has the vendor demonstrated long-term reliability and a positive reputation through industry reviews, client testimonials, and evidence of stability over the past three years?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catFq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catFq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catFq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catFq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Does the vendor offer effective, prompt support and maintenance services, including regular updates and improvements to their solutions?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catFq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catFq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catFq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catFq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>F. Fiabilité et support du fournisseur</strong> – Examine la réputation, la stabilité et la qualité du support du fournisseur pour un service durable.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Le fournisseur a-t-il démontré une fiabilité à long terme et une réputation positive à travers des revues de l’industrie, des témoignages de clients et des preuves de stabilité au cours des trois dernières années?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catFq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catFq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catFq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catFq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Le fournisseur offre-t-il des services de support et de maintenance efficaces et rapides, incluant des mises à jour régulières et des améliorations de leurs solutions?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catFq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catFq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catFq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catFq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+  
+<!-- G ----------------------------------------------------------------->
+<section id="stepG" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>G. Workforce Planning and Development</strong> – Aligns workforce capabilities with future organizational needs, supporting talent management strategies.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the initiative have a comprehensive workforce strategy that aligns with strategic goals, includes skill development, and incorporates a robust succession planning process to address future challenges and demographic changes?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catGq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catGq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catGq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catGq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Is there a systematic approach to assessing current workforce capabilities, identifying critical gaps, and promoting diversity and inclusion within workforce planning and development efforts?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catGq2" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catGq2" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catGq2" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catGq2" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>G. Planification et développement de la main-d’œuvre</strong> – Aligne les capacités de la main-d’œuvre sur les besoins futurs, soutenant les stratégies de gestion des talents.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. L’initiative dispose-t-elle d’une stratégie globale de main-d’œuvre alignée sur les objectifs stratégiques, incluant le développement des compétences et intégrant un processus de planification de la relève pour relever les défis futurs et les changements démographiques?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catGq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catGq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catGq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catGq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><strong>2. Existe-t-il une approche systématique pour évaluer les capacités actuelles de la main-d’œuvre, identifier les lacunes critiques et promouvoir la diversité et l’inclusion dans la planification et le développement de la main-d’œuvre?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catGq2f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catGq2f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catGq2f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catGq2f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- H ----------------------------------------------------------------->
+<section id="stepH" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>H. Employee Engagement and Culture Change</strong> – Reviews initiatives for enhancing workplace culture and employee well-being, fostering a positive environment.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the initiative cultivate a positive workplace culture by addressing well-being, encouraging feedback and participation, enhancing communication and collaboration, recognizing contributions, and supporting work-life balance?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catHq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catHq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catHq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catHq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>H. Mobilisation des employés et changement de culture</strong> – Évalue les initiatives visant à améliorer la culture du lieu de travail et le bien-être.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. L’initiative cultive-t-elle une culture de travail positive en s’adressant au bien-être, en encourageant les retours et la participation, en améliorant la communication et la collaboration, en reconnaissant les contributions et en soutenant l’équilibre entre vie professionnelle et vie privée?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catHq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catHq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catHq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catHq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- I ----------------------------------------------------------------->
+<section id="stepI" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>I. Diversity and Inclusion Programs</strong> – Assesses the effectiveness of diversity and inclusivity strategies, promoting equitable treatment and cultural competence.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the program establish clear diversity and inclusion goals, implement strategies for diverse recruitment and retention, offer inclusivity training, address unconscious bias, and regularly evaluate progress?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catIq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catIq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catIq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catIq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>I. Programmes de diversité et d’inclusion</strong> – Évalue l’efficacité des stratégies visant la diversité et l’inclusivité.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Le programme établit-il des objectifs clairs de diversité et d’inclusion, met-il en œuvre des stratégies pour un recrutement et une rétention diversifiée, offre-t-il des formations sur l’inclusivité, aborde-t-il les biais inconscients et évalue-t-il régulièrement les progrès?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catIq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catIq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catIq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catIq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- J ----------------------------------------------------------------->
+<section id="stepJ" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>J. Organizational Restructuring</strong> – Evaluates the impact of organizational changes on strategic alignment and communication.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Does the restructuring align with strategic objectives, include clear communication and transition management plans, thoroughly assess and address impacts on employee roles and workloads, and incorporate strategies to maintain or improve morale and engagement?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catJq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catJq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catJq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catJq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>J. Restructuration organisationnelle</strong> – Évalue l’impact des changements organisationnels sur l’alignement stratégique et la communication.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. La restructuration est-elle alignée sur les objectifs stratégiques, inclut-elle des plans clairs de communication et de gestion de la transition, évalue-t-elle et adresse-t-elle en profondeur les impacts sur les rôles et les charges de travail des employés, et intègre-t-elle des stratégies pour maintenir ou améliorer le moral et l’engagement?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catJq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catJq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catJq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catJq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<!-- K ----------------------------------------------------------------->
+<section id="stepK" class="panel panel-default hidden">
+
+  <!-- English -->
+  <details class="wb-accordion" data-lang="en">
+    <summary><strong>K. Policy Development and Implementation</strong> – Ensures HR policies are developed and implemented in alignment with organizational goals and compliance requirements.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Do the new policies align with strategic goals, comply with laws and standards, and have plans for communication, employee training, and monitoring effectiveness?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catKq1" value="Yes"> Yes</label>
+          <label class="radio-spacing"><input type="radio" name="catKq1" value="No"> No</label>
+          <label class="radio-spacing"><input type="radio" name="catKq1" value="Unknown"> Unknown</label>
+          <label class="radio-spacing"><input type="radio" name="catKq1" value="Not Applicable"> Not Applicable</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+  <!-- French -->
+  <details class="wb-accordion hidden" data-lang="fr" aria-hidden="true">
+    <summary><strong>K. Élaboration et mise en œuvre des politiques</strong> – Garantit que les politiques RH sont alignées sur les objectifs et la conformité.</summary>
+    <div>
+      <fieldset>
+        <legend><strong>1. Les nouvelles politiques sont-elles alignées sur les objectifs stratégiques, respectent-elles les lois et les normes, et incluent-elles des plans pour la communication, la formation des employés et le suivi de l’efficacité?</strong></legend>
+        <div class="rrit-responses">
+          <label class="radio-spacing"><input type="radio" name="catKq1f" value="Oui"> Oui</label>
+          <label class="radio-spacing"><input type="radio" name="catKq1f" value="Non"> Non</label>
+          <label class="radio-spacing"><input type="radio" name="catKq1f" value="Inconnu"> Inconnu</label>
+          <label class="radio-spacing"><input type="radio" name="catKq1f" value="Sans objet"> Sans objet</label>
+        </div>
+      </fieldset>
+    </div>
+  </details>
+
+</section>
+
+<hr class="brdr-bttm mrgn-tp-xl">
+
+
+<!-- ===== Enhanced Print Container ===== -->
+<div id="printContainer" class="hidden" style="margin-top:2rem;">
+  <h2 data-lang="en">Risk Profile Summary</h2>
+  <h2 data-lang="fr" class="hidden">Résumé du profil de risque</h2>
+  <div id="printSummary"></div>
+
+  <h2 data-lang="en" style="margin-top:2rem;">Responses by Category</h2>
+  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Réponses par catégorie</h2>
+  <div id="printResponses"></div>
+
+  <p class="generated-on" id="generatedOnNote"></p>
+</div>
+<!-- ===== Risk Summary Section (Bilingual) ===== -->
+<section id="rrit-summary" class="panel panel-default">
+  <header class="panel-heading">
+    <h2 class="panel-title" data-lang="en">Risk Profile Summary</h2>
+    <h2 class="panel-title hidden" data-lang="fr">Résumé du profil de risque</h2>
+  </header>
+  <div class="panel-body">
+    <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
+    <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
+    <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+    <button class="btn btn-secondary" onclick="preparePrint()">Print / Save as PDF</button>
+
+    <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
+      <table class="table table-striped">
         <thead>
-          <tr><th>Category</th><th>Score</th><th>Status</th></tr>
+          <tr>
+            <th data-lang="en">Category</th>
+            <th data-lang="fr" class="hidden">Catégorie</th>
+            <th data-lang="en">Risk Score</th>
+            <th data-lang="fr" class="hidden">Score de risque</th>
+            <th data-lang="en">Risk Status</th>
+            <th data-lang="fr" class="hidden">Statut de risque</th>
+          </tr>
         </thead>
-        <tbody id="summaryTableBody">
-          <tr class="risk-medium"><td>Example Category</td><td>2.5 / 5</td><td>Medium Risk</td></tr>
-        </tbody>
+        <tbody id="summaryTableBody"></tbody>
       </table>
-    </section>
+    </div>
+  </div>
+  <div id="printContainer" class="hidden" style="margin-top:2rem;">
+  <h2 data-lang="en">Risk Assessment Details</h2>
+  <h2 data-lang="fr" class="hidden">Détails de l’évaluation des risques</h2>
 
-    <section id="printContainer" class="hidden">
-      <h2>Risk Profile Summary</h2>
-      <div id="printSummary"></div>
-      <div class="generated-on">Generated on: 2025-04-29</div>
-    </section>
-  </main>
+  <div id="printResponses"></div>
 
-  <script>
-    function generateSummary() {
-      document.getElementById('summaryTableContainer').classList.remove('hidden');
-    }
+  <h2 data-lang="en" style="margin-top:2rem;">Risk Profile Summary</h2>
+  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Résumé du profil de risque</h2>
 
-    function preparePrint() {
-      const content = document.getElementById('summaryTableContainer').innerHTML;
-      document.getElementById('printSummary').innerHTML = content;
-      document.getElementById('printContainer').classList.remove('hidden');
-      window.print();
-      setTimeout(() => {
-        document.getElementById('printContainer').classList.add('hidden');
-      }, 1000);
-    }
-  </script>
+  <div id="printSummary"></div>
+</div>
+</section>
 
 <script>
-function preparePrint() {
+// ===== CONFIGURATION BLOCK =====
+
+const questionWeights = {
+  "No": 1,
+  "Unknown": 0.5,
+  "Non": 1,           // French "No"
+  "Inconnu": 0.5      // French "Unknown"
+};
+
+const riskLabels = {
+  high: { en: "Requires Risk Mitigation", fr: "Requiert une atténuation des risques" },
+  medium: { en: "Further research required", fr: "Recherche supplémentaire requise" },
+  low: { en: "Risks Mitigated / N/A", fr: "Risques atténués / N/A" },
+  notReviewed: { en: "Not reviewed", fr: "Non examiné" }
+};
+
+const riskThresholds = {
+  high: 0.4,    // High if ≥ 40% "bad" weight
+  medium: 0.2   // Medium if ≥ 20% but < 40%
+  // Otherwise Low
+};
+
+const categories = {
+  A: { en: "Regulatory Compliance (Mandatory)", fr: "Conformité réglementaire (Obligatoire)" },
+  B: { en: "Data Security and Privacy (Mandatory)", fr: "Sécurité des données et confidentialité (Obligatoire)" },
+  C: { en: "HR Technology / Integration", fr: "Technologie RH / Intégration" },
+  D: { en: "User Adoption and Training", fr: "Adoption et formation des utilisateurs" },
+  E: { en: "Cost-Benefit Analysis", fr: "Analyse coûts-avantages" },
+  F: { en: "Vendor Reliability and Support", fr: "Fiabilité et soutien du fournisseur" },
+  G: { en: "Workforce Planning and Development", fr: "Planification et développement de la main-d'œuvre" },
+  H: { en: "Employee Engagement and Culture Change", fr: "Mobilisation des employés et changement de culture" },
+  I: { en: "Diversity and Inclusion Programs", fr: "Programmes de diversité et d'inclusion" },
+  J: { en: "Organizational Restructuring", fr: "Restructuration organisationnelle" },
+  K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
+};
+
+// ===== END CONFIGURATION =====
+
+
+// ===== generateSummary FUNCTION =====
+
+function generateSummary() {
   const lang = currentLang || "en";
 
-  // Move the summary to the top of the print container
-  const printContainer = document.getElementById('printContainer');
-  const summaryHTML = document.getElementById('summaryTableContainer').innerHTML;
-  let responsesHTML = "";
+  const summaryBody = document.getElementById('summaryTableBody');
+  summaryBody.innerHTML = ""; // clear previous
 
-  // Iterate through all category sections and extract selected responses
-  document.querySelectorAll("section.panel").forEach(section => {
-    if (!section.classList.contains("hidden")) {
-      const summary = section.querySelector("summary");
-      const heading = summary ? summary.textContent.trim() : "Category";
+  const printResponses = []; // <-- NEW: Array to collect responses for printing
+  const categoryKeys = Object.keys(categories);
 
-      responsesHTML += `<h3 style='margin-top:2rem;'>${heading}</h3>`;
+  categoryKeys.forEach(cat => {
+    let totalPossibleWeight = 0;
+    let accumulatedWeight = 0;
+    let questions = [];
 
-      section.querySelectorAll("fieldset").forEach(field => {
-        const legend = field.querySelector("legend")?.textContent || "Question";
-        const selected = field.querySelector("input:checked");
-        const response = selected ? selected.value : "(no answer)";
+    // English responses
+    document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) {
+        accumulatedWeight += questionWeights[answer];
+      }
+      totalPossibleWeight += 1;
+    });
 
-        responsesHTML += `
-          <p><strong>${legend}</strong><br/>
-          Response: <em>${response}</em></p>`;
+    // French responses
+    document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) {
+        accumulatedWeight += questionWeights[answer];
+      }
+      totalPossibleWeight += 1;
+    });
+
+    let riskStatus = "";
+    let riskClass = "";
+
+    if (totalPossibleWeight === 0) {
+      riskStatus = riskLabels.notReviewed[lang];
+      riskClass = "text-muted";
+    } else {
+      const riskRatio = accumulatedWeight / totalPossibleWeight;
+      if (riskRatio >= riskThresholds.high) {
+        riskStatus = riskLabels.high[lang];
+        riskClass = "risk-high";
+      } else if (riskRatio >= riskThresholds.medium) {
+        riskStatus = riskLabels.medium[lang];
+        riskClass = "risk-medium";
+      } else {
+        riskStatus = riskLabels.low[lang];
+        riskClass = "risk-low";
+      }
+    }
+
+    // Create Risk Summary Row
+const row = `<tr>
+  <td>${categories[cat][lang]}</td>
+  <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
+  <td class="${riskClass}">${riskStatus}</td>
+</tr>`;
+    summaryBody.insertAdjacentHTML('beforeend', row);
+
+    // Save detailed responses if user reviewed this category
+    if (questions.length > 0) {
+      printResponses.push({
+        category: categories[cat][lang],
+        questions: questions
       });
     }
   });
 
-  const now = new Date().toLocaleString();
-  const generatedNote = `<p class="generated-on">Generated on: ${now}</p>`;
+  // Save the collected responses in a global variable for printing
+  window.collectedResponses = printResponses;
 
-  printContainer.innerHTML = `
-    <h2>${(lang === "en") ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    ${summaryHTML}
-    <h2 style="margin-top:3rem;">${(lang === "en") ? "Detailed Responses" : "Réponses détaillées"}</h2>
-    ${responsesHTML}
-    ${generatedNote}
-  `;
+  document.getElementById('summaryTableContainer').classList.remove('hidden');
+}
 
-  printContainer.classList.remove("hidden");
+  function buildResponsesHTML(lang) {
+  let html = "";
+
+  const categoryKeys = Object.keys(categories);
+
+  categoryKeys.forEach(cat => {
+    const section = document.getElementById("step" + cat);
+    if (!section || section.classList.contains("hidden")) return; // Only process visible categories
+
+    const title = categories[cat][lang];
+
+    html += `<h3 style="margin-top:1.5rem;">${title}</h3>`;
+
+    // Find fieldsets (each question)
+    const fieldsets = section.querySelectorAll(`fieldset`);
+
+    fieldsets.forEach(fs => {
+      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
+      let answer = "-";
+
+      // Find the checked radio input
+      const checked = fs.querySelector('input[type="radio"]:checked');
+      if (checked) {
+        answer = checked.value;
+      }
+
+      html += `<p><strong>${question}</strong><br>Response: ${answer}</p>`;
+    });
+  });
+
+  return html;
+}
+  
+  //=========== Prepare Print =======================>
+// Enhanced preparePrint()
+
+function preparePrint() {
+  const lang = currentLang || "en";
+  const summaryHTML = document.getElementById('summaryTableContainer').innerHTML;
+
+  // Clone and collect reviewed responses
+  let responseHTML = "";
+  const reviewedSections = document.querySelectorAll('section.panel:not(.hidden)');
+  reviewedSections.forEach(section => {
+    const clone = section.cloneNode(true);
+    // Only keep the visible language
+    clone.querySelectorAll('[data-lang]').forEach(el => {
+      if (el.getAttribute("data-lang") !== lang) el.remove();
+    });
+    responseHTML += clone.innerHTML;
+  });
+
+  document.getElementById('printSummary').innerHTML = summaryHTML;
+  document.getElementById('printResponses').innerHTML = responseHTML;
+
+  // Update timestamp
+  const now = new Date();
+  const formattedDate = now.toLocaleDateString(lang === "fr" ? "fr-CA" : "en-CA", {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+  document.getElementById('generatedOnNote').textContent =
+    (lang === "fr" ? "Généré le " : "Generated on ") + formattedDate;
+
+  // Show print content and trigger print
+  const printContainer = document.getElementById('printContainer');
+  printContainer.classList.remove('hidden');
   window.print();
+  setTimeout(() => printContainer.classList.add('hidden'), 1000);
+}
+
+  const lang = currentLang || "en";
+
+  // 1. Get Risk Profile Summary
+  const summaryHTML = document.getElementById('summaryTableContainer').innerHTML;
+
+  // 2. Build User Responses
+  let responsesHTML = "";
+
+  if (window.collectedResponses && window.collectedResponses.length > 0) {
+    window.collectedResponses.forEach(cat => {
+      responsesHTML += `
+        <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
+              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      cat.questions.forEach(q => {
+        responsesHTML += `
+          <tr>
+            <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
+            <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
+          </tr>
+        `;
+      });
+
+      responsesHTML += `
+          </tbody>
+        </table>
+      `;
+    });
+  } else {
+    responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
+  }
+
+  // 3. Now: PrintContainer = Summary FIRST, then Responses
+  const printContainer = document.getElementById('printContainer');
+  printContainer.innerHTML = `
+    <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
+    ${summaryHTML}
+
+    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
+    ${responsesHTML}
+  `;
+  // 3b. Add Generated on date
+  const now = new Date();
+  const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
+    dateStyle: "long",
+    timeStyle: "short"
+  });
+
+  printContainer.innerHTML += `
+    <p style="text-align:right; font-size:0.9rem; color:#666; margin-top:3rem;">
+      ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
+    </p>
+  `;
+  // 4. Unhide and trigger Print
+  printContainer.classList.remove('hidden');
+  window.print();
+
+  // 5. Re-hide after printing
   setTimeout(() => {
-    printContainer.classList.add("hidden");
-  }, 500);
+    printContainer.classList.add('hidden');
+  }, 1000);
 }
 </script>
+  
+</main></div></div>
+
+<!-- ===== Footer placeholder (optional) -->
+<footer id="wb-info"><div class="container"></div></footer>
+
+<!-- ===== GCWeb scripts -->
+<script src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/wet-boew/js/wet-boew.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/GCWeb/js/theme.min.js"></script>
+
+<!-- ===== RRIT logic -->
+<script>
+/*  ==== RRIT logic – revised (no #langSel element needed) ====  */
+
+/* keep the current language in a simple variable */
+let currentLang = "en";
+
+/* show/hide all bilingual elements */
+function toggleLanguage(lang) {
+  currentLang = lang; /* remember the choice */
+
+  document.querySelectorAll("[data-lang]").forEach(el => {
+    const hide = el.getAttribute("data-lang") !== lang;
+    el.classList.toggle("hidden", hide);
+    el.setAttribute("aria-hidden", hide);
+  });
+
+  // Update the Generate Summary button text bilingualy
+  const genButton = document.querySelector('button[onclick="generateSummary()"]');
+  if (genButton) {
+    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
+  }
+
+  // Update the Print button bilingualy
+const printButton = document.querySelector('button[onclick="preparePrint()"]');
+if (printButton) {
+  printButton.textContent = (lang === "en") ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
+}
+
+  // If the summary table is showing, regenerate it to update the language
+  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
+  if (summaryVisible) {
+    generateSummary();
+  }
+}
+
+/* reveal the category panels the user selected in Step-0 */
+function collectCategories() {
+  /* use the variable we just set instead of reading #langSel */
+  const lang   = currentLang;
+  const formId = (lang === "en") ? "categoryFormEN" : "categoryFormFR";
+
+  const chosen = [...document.querySelectorAll("#" + formId + " input:checked")]
+                 .map(cb => cb.value);
+
+  const cats = ["A", "B", ...chosen];
+  cats.forEach(c => {
+    const sec = document.getElementById("step" + c);
+    if (sec) sec.classList.remove("hidden");
+  });
+
+  document.getElementById("statusMsg").textContent =
+    (lang === "en" ? "Categories shown: " : "Catégories affichées : ") +
+    cats.join(", ");
+}
+
+/* default to English when the page loads */
+document.addEventListener("DOMContentLoaded", () => toggleLanguage("en"));
+</script>
+  <script src="gcweb/wet-boew/js/wet-boew.min.js"></script>
+<script src="gcweb/gcweb/js/theme.min.js"></script>
 </body>
 </html>
