@@ -1297,16 +1297,23 @@ const row = `<tr>
   //=========== Prepare Print =======================>
 function preparePrint() {
   const lang = currentLang || "en";
-
+  
   const summaryTable = document.getElementById('summaryTableContainer');
 
+  // First, check if the summary was generated
   if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
     alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
+  // Now safe to clear and rebuild
+  const printContainer = document.getElementById('printContainer');
+  printContainer.innerHTML = "";
+
+  // 1. Get Risk Profile Summary HTML
   const summaryHTML = summaryTable.innerHTML;
 
+  // 2. Build User Responses
   let responsesHTML = "";
 
   if (window.collectedResponses && window.collectedResponses.length > 0) {
@@ -1341,7 +1348,7 @@ function preparePrint() {
     responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
   }
 
-  const printContainer = document.getElementById('printContainer');
+  // 3. Build the full printable content
   printContainer.innerHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
     ${summaryHTML}
@@ -1350,6 +1357,7 @@ function preparePrint() {
     ${responsesHTML}
   `;
 
+  // 3b. Add a "Generated on" footer
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
@@ -1362,21 +1370,14 @@ function preparePrint() {
     </p>
   `;
 
-  // --- FINAL critical part: ---
+  // 4. Unhide and trigger the browser print
   printContainer.classList.remove('hidden');
+  window.print();
 
-  // Force reflow
-  void printContainer.offsetHeight;
-
-  // Now delay print slightly so the DOM fully updates
+  // 5. Hide again after printing
   setTimeout(() => {
-    window.print();
-
-    // After print, hide it again
-    setTimeout(() => {
-      printContainer.classList.add('hidden');
-    }, 500);
-  }, 100);
+    printContainer.classList.add('hidden');
+  }, 1000);
 }
 </script>
   
