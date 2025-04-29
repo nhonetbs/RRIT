@@ -199,6 +199,19 @@
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
+<div id="printContainer" class="hidden">
+  <h2 data-lang="en">Risk Profile Summary</h2>
+  <h2 data-lang="fr" class="hidden">Résumé du profil de risque</h2>
+  <div id="printSummary"></div>
+
+  <h2 data-lang="en" style="margin-top:2rem;">Risk Assessment Details</h2>
+  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Détails de l’évaluation des risques</h2>
+  <div id="printResponses"></div>
+
+  <div class="generated-on">Generated on: <span id="print-date"></span></div>
+</div>
+
+
 <!-- ===== Skip links -->
 <nav id="wb-tphp"><h2 class="wb-inv">Skip links</h2><ul>
   <li><a class="wb-inv" href="#wb-cont">Skip to main</a></li>
@@ -1101,18 +1114,7 @@
       </table>
     </div>
   </div>
-  <div id="printContainer" class="hidden" style="margin-top:2rem;">
-  <h2 data-lang="en">Risk Assessment Details</h2>
-  <h2 data-lang="fr" class="hidden">Détails de l’évaluation des risques</h2>
-
-  <div id="printResponses"></div>
-
-  <h2 data-lang="en" style="margin-top:2rem;">Risk Profile Summary</h2>
-  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Résumé du profil de risque</h2>
-
-  <div id="printSummary"></div>
-</div>
-</section>
+  
 
 <script>
 // ===== CONFIGURATION BLOCK =====
@@ -1333,6 +1335,7 @@ function preparePrint() {
   `;
   // 4. Unhide and trigger Print
   printContainer.classList.remove('hidden');
+  document.getElementById("print-date").textContent = new Date().toLocaleDateString();
   window.print();
 
   // 5. Re-hide after printing
