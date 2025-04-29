@@ -97,8 +97,14 @@
     margin-top: 2rem;
   }
 
-  #printContainer {
-  border: 3px solid red;
+printContainer {
+  display: block !important;
+  visibility: visible !important;
+  margin: 0;
+  padding: 0;
+  page-break-inside: avoid;
+  position: relative;
+  z-index: 9999;
 }
 </style>
 
