@@ -7,92 +7,70 @@
   <!-- GCWeb / WET-BOEW 16.5.0 -->
 <link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
 <link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
- <style>
-  .hidden { display: none !important; }
-  fieldset { border: 1px solid #d9d9d9; padding: 1rem; margin: 0 0 1rem; }
-  legend { font-weight: 700; }
-  .rrit-status { margin-top: 1rem; font-weight: 700; }
+<style>
 
-  /* NEW: extra space between radio button responses */
+/* Base screen styles */
+.hidden { display: none !important; }
+fieldset { border: 1px solid #d9d9d9; padding: 1rem; margin: 0 0 1rem; }
+legend { font-weight: 700; }
+.rrit-status { margin-top: 1rem; font-weight: 700; }
+
 .radio-spacing {
   display: inline-block;
-  margin-right: 1.5rem; /* or 2rem if you want even more space between them */
+  margin-right: 1.5rem;
   margin-bottom: 0.5rem;
   font-weight: normal;
 }
-     /* NEW for grouping radio buttons under questions */
-  .rrit-responses {
-    margin-bottom: 1.5rem; /* adds nice space below each question group */
-  }
 
-/* Make risk summary table rows softer */
-#summaryTableContainer table td {
-  vertical-align: middle;
-  font-size: 1rem;
-  padding: 0.75rem;
+.rrit-responses {
+  margin-bottom: 1.5rem;
 }
 
-/* Smooth background-color transition when switching language */
+/* Risk Summary Table for Screen */
+#summaryTableContainer table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1rem;
+}
+
+#summaryTableContainer th,
+#summaryTableContainer td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+}
+
+#summaryTableContainer thead {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.risk-high {
+  background-color: #f8d7da;
+  color: #721c24;
+  font-weight: bold;
+}
+
+.risk-medium {
+  background-color: #fff3cd;
+  color: #856404;
+  font-weight: bold;
+}
+
+.risk-low {
+  background-color: #d4edda;
+  color: #155724;
+  font-weight: bold;
+}
+
+/* Transition for switching language views */
 #summaryTableContainer table tr {
   transition: background-color 0.3s ease;
 }
 
-/* Summary Table style */
-/* ===== Risk Profile Summary Table Polished WET-BOEW Styles ===== */
+/* PRINT STYLES */
+@media print {
 
-/* Ensure the table uses standard readable font size */
-table.table {
-  font-size: 2rem; /* Matches normal body text */
-}
-
-/* Make headers a little bolder and easier to scan */
-table.table th {
-  font-weight: 700; /* strong but still GCWeb style */
-  font-size: 1.05rem; /* slight emphasis */
-}
-
-/* Add more padding for breathing space */
-table.table th, 
-table.table td {
-  padding: 0.75rem; /* instead of default tighter padding */
-  vertical-align: middle; /* centers vertically */
-}
-
-/* Colorize risk status cells for easy scanning */
-table.table td.risk-high {
-  background-color: #f8d7da; /* light red */
-  font-weight: bold;
-  color: #721c24; /* dark red text */
-}
-
-table.table td.risk-medium {
-  background-color: #fff3cd; /* light yellow */
-  font-weight: bold;
-  color: #856404; /* dark yellow text */
-}
-
-table.table td.risk-low {
-  background-color: #d4edda; /* light green */
-  font-weight: bold;
-  color: #155724; /* dark green text */
-}
-
-/* Optional: Give the whole table a soft border and slight rounding */
-table.table {
-  border: 1px solid #dee2e6;
-  border-radius: 0.5rem;
-  overflow: hidden; /* needed for border-radius to clip */
-}
-
-/* Optional: Add slight background color to header for clarity */
-table.table thead {
-  background-color: #f1f1f1;
-}
-
-
-</style>
-
-<style media="print">
   body * {
     visibility: hidden;
   }
@@ -101,21 +79,10 @@ table.table thead {
     visibility: visible;
   }
 
-  #printContainer {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Hide web-specific elements */
   header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
     display: none !important;
   }
 
-  /* Remove margins and default padding */
   html, body {
     margin: 0;
     padding: 0;
@@ -125,10 +92,17 @@ table.table thead {
     color: #000;
   }
 
-  /* Risk Profile Table Enhancements */
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 14pt;
+    font-weight: bold;
+  }
+
   table {
     border-collapse: collapse;
     width: 100%;
+    font-size: 11pt;
     margin-bottom: 1rem;
   }
 
@@ -136,6 +110,7 @@ table.table thead {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
+    vertical-align: middle;
   }
 
   thead {
@@ -143,109 +118,7 @@ table.table thead {
     font-weight: bold;
   }
 
-  /* Risk level background colors */
-  .risk-high {
-    background-color: #f8d7da !important; /* light red */
-    color: #721c24 !important;
-    font-weight: bold;
-  }
-  .risk-medium {
-    background-color: #fff3cd !important; /* light yellow */
-    color: #856404 !important;
-    font-weight: bold;
-  }
-  .risk-low {
-    background-color: #d4edda !important; /* light green */
-    color: #155724 !important;
-    font-weight: bold;
-  }
-
-  /* Border fallback if background printing is disabled */
-  tr.risk-high td {
-    border-left: 5px solid #dc3545;
-  }
-  tr.risk-medium td {
-    border-left: 5px solid #ffc107;
-  }
-  tr.risk-low td {
-    border-left: 5px solid #28a745;
-  }
-
-  /* Heading spacing */
-  h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 16pt;
-    font-weight: bold;
-  }
-
-  /* "Generated on" footer */
-  .generated-on {
-    font-size: 10pt;
-    margin-top: 3rem;
-    text-align: right;
-    color: #666;
-  }
-</style>
-
-<style>
-/* Print clean-up */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-
-  #printContainer, #printContainer * {
-    visibility: visible;
-  }
-
-  #printContainer {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Hide header/footer/navbars if you have them */
-  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
-    display: none !important;
-  }
-
-  /* Remove margins and paddings that could push content */
-  html, body {
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Avoid page breaks inside important sections */
-  #printContainer {
-    page-break-inside: avoid;
-  }
-}
-
-   /* Risk Profile Summary table cleanup */
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ccc;
-  }
-
-  td {
-    padding: 8px;
-    border: 1px solid #ccc;
-    font-weight: normal;
-  }
-
+  /* Risk level colors for print */
   .risk-high {
     background-color: #f8d7da !important;
     color: #721c24 !important;
@@ -263,6 +136,24 @@ table.table thead {
     color: #155724 !important;
     font-weight: bold;
   }
+
+  tr.risk-high td {
+    border-left: 5px solid #dc3545;
+  }
+  tr.risk-medium td {
+    border-left: 5px solid #ffc107;
+  }
+  tr.risk-low td {
+    border-left: 5px solid #28a745;
+  }
+
+  .generated-on {
+    font-size: 10pt;
+    margin-top: 3rem;
+    text-align: right;
+    color: #666;
+  }
+}
 
 </style>
   
