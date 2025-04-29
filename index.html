@@ -109,25 +109,29 @@ printContainer {
 </style>
 
 <style media="print">
-  /* === PRINT STYLES === */
-
   /* Hide everything initially */
- body > *:not(#printContainer) {
-  display: none !important;
-}
-
-  /* Show only the print container */
-  #printContainer * {
-    display: block !important;
-    visibility: visible !important;
+  body > *:not(#printContainer) {
+    display: none !important;
   }
 
+  /* Explicitly show print container */
   #printContainer {
+    display: block !important;
+    visibility: visible !important;
+    position: relative;
+    z-index: 9999;
     margin: 0;
     padding: 0;
     page-break-inside: avoid;
   }
 
+  /* Ensure children are visible */
+  #printContainer * {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* General page styles */
   html, body {
     margin: 0;
     padding: 0;
@@ -146,6 +150,14 @@ printContainer {
     margin-bottom: 1rem;
     font-size: 16pt;
     font-weight: bold;
+  }
+
+  h3 {
+    margin-top: 1.5rem;
+    font-size: 13pt;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.3rem;
   }
 
   /* Table formatting */
@@ -207,7 +219,6 @@ printContainer {
     color: #666;
   }
 </style>
-
   
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
