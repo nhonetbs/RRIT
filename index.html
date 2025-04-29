@@ -6,18 +6,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- GCWeb / WET-BOEW 16.5.0 -->
   <!-- place in <head> (or anywhere before wet-boew.min.js) -->
-<!-- 1) jQuery – first, blocking -->
+<!-- 1. jQuery (blocking) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<!-- 2) WET core (from the WET‐BOEW package, not GCWeb) -->
+<!-- 2. WET-BOEW core (v4.0.87) -->
 <script src="https://cdn.jsdelivr.net/gh/wet-boew/wet-boew@v4.0.87/dist/js/wet-boew.min.js"></script>
 
-<!-- 3) GCWeb theme (needs WET) -->
+<!-- 3. GCWeb theme that matches wet-boew 4.0.87 -->
 <script src="https://cdn.jsdelivr.net/gh/wet-boew/themes-dist@v4.0.87/GCWeb/js/theme.min.js"></script>
 
-<!-- 4) your own JS that calls generateSummary(), etc. -->
+<!-- 4. Your own code (after WET has created window.wb) -->
 <script src="assets/js/rrit-scripts.js"></script>
-
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/wet-boew/wet-boew@v4.0.87/dist/css/wet-boew.min.css">
 <link rel="stylesheet"
@@ -1121,10 +1120,8 @@ document.addEventListener("DOMContentLoaded",()=>toggleLanguage("en"));
 <!-- ===== Footer placeholder (optional) -->
 <footer id="wb-info"><div class="container"></div></footer>
 
-<!-- ===== GCWeb scripts -->
-<script src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/wet-boew/js/wet-boew.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/GCWeb/js/theme.min.js"></script>
 
-<script src="gcweb/gcweb/js/theme.min.js"></script>
+<!-- Your custom logic -->
+<script src="assets/js/rrit-scripts.js"></script>
 </body>
 </html>
