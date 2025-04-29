@@ -102,9 +102,9 @@
   /* === PRINT STYLES === */
 
   /* Hide everything initially */
-  body * {
-    display: none !important;
-  }
+ body > *:not(#printContainer) {
+  display: none !important;
+}
 
   /* Show only the print container */
   #printContainer, #printContainer * {
