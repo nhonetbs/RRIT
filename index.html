@@ -1276,10 +1276,18 @@ const row = `<tr>
 function preparePrint() {
   const lang = currentLang || "en";
 
-  // 1. Get Risk Profile Summary
-  const summaryHTML = document.getElementById('summaryTableContainer').innerHTML;
+  const summaryTable = document.getElementById('summaryTableContainer');
 
-  // 2. Build User Responses
+  // ✅ Step 1: Safety Check
+  if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
+    alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
+    return;
+  }
+
+  // ✅ Step 2: Get the Summary HTML
+  const summaryHTML = summaryTable.innerHTML;
+
+  // ✅ Step 3: Build Responses
   let responsesHTML = "";
 
   if (window.collectedResponses && window.collectedResponses.length > 0) {
@@ -1314,7 +1322,7 @@ function preparePrint() {
     responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
   }
 
-  // 3. Now: PrintContainer = Summary FIRST, then Responses
+  // ✅ Step 4: Assemble the Print Container
   const printContainer = document.getElementById('printContainer');
   printContainer.innerHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
@@ -1323,7 +1331,8 @@ function preparePrint() {
     <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
     ${responsesHTML}
   `;
-  // 3b. Add Generated on date
+
+  // ✅ Step 5: Add Timestamp
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
@@ -1335,11 +1344,12 @@ function preparePrint() {
       ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
     </p>
   `;
-  // 4. Unhide and trigger Print
+
+  // ✅ Step 6: Show and Print
   printContainer.classList.remove('hidden');
   window.print();
 
-  // 5. Re-hide after printing
+  // ✅ Step 7: Re-hide After Printing
   setTimeout(() => {
     printContainer.classList.add('hidden');
   }, 1000);
