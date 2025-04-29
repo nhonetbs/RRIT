@@ -1278,16 +1278,13 @@ function preparePrint() {
 
   const summaryTable = document.getElementById('summaryTableContainer');
 
-  // ✅ Step 1: Safety Check
   if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
     alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
-  // ✅ Step 2: Get the Summary HTML
   const summaryHTML = summaryTable.innerHTML;
 
-  // ✅ Step 3: Build Responses
   let responsesHTML = "";
 
   if (window.collectedResponses && window.collectedResponses.length > 0) {
@@ -1322,7 +1319,6 @@ function preparePrint() {
     responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
   }
 
-  // ✅ Step 4: Assemble the Print Container
   const printContainer = document.getElementById('printContainer');
   printContainer.innerHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
@@ -1332,7 +1328,6 @@ function preparePrint() {
     ${responsesHTML}
   `;
 
-  // ✅ Step 5: Add Timestamp
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
@@ -1345,14 +1340,21 @@ function preparePrint() {
     </p>
   `;
 
-  // ✅ Step 6: Show and Print
+  // --- FINAL critical part: ---
   printContainer.classList.remove('hidden');
-  window.print();
 
-  // ✅ Step 7: Re-hide After Printing
+  // Force reflow
+  void printContainer.offsetHeight;
+
+  // Now delay print slightly so the DOM fully updates
   setTimeout(() => {
-    printContainer.classList.add('hidden');
-  }, 1000);
+    window.print();
+
+    // After print, hide it again
+    setTimeout(() => {
+      printContainer.classList.add('hidden');
+    }, 500);
+  }, 100);
 }
 </script>
   
