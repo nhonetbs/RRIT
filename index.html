@@ -5,8 +5,12 @@
   <title>RRIT – Rapid Risk Identification Tool</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- GCWeb / WET-BOEW 16.5.0 -->
-<link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
-<link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
+
+  <link  rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
+  <script src="/RRIT/wet-boew/jquery/2.2.4/jquery.min.js"></script>  <!-- must be first -->
+  <script src="/RRIT/wet-boew/js/wet-boew.min.js"></script>
+  <script src="/RRIT/GCWeb/js/theme.min.js"></script>
+  
 <style>
   /* === SCREEN STYLES === */
   .hidden {
@@ -1410,7 +1414,6 @@ function collectCategories() {
 /* default to English when the page loads */
 document.addEventListener("DOMContentLoaded", () => toggleLanguage("en"));
 </script>
-  <script src="gcweb/wet-boew/js/wet-boew.min.js"></script>
-<script src="gcweb/gcweb/js/theme.min.js"></script>
+
 </body>
 </html>
