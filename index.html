@@ -6,11 +6,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- GCWeb / WET-BOEW 16.5.0 -->
   <!-- place in <head> (or anywhere before wet-boew.min.js) -->
+<!-- 1) jQuery – first, blocking -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<!-- WET / GCWeb core (needs jQuery above) -->
-<script defer src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/wet-boew/js/wet-boew.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/GCWeb/js/theme.min.js"></script>
+<!-- 2) WET core (from the WET‐BOEW package, not GCWeb) -->
+<script src="https://cdn.jsdelivr.net/gh/wet-boew/wet-boew@v4.0.87/dist/js/wet-boew.min.js"></script>
+
+<!-- 3) GCWeb theme (needs WET) -->
+<script src="https://cdn.jsdelivr.net/gh/wet-boew/themes-dist@v4.0.87/GCWeb/js/theme.min.js"></script>
+
+<!-- 4) your own JS that calls generateSummary(), etc. -->
+<script src="assets/js/rrit-scripts.js"></script>
+
 <link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
 <link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
 <!---styles and script updated below --->
