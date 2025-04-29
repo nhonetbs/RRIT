@@ -8,79 +8,111 @@
 <link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
 <link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
 <style>
-
-/* Base screen styles */
-.hidden { display: none !important; }
-fieldset { border: 1px solid #d9d9d9; padding: 1rem; margin: 0 0 1rem; }
-legend { font-weight: 700; }
-.rrit-status { margin-top: 1rem; font-weight: 700; }
-
-.radio-spacing {
-  display: inline-block;
-  margin-right: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: normal;
-}
-
-.rrit-responses {
-  margin-bottom: 1.5rem;
-}
-
-/* Risk Summary Table for Screen */
-#summaryTableContainer table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 1rem;
-}
-
-#summaryTableContainer th,
-#summaryTableContainer td {
-  padding: 0.75rem;
-  vertical-align: middle;
-  border: 1px solid #ccc;
-}
-
-#summaryTableContainer thead {
-  background-color: #f1f1f1;
-  font-weight: bold;
-}
-
-.risk-high {
-  background-color: #f8d7da;
-  color: #721c24;
-  font-weight: bold;
-}
-
-.risk-medium {
-  background-color: #fff3cd;
-  color: #856404;
-  font-weight: bold;
-}
-
-.risk-low {
-  background-color: #d4edda;
-  color: #155724;
-  font-weight: bold;
-}
-
-/* Transition for switching language views */
-#summaryTableContainer table tr {
-  transition: background-color 0.3s ease;
-}
-
-/* PRINT STYLES */
-@media print {
-
-  body * {
-    visibility: hidden;
-  }
-
-  #printContainer, #printContainer * {
-    visibility: visible;
-  }
-
-  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
+  /* === SCREEN STYLES === */
+  .hidden {
     display: none !important;
+  }
+
+  fieldset {
+    border: 1px solid #d9d9d9;
+    padding: 1rem;
+    margin: 0 0 1rem;
+  }
+
+  legend {
+    font-weight: 700;
+  }
+
+  .rrit-status {
+    margin-top: 1rem;
+    font-weight: 700;
+  }
+
+  .radio-spacing {
+    display: inline-block;
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+  }
+
+  .rrit-responses {
+    margin-bottom: 1.5rem;
+  }
+
+  #summaryTableContainer table td {
+    vertical-align: middle;
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  #summaryTableContainer table tr {
+    transition: background-color 0.3s ease;
+  }
+
+  table.table {
+    font-size: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  table.table th {
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 0.75rem;
+    vertical-align: middle;
+    background-color: #f1f1f1;
+  }
+
+  table.table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+  }
+
+  table.table td.risk-high {
+    background-color: #f8d7da;
+    font-weight: bold;
+    color: #721c24;
+  }
+
+  table.table td.risk-medium {
+    background-color: #fff3cd;
+    font-weight: bold;
+    color: #856404;
+  }
+
+  table.table td.risk-low {
+    background-color: #d4edda;
+    font-weight: bold;
+    color: #155724;
+  }
+
+  .generated-on {
+    font-size: 0.875rem;
+    text-align: right;
+    color: #666;
+    margin-top: 2rem;
+  }
+</style>
+
+<style media="print">
+  /* === PRINT STYLES === */
+
+  /* Hide everything initially */
+  body * {
+    display: none !important;
+  }
+
+  /* Show only the print container */
+  #printContainer, #printContainer * {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  #printContainer {
+    margin: 0;
+    padding: 0;
+    page-break-inside: avoid;
   }
 
   html, body {
@@ -92,33 +124,39 @@ legend { font-weight: 700; }
     color: #000;
   }
 
+  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
+    display: none !important;
+  }
+
   h2 {
     margin-top: 2rem;
     margin-bottom: 1rem;
-    font-size: 14pt;
+    font-size: 16pt;
     font-weight: bold;
   }
 
+  /* Table formatting */
   table {
     border-collapse: collapse;
     width: 100%;
-    font-size: 11pt;
     margin-bottom: 1rem;
+    font-size: 11pt;
   }
 
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  thead {
+  th {
     background-color: #f1f1f1;
     font-weight: bold;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
   }
 
-  /* Risk level colors for print */
+  td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-weight: normal;
+  }
+
   .risk-high {
     background-color: #f8d7da !important;
     color: #721c24 !important;
@@ -140,9 +178,11 @@ legend { font-weight: 700; }
   tr.risk-high td {
     border-left: 5px solid #dc3545;
   }
+
   tr.risk-medium td {
     border-left: 5px solid #ffc107;
   }
+
   tr.risk-low td {
     border-left: 5px solid #28a745;
   }
@@ -153,9 +193,8 @@ legend { font-weight: 700; }
     text-align: right;
     color: #666;
   }
-}
-
 </style>
+
   
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
