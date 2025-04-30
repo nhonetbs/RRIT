@@ -97,7 +97,7 @@
     margin-top: 2rem;
   }
 
-#printContainer {
+printContainer {
   display: block !important;
   visibility: visible !important;
   margin: 0;
@@ -109,72 +109,78 @@
 }
 </style>
 
-
 <style media="print">
+  /* Hide everything initially */
   body > *:not(#printContainer) {
     display: none !important;
   }
 
-  #printContainer, #printContainer * {
+  /* Explicitly show print container */
+  #printContainer {
     display: block !important;
     visibility: visible !important;
-  }
-
-  #printContainer {
+    position: relative;
+    z-index: 9999;
     margin: 0;
     padding: 0;
     page-break-inside: avoid;
   }
 
+  /* Ensure children are visible */
+  #printContainer * {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* General page styles */
   html, body {
     margin: 0;
     padding: 0;
     font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 10pt;
+    font-size: 11pt;
     line-height: 1.4;
     color: #000;
   }
 
-  [data-lang]:not([data-lang="en"]):not(.hidden) {
+  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
     display: none !important;
   }
 
-  [data-lang="en"] {
-    display: block !important;
-  }
-
   h2 {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    font-size: 13pt;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 16pt;
     font-weight: bold;
   }
 
   h3 {
-    font-size: 11.5pt;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    font-size: 13pt;
     font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.3rem;
   }
 
+  /* Table formatting */
   table {
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 1.25rem;
-    font-size: 10pt;
+    margin-bottom: 1rem;
+    font-size: 11pt;
   }
 
   th {
     background-color: #f1f1f1;
     font-weight: bold;
-    padding: 6px 8px;
+    padding: 10px;
     text-align: left;
     border: 1px solid #ccc;
   }
 
   td {
-    padding: 6px 8px;
+    padding: 8px;
     border: 1px solid #ccc;
+    font-weight: normal;
   }
 
   .risk-high {
@@ -208,14 +214,62 @@
   }
 
   .generated-on {
+    font-size: 10pt;
+    margin-top: 3rem;
+    text-align: right;
+    color: #666;
+  }
+</style>
+  
+
+<style>
+@media print {
+  body > *:not(#printContainer) {
+    display: none !important;
+  }
+  #printContainer, #printContainer * {
+    display: block !important;
+    visibility: visible !important;
+  }
+  html, body {
+    font-size: 10pt;
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+  }
+  .risk-high {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    font-weight: bold;
+  }
+  .risk-medium {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    font-weight: bold;
+  }
+  .risk-low {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    font-weight: bold;
+  }
+  .generated-on {
     font-size: 9pt;
     margin-top: 2rem;
     text-align: right;
     color: #666;
   }
+}
 </style>
-
-  
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
@@ -1288,12 +1342,8 @@ const row = `<tr>
 
   return html;
 }
-</script>
-
   
-</main></div></div>
-<script>
-    //=========== Prepare Print =======================>
+  //=========== Prepare Print =======================>
 function preparePrint() {
   const lang = currentLang || "en";
   
@@ -1379,6 +1429,9 @@ function preparePrint() {
   }, 1000);
 }
 </script>
+  
+</main></div></div>
+
 <!-- ===== Footer placeholder (optional) -->
 <footer id="wb-info"><div class="container"></div></footer>
 
