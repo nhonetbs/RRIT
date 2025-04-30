@@ -191,4 +191,30 @@ table.table td {
 #printContainer td {
   display: table-cell;
 }
+
+    .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* <-- This is the fix */
   }
+
+  .summary-table th,
+  .summary-table td {
+    display: table-cell !important; /* Force table-like rendering */
+    padding: 8px;
+    border: 1px solid #000;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .summary-table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    font-size: 11pt;
+  }
+
+  .summary-table tr {
+    page-break-inside: avoid;
+  }
+}
+  
