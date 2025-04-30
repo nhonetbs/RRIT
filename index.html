@@ -1074,91 +1074,67 @@ console.log("Generated row HTML:", row);
   //=========== Prepare Print =======================>
 function preparePrint() {
   const lang = currentLang || "en";
-  
-  const summaryTable = document.getElementById('summaryTableContainer');
 
-  // First, check if the summary was generated
-  if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
+  const summaryTableBody = document.getElementById('summaryTableBody');
+  const summaryTableContainer = document.getElementById('summaryTableContainer');
+  const printContainer = document.getElementById('printContainer');
+
+  // Check if summary exists
+  if (!summaryTableBody || summaryTableBody.innerHTML.trim() === "" || summaryTableContainer.classList.contains('hidden')) {
     alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
-  // Now safe to clear and rebuild
-  const printContainer = document.getElementById('printContainer');
+  // Clear previous print content
   printContainer.innerHTML = "";
 
-  // 1. Get Risk Profile Summary HTML
-  const summaryHTML = summaryTable.innerHTML;
-
-  // 2. Build User Responses
-  let responsesHTML = "";
-
-  if (window.collectedResponses && window.collectedResponses.length > 0) {
-    window.collectedResponses.forEach(cat => {
-      responsesHTML += `
-        <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
-        <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
-          <thead>
-            <tr>
-              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
-              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      cat.questions.forEach(q => {
-        responsesHTML += `
-          <tr>
-            <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
-            <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
-          </tr>
-        `;
-      });
-
-      responsesHTML += `
-          </tbody>
-        </table>
-      `;
-    });
-  } else {
-    responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
-  }
-
-  // 3. Build the full printable content
-  printContainer.innerHTML = `
+  // === Reconstruct the Risk Profile Summary Table ===
+  const summaryHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    ${summaryHTML}
-
-    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
-    ${responsesHTML}
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>${lang === "en" ? "Category" : "Catégorie"}</th>
+          <th>${lang === "en" ? "Risk Score" : "Score de risque"}</th>
+          <th>${lang === "en" ? "Risk Status" : "Statut de risque"}</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${summaryTableBody.innerHTML}
+      </tbody>
+    </table>
   `;
 
-  // 3b. Add a "Generated on" footer
+  // === Build User Responses Section ===
+  const responsesHTML = buildResponsesHTML(lang);
+
+  // === Add Timestamp ===
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
     timeStyle: "short"
   });
 
-  printContainer.innerHTML += `
-    <p style="text-align:right; font-size:0.9rem; color:#666; margin-top:3rem;">
-      ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
-    </p>
+  const footerHTML = `
+    <p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>
   `;
 
-  // 4. Unhide and trigger the browser print
-printContainer.classList.remove('hidden');
+  // === Combine all into the print container ===
+  printContainer.innerHTML = `
+    ${summaryHTML}
+    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
+    ${responsesHTML}
+    ${footerHTML}
+  `;
 
-// Force browser layout update before printing
-setTimeout(() => {
-  window.print();
-
-  // Hide after print
+  // === Trigger print ===
+  printContainer.classList.remove('hidden');
   setTimeout(() => {
-    printContainer.classList.add('hidden');
-  }, 1000);
-}, 100); // 100ms delay to ensure DOM update
+    window.print();
+    setTimeout(() => {
+      printContainer.classList.add('hidden');
+    }, 1000);
+  }, 100); // Allow DOM to update before print
 }
 </script>
   
