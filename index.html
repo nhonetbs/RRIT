@@ -111,9 +111,15 @@ printContainer {
 
 <style media="print">
   /* Hide everything initially */
-  body > *:not(#printContainer) {
-    display: none !important;
-  }
+ body * {
+  display: none !important;
+}
+
+#printContainer,
+#printContainer * {
+  display: block !important;
+  visibility: visible !important;
+}
 
   /* Explicitly show print container */
   #printContainer {
