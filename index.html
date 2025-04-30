@@ -1055,6 +1055,7 @@ function generateSummary() {
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
+    console.log(`Processing category: ${cat}`);
     const section = document.getElementById("step" + cat);
     if (!section || section.classList.contains("hidden")) return; // Only process visible categories
 
