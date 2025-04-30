@@ -906,11 +906,17 @@
     <button class="btn btn-secondary" onclick="preparePrint()">Print / Save as PDF</button>
 
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
-        <table class="summary-table">
-
-        <tbody id="summaryTableBody"></tbody>
-      </table>
-    </div>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Risk Score</th>
+        <th>Risk Status</th>
+      </tr>
+    </thead>
+    <tbody id="summaryTableBody"></tbody>
+  </table>
+</div>
 
 </section>
 
