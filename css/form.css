@@ -161,3 +161,33 @@ table.table td {
     color: #666;
   }
 }
+
+<------ADDED------->
+/* Restore proper table layout for print */
+#printContainer table,
+#printContainer thead,
+#printContainer tbody,
+#printContainer tr,
+#printContainer th,
+#printContainer td {
+  display: table;
+  width: auto;
+  border-collapse: collapse;
+}
+
+#printContainer thead {
+  display: table-header-group;
+}
+
+#printContainer tbody {
+  display: table-row-group;
+}
+
+#printContainer tr {
+  display: table-row;
+}
+
+#printContainer th,
+#printContainer td {
+  display: table-cell;
+}
