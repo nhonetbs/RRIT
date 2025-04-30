@@ -267,41 +267,64 @@ h2, h3, table {
   body > *:not(#printContainer) {
     display: none !important;
   }
-  #printContainer, #printContainer * {
+
+  #printContainer,
+  #printContainer * {
     display: block !important;
     visibility: visible !important;
   }
+
   html, body {
-    font-size: 10pt;
     margin: 0;
     padding: 0;
     font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000;
   }
-  table {
-    border-collapse: collapse;
+
+  #summaryTableContainer table {
+    border-collapse: separate;
+    border: 2px solid #000;
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-spacing: 0;
   }
-  th, td {
-    border: 1px solid #ccc;
-    padding: 6px 8px;
+
+  #summaryTableContainer th {
+    font-weight: bold;
+    font-size: 12pt;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
     text-align: left;
   }
-  .risk-high {
-    background-color: #f8d7da !important;
-    color: #721c24 !important;
+
+  #summaryTableContainer td {
+    padding: 10px;
+    font-size: 11pt;
+    vertical-align: top;
+    border-bottom: 1px solid #ddd;
+  }
+
+  #summaryTableContainer td.risk-high {
+    background-color: #f8d7da;
+    color: #721c24;
     font-weight: bold;
   }
-  .risk-medium {
-    background-color: #fff3cd !important;
-    color: #856404 !important;
+
+  #summaryTableContainer td.risk-medium {
+    background-color: #fff3cd;
+    color: #856404;
     font-weight: bold;
   }
-  .risk-low {
-    background-color: #d4edda !important;
-    color: #155724 !important;
+
+  #summaryTableContainer td.risk-low {
+    background-color: #d4edda;
+    color: #155724;
     font-weight: bold;
   }
+
   .generated-on {
     font-size: 9pt;
     margin-top: 2rem;
