@@ -5,221 +5,180 @@
   <title>RRIT – Rapid Risk Identification Tool</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- GCWeb / WET-BOEW 16.5.0 -->
-
-  <link  rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
-   <link rel="stylesheet" href="/RRIT/wet-boew/css/wet-boew.min.css">
-  
-  
+<link rel="stylesheet" href="gcweb/wet-boew/css/wet-boew.min.css">
+<link rel="stylesheet" href="gcweb/gcweb/css/theme.min.css">
+<!---styles and script updated below --->
+ <!-- ===== Clean SCREEN + PRINT styles ===== -->
 <style>
-  /* === SCREEN STYLES === */
-  .hidden {
-    display: none !important;
-  }
+/* -------------  Screen ------------- */
+.hidden{display:none!important}
+fieldset{border:1px solid #d9d9d9;padding:1rem;margin:0 0 1rem}
+legend{font-weight:700}
+.radio-spacing{display:inline-block;margin:0 1.5rem 0.5rem 0}
+.rrit-responses{margin-bottom:1.5rem}
+table.table{font-size:1rem;border:1px solid #dee2e6;border-radius:.5rem;overflow:hidden}
+table.table th{background:#f1f1f1;font-weight:700;font-size:1.05rem;padding:.75rem}
+table.table td{padding:.75rem;vertical-align:middle}
+.risk-high{background:#f8d7da;color:#721c24;font-weight:bold}
+.risk-medium{background:#fff3cd;color:#856404;font-weight:bold}
+.risk-low{background:#d4edda;color:#155724;font-weight:bold}
+.generated-on{font-size:.875rem;text-align:right;color:#666;margin-top:2rem}
 
-  fieldset {
-    border: 1px solid #d9d9d9;
-    padding: 1rem;
-    margin: 0 0 1rem;
-  }
+/* -------------  Print ------------- */
+@media print{
+  /* hide everything first */
+  body *{display:none!important}
+  /* show only the container we prepared */
+  #printContainer,#printContainer *{display:block!important;visibility:visible!important}
 
-  legend {
-    font-weight: 700;
-  }
+  html,body{margin:0;padding:0;font-family:"Noto Sans","Helvetica Neue",Arial,sans-serif;font-size:11pt;line-height:1.4;color:#000}
+  h2{margin:2rem 0 1rem;font-size:16pt;font-weight:bold}
 
-  .rrit-status {
-    margin-top: 1rem;
-    font-weight: 700;
-  }
-
-  .radio-spacing {
-    display: inline-block;
-    margin-right: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: normal;
-  }
-
-  .rrit-responses {
-    margin-bottom: 1.5rem;
-  }
-
-  #summaryTableContainer table td {
-    vertical-align: middle;
-    font-size: 1rem;
-    padding: 0.75rem;
-  }
-
-  #summaryTableContainer table tr {
-    transition: background-color 0.3s ease;
-  }
-
-  table.table {
-    font-size: 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-
-  table.table th {
-    font-weight: 700;
-    font-size: 1.05rem;
-    padding: 0.75rem;
-    vertical-align: middle;
-    background-color: #f1f1f1;
-  }
-
-  table.table td {
-    padding: 0.75rem;
-    vertical-align: middle;
-  }
-
-  table.table td.risk-high {
-    background-color: #f8d7da;
-    font-weight: bold;
-    color: #721c24;
-  }
-
-  table.table td.risk-medium {
-    background-color: #fff3cd;
-    font-weight: bold;
-    color: #856404;
-  }
-
-  table.table td.risk-low {
-    background-color: #d4edda;
-    font-weight: bold;
-    color: #155724;
-  }
-
-  .generated-on {
-    font-size: 0.875rem;
-    text-align: right;
-    color: #666;
-    margin-top: 2rem;
-  }
-
-printContainer {
-  display: block !important;
-  visibility: visible !important;
-  margin: 0;
-  padding: 0;
-  page-break-inside: avoid;
-  position: relative;
-  z-index: 9999;
-  border: 2px solid red; 
+  table{width:100%;border-collapse:collapse;margin-bottom:1rem;font-size:11pt}
+  th,td{border:1px solid #ccc;padding:8px;text-align:left}
+  th{background:#f1f1f1;font-weight:bold}
+  .risk-high{background:#f8d7da!important;color:#721c24!important}
+  .risk-medium{background:#fff3cd!important;color:#856404!important}
+  .risk-low{background:#d4edda!important;color:#155724!important}
+  tr.risk-high td{border-left:5px solid #dc3545}
+  tr.risk-medium td{border-left:5px solid #ffc107}
+  tr.risk-low td{border-left:5px solid #28a745}
 }
 </style>
 
-<style media="print">
-  /* Hide everything initially */
-  body > *:not(#printContainer) {
-    display: none !important;
-  }
+<!-- ===== Clean JS ===== -->
+<script>
+/* ---------- Globals ---------- */
+let currentLang="en";
+const questionWeights={No:1,Unknown:.5,Non:1,Inconnu:.5};
+const riskLabels={
+  high:{en:"Requires Risk Mitigation",fr:"Requiert une atténuation des risques"},
+  medium:{en:"Further research required",fr:"Recherche supplémentaire requise"},
+  low:{en:"Risks Mitigated / N/A",fr:"Risques atténués / N/A"},
+  notReviewed:{en:"Not reviewed",fr:"Non examiné"}
+};
+const riskThresholds={high:.4,medium:.2};
+const categories={
+  A:{en:"Regulatory Compliance (Mandatory)",fr:"Conformité réglementaire (Obligatoire)"},
+  B:{en:"Data Security and Privacy (Mandatory)",fr:"Sécurité des données et confidentialité (Obligatoire)"},
+  C:{en:"HR Technology / Integration",fr:"Technologie RH / Intégration"},
+  D:{en:"User Adoption and Training",fr:"Adoption et formation des utilisateurs"},
+  E:{en:"Cost-Benefit Analysis",fr:"Analyse coûts-avantages"},
+  F:{en:"Vendor Reliability and Support",fr:"Fiabilité et soutien du fournisseur"},
+  G:{en:"Workforce Planning and Development",fr:"Planification et développement de la main-d’œuvre"},
+  H:{en:"Employee Engagement and Culture Change",fr:"Mobilisation des employés et changement de culture"},
+  I:{en:"Diversity and Inclusion Programs",fr:"Programmes de diversité et d’inclusion"},
+  J:{en:"Organizational Restructuring",fr:"Restructuration organisationnelle"},
+  K:{en:"Policy Development and Implementation",fr:"Élaboration et mise en œuvre des politiques"}
+};
 
-  /* Explicitly show print container */
-  #printContainer {
-    display: block !important;
-    visibility: visible !important;
-    position: relative;
-    z-index: 9999;
-    margin: 0;
-    padding: 0;
-    page-break-inside: avoid;
-  }
+/* ---------- Bilingual toggle ---------- */
+function toggleLanguage(lang){
+  currentLang=lang;
+  document.querySelectorAll("[data-lang]").forEach(el=>{
+    const show=el.getAttribute("data-lang")===lang;
+    el.classList.toggle("hidden",!show);
+    el.setAttribute("aria-hidden",!show);
+  });
+  document.querySelector('[onclick="generateSummary()"]').textContent=
+    lang==="en"?"Generate Summary":"Générer le résumé";
+  document.querySelector('[onclick="preparePrint()"]').textContent=
+    lang==="en"?"Print / Save as PDF":"Imprimer / Enregistrer en PDF";
+  if(!document.getElementById("summaryTableContainer").classList.contains("hidden")) generateSummary();
+}
 
-  /* Ensure children are visible */
-  #printContainer * {
-    display: block !important;
-    visibility: visible !important;
-  }
+/* ---------- Step-0 category reveal ---------- */
+function collectCategories(){
+  const formId=currentLang==="en"?"categoryFormEN":"categoryFormFR";
+  const chosen=[...document.querySelectorAll("#"+formId+" input:checked")].map(cb=>cb.value);
+  ["A","B",...chosen].forEach(c=>{
+    const sec=document.getElementById("step"+c);
+    if(sec) sec.classList.remove("hidden");
+  });
+}
 
-  /* General page styles */
-  html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.4;
-    color: #000;
-  }
+/* ---------- Summary generator ---------- */
+function generateSummary(){
+  const lang=currentLang;
+  const tbody=document.getElementById("summaryTableBody");
+  tbody.innerHTML="";
 
-  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
-    display: none !important;
-  }
+  window.collectedResponses=[];           // clear previous
+  Object.keys(categories).forEach(cat=>{
+    let total=0,score=0,questions=[];
 
-  h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 16pt;
-    font-weight: bold;
-  }
+    // English & French radios
+    document.querySelectorAll(`input[name^="cat${cat}q"]:checked, input[name^="cat${cat}qf"]:checked`)
+      .forEach(inp=>{
+        const q=inp.closest("fieldset").querySelector("legend").textContent.trim();
+        const a=inp.value;
+        questions.push({q,a});
+        if(a in questionWeights) score+=questionWeights[a];
+        total++;
+      });
 
-  h3 {
-    margin-top: 1.5rem;
-    font-size: 13pt;
-    font-weight: bold;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 0.3rem;
-  }
+    /* risk level */
+    let statusClass="text-muted",status=riskLabels.notReviewed[lang];
+    if(total){
+      const ratio=score/total;
+      if(ratio>=riskThresholds.high){status="high";statusClass="risk-high";}
+      else if(ratio>=riskThresholds.medium){status="medium";statusClass="risk-medium";}
+      else{status="low";statusClass="risk-low";}
+      status=riskLabels[status][lang];
+    }
 
-  /* Table formatting */
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1rem;
-    font-size: 11pt;
-  }
+    /* row */
+    tbody.insertAdjacentHTML("beforeend",`
+      <tr>
+        <td>${categories[cat][lang]}</td>
+        <td>${total?`${score.toFixed(1)} / ${total}`:"–"}</td>
+        <td class="${statusClass}">${status}</td>
+      </tr>`);
 
-  th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ccc;
-  }
+    if(questions.length) window.collectedResponses.push({cat:categories[cat][lang],questions});
+  });
 
-  td {
-    padding: 8px;
-    border: 1px solid #ccc;
-    font-weight: normal;
-  }
+  document.getElementById("summaryTableContainer").classList.remove("hidden");
+}
 
-  .risk-high {
-    background-color: #f8d7da !important;
-    color: #721c24 !important;
-    font-weight: bold;
-  }
+/* ---------- Print builder ---------- */
+function preparePrint(){
+  const lang=currentLang;
 
-  .risk-medium {
-    background-color: #fff3cd !important;
-    color: #856404 !important;
-    font-weight: bold;
-  }
+  /* 1. Summary (already generated) */
+  document.getElementById("printSummary").innerHTML=
+    document.getElementById("summaryTableContainer").innerHTML;
 
-  .risk-low {
-    background-color: #d4edda !important;
-    color: #155724 !important;
-    font-weight: bold;
-  }
+  /* 2. Detailed Q&A */
+  const respDiv=document.getElementById("printResponses");
+  respDiv.innerHTML="";
+  window.collectedResponses.forEach(sec=>{
+    let qRows=sec.questions.map(({q,a})=>`
+      <tr><td>${q}</td><td>${a}</td></tr>`).join("");
+    respDiv.insertAdjacentHTML("beforeend",`
+      <h3 style="margin-top:1.5rem;">${sec.cat}</h3>
+      <table><thead><tr>
+        <th>${lang==="en"?"Question":"Question"}</th>
+        <th>${lang==="en"?"Answer":"Réponse"}</th>
+      </tr></thead><tbody>${qRows}</tbody></table>`);
+  });
 
-  tr.risk-high td {
-    border-left: 5px solid #dc3545;
-  }
+  /* 3. Timestamp */
+  document.getElementById("generatedOnNote").textContent=
+    (lang==="en"?"Generated on ":"Généré le ")+
+    new Date().toLocaleDateString(lang==="fr"?"fr-CA":"en-CA",{year:"numeric",month:"long",day:"numeric"});
 
-  tr.risk-medium td {
-    border-left: 5px solid #ffc107;
-  }
+  /* 4. Show & print */
+  const pc=document.getElementById("printContainer");
+  pc.classList.remove("hidden");
+  window.print();
+  /* 5. Always hide afterwards (even if print cancelled) */
+  pc.classList.add("hidden");
+}
 
-  tr.risk-low td {
-    border-left: 5px solid #28a745;
-  }
-
-  .generated-on {
-    font-size: 10pt;
-    margin-top: 3rem;
-    text-align: right;
-    color: #666;
-  }
-</style>
+/* ---------- Init ---------- */
+document.addEventListener("DOMContentLoaded",()=>toggleLanguage("en"));
+</script> 
   
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
@@ -404,7 +363,6 @@ printContainer {
       </form>
       <button class="btn btn-primary" onclick="collectCategories()">Continuer</button>
     </div>
-     <p id="statusMsg" class="wb-inv"></p>
   </div>
 </section>
 
@@ -1099,6 +1057,25 @@ printContainer {
 
 <hr class="brdr-bttm mrgn-tp-xl">
 
+
+<!-- ===== Enhanced Print Container ===== -->
+
+<div id="printContainer" class="hidden" style="margin-top:2rem;">
+  <div id="printSummary"></div>
+  <div id="printResponses"></div>
+  <p id="generatedOnNote" class="generated-on"></p>
+</div>
+
+  <h2 data-lang="en">Risk Profile Summary</h2>
+  <h2 data-lang="fr" class="hidden">Résumé du profil de risque</h2>
+  <div id="printSummary"></div>
+
+  <h2 data-lang="en" style="margin-top:2rem;">Responses by Category</h2>
+  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Réponses par catégorie</h2>
+  <div id="printResponses"></div>
+
+  <p class="generated-on" id="generatedOnNote"></p>
+</div>
 <!-- ===== Risk Summary Section (Bilingual) ===== -->
 <section id="rrit-summary" class="panel panel-default">
   <header class="panel-heading">
@@ -1127,7 +1104,13 @@ printContainer {
       </table>
     </div>
   </div>
-  <div id="printContainer" class="hidden" style="margin-top:2rem;">
+  
+<div id="printContainer" class="hidden" style="margin-top:2rem;">
+  <div id="printSummary"></div>
+  <div id="printResponses"></div>
+  <p id="generatedOnNote" class="generated-on"></p>
+</div>
+
   <h2 data-lang="en">Risk Assessment Details</h2>
   <h2 data-lang="fr" class="hidden">Détails de l’évaluation des risques</h2>
 
@@ -1140,315 +1123,17 @@ printContainer {
 </div>
 </section>
 
-<script>
-// ===== CONFIGURATION BLOCK =====
-
-const questionWeights = {
-  "No": 1,
-  "Unknown": 0.5,
-  "Non": 1,           // French "No"
-  "Inconnu": 0.5      // French "Unknown"
-};
-
-const riskLabels = {
-  high: { en: "Requires Risk Mitigation", fr: "Requiert une atténuation des risques" },
-  medium: { en: "Further research required", fr: "Recherche supplémentaire requise" },
-  low: { en: "Risks Mitigated / N/A", fr: "Risques atténués / N/A" },
-  notReviewed: { en: "Not reviewed", fr: "Non examiné" }
-};
-
-const riskThresholds = {
-  high: 0.4,    // High if ≥ 40% "bad" weight
-  medium: 0.2   // Medium if ≥ 20% but < 40%
-  // Otherwise Low
-};
-
-const categories = {
-  A: { en: "Regulatory Compliance (Mandatory)", fr: "Conformité réglementaire (Obligatoire)" },
-  B: { en: "Data Security and Privacy (Mandatory)", fr: "Sécurité des données et confidentialité (Obligatoire)" },
-  C: { en: "HR Technology / Integration", fr: "Technologie RH / Intégration" },
-  D: { en: "User Adoption and Training", fr: "Adoption et formation des utilisateurs" },
-  E: { en: "Cost-Benefit Analysis", fr: "Analyse coûts-avantages" },
-  F: { en: "Vendor Reliability and Support", fr: "Fiabilité et soutien du fournisseur" },
-  G: { en: "Workforce Planning and Development", fr: "Planification et développement de la main-d'œuvre" },
-  H: { en: "Employee Engagement and Culture Change", fr: "Mobilisation des employés et changement de culture" },
-  I: { en: "Diversity and Inclusion Programs", fr: "Programmes de diversité et d'inclusion" },
-  J: { en: "Organizational Restructuring", fr: "Restructuration organisationnelle" },
-  K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
-};
-
-// ===== END CONFIGURATION =====
-
-
-// ===== generateSummary FUNCTION =====
-
-function generateSummary() {
-  const lang = currentLang || "en";
-
-  const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = ""; // clear previous
-
-  const printResponses = []; // <-- NEW: Array to collect responses for printing
-  const categoryKeys = Object.keys(categories);
-
-  categoryKeys.forEach(cat => {
-    let totalPossibleWeight = 0;
-    let accumulatedWeight = 0;
-    let questions = [];
-
-    // English responses
-    document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) {
-        accumulatedWeight += questionWeights[answer];
-      }
-      totalPossibleWeight += 1;
-    });
-
-    // French responses
-    document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) {
-        accumulatedWeight += questionWeights[answer];
-      }
-      totalPossibleWeight += 1;
-    });
-
-    let riskStatus = "";
-    let riskClass = "";
-
-    if (totalPossibleWeight === 0) {
-      riskStatus = riskLabels.notReviewed[lang];
-      riskClass = "text-muted";
-    } else {
-      const riskRatio = accumulatedWeight / totalPossibleWeight;
-      if (riskRatio >= riskThresholds.high) {
-        riskStatus = riskLabels.high[lang];
-        riskClass = "risk-high";
-      } else if (riskRatio >= riskThresholds.medium) {
-        riskStatus = riskLabels.medium[lang];
-        riskClass = "risk-medium";
-      } else {
-        riskStatus = riskLabels.low[lang];
-        riskClass = "risk-low";
-      }
-    }
-
-    // Create Risk Summary Row
-const row = `<tr>
-  <td>${categories[cat][lang]}</td>
-  <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
-  <td class="${riskClass}">${riskStatus}</td>
-</tr>`;
-    summaryBody.insertAdjacentHTML('beforeend', row);
-
-    // Save detailed responses if user reviewed this category
-    if (questions.length > 0) {
-      printResponses.push({
-        category: categories[cat][lang],
-        questions: questions
-      });
-    }
-  });
-
-  // Save the collected responses in a global variable for printing
-  window.collectedResponses = printResponses;
-
-  document.getElementById('summaryTableContainer').classList.remove('hidden');
-}
-
-  function buildResponsesHTML(lang) {
-  let html = "";
-
-  const categoryKeys = Object.keys(categories);
-
-  categoryKeys.forEach(cat => {
-    const section = document.getElementById("step" + cat);
-    if (!section || section.classList.contains("hidden")) return; // Only process visible categories
-
-    const title = categories[cat][lang];
-
-    html += `<h3 style="margin-top:1.5rem;">${title}</h3>`;
-
-    // Find fieldsets (each question)
-    const fieldsets = section.querySelectorAll(`fieldset`);
-
-    fieldsets.forEach(fs => {
-      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
-      let answer = "-";
-
-      // Find the checked radio input
-      const checked = fs.querySelector('input[type="radio"]:checked');
-      if (checked) {
-        answer = checked.value;
-      }
-
-      html += `<p><strong>${question}</strong><br>Response: ${answer}</p>`;
-    });
-  });
-
-  return html;
-}
-  
-  //=========== Prepare Print =======================>
-function preparePrint() {
-  const lang = currentLang || "en";
-  
-  const summaryTable = document.getElementById('summaryTableContainer');
-
-  // First, check if the summary was generated
-  if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
-    alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
-    return;
-  }
-
-  // Now safe to clear and rebuild
-  const printContainer = document.getElementById('printContainer');
-  printContainer.innerHTML = "";
-
-  // 1. Get Risk Profile Summary HTML
-  const summaryHTML = summaryTable.innerHTML;
-
-  // 2. Build User Responses
-  let responsesHTML = "";
-
-  if (window.collectedResponses && window.collectedResponses.length > 0) {
-    window.collectedResponses.forEach(cat => {
-      responsesHTML += `
-        <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
-        <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
-          <thead>
-            <tr>
-              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
-              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      cat.questions.forEach(q => {
-        responsesHTML += `
-          <tr>
-            <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
-            <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
-          </tr>
-        `;
-      });
-
-      responsesHTML += `
-          </tbody>
-        </table>
-      `;
-    });
-  } else {
-    responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
-  }
-
-  // 3. Build the full printable content
-  printContainer.innerHTML = `
-    <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    ${summaryHTML}
-
-    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
-    ${responsesHTML}
-  `;
-
-  // 3b. Add a "Generated on" footer
-  const now = new Date();
-  const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
-    dateStyle: "long",
-    timeStyle: "short"
-  });
-
-  printContainer.innerHTML += `
-    <p style="text-align:right; font-size:0.9rem; color:#666; margin-top:3rem;">
-      ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
-    </p>
-  `;
-
-  // 4. Unhide and trigger the browser print
-  printContainer.classList.remove('hidden');
-  window.print();
-
-  // 5. Hide again after printing
-  setTimeout(() => {
-    printContainer.classList.add('hidden');
-  }, 1000);
-}
-</script>
-  
 </main></div></div>
 
 <!-- ===== Footer placeholder (optional) -->
 <footer id="wb-info"><div class="container"></div></footer>
 
+<!-- ===== GCWeb scripts -->
+<script src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/wet-boew/js/wet-boew.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/wet-boew/GCWeb@v16.5.0/core/GCWeb/js/theme.min.js"></script>
 
 
-<!-- ===== RRIT logic -->
-<script>
-/*  ==== RRIT logic – revised (no #langSel element needed) ====  */
-
-/* keep the current language in a simple variable */
-let currentLang = "en";
-
-/* show/hide all bilingual elements */
-function toggleLanguage(lang) {
-  currentLang = lang; /* remember the choice */
-
-  document.querySelectorAll("[data-lang]").forEach(el => {
-    const hide = el.getAttribute("data-lang") !== lang;
-    el.classList.toggle("hidden", hide);
-    el.setAttribute("aria-hidden", hide);
-  });
-
-  // Update the Generate Summary button text bilingualy
-  const genButton = document.querySelector('button[onclick="generateSummary()"]');
-  if (genButton) {
-    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
-  }
-
-  // Update the Print button bilingualy
-const printButton = document.querySelector('button[onclick="preparePrint()"]');
-if (printButton) {
-  printButton.textContent = (lang === "en") ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
-}
-
-  // If the summary table is showing, regenerate it to update the language
-  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
-  if (summaryVisible) {
-    generateSummary();
-  }
-}
-
-/* reveal the category panels the user selected in Step-0 */
-function collectCategories() {
-  /* use the variable we just set instead of reading #langSel */
-  const lang   = currentLang;
-  const formId = (lang === "en") ? "categoryFormEN" : "categoryFormFR";
-
-  const chosen = [...document.querySelectorAll("#" + formId + " input:checked")]
-                 .map(cb => cb.value);
-
-  const cats = ["A", "B", ...chosen];
-  cats.forEach(c => {
-    const sec = document.getElementById("step" + c);
-    if (sec) sec.classList.remove("hidden");
-  });
-
-  document.getElementById("statusMsg").textContent =
-    (lang === "en" ? "Categories shown: " : "Catégories affichées : ") +
-    cats.join(", ");
-}
-
-/* default to English when the page loads */
-document.addEventListener("DOMContentLoaded", () => toggleLanguage("en"));
-</script>
-<script src="/RRIT/wet-boew/jquery/2.2.4/jquery.min.js"></script>  <!-- must be first -->
-  <script src="/RRIT/wet-boew/js/wet-boew.min.js"></script>
-  <script src="/RRIT/GCWeb/js/theme.min.js"></script>
+  <script src="gcweb/wet-boew/js/wet-boew.min.js"></script>
+<script src="gcweb/gcweb/js/theme.min.js"></script>
 </body>
 </html>
