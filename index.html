@@ -110,11 +110,12 @@
 </style>
 
 <style media="print">
-  /* Hide everything except the print container */
+  /* Hide all content except print container */
   body > *:not(#printContainer) {
     display: none !important;
   }
 
+  /* Ensure print container is visible */
   #printContainer, #printContainer * {
     display: block !important;
     visibility: visible !important;
@@ -123,79 +124,62 @@
   #printContainer {
     margin: 0;
     padding: 2rem;
-    page-break-inside: avoid;
-    color: #000 !important;
-    background: #fff !important;
     font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 11pt;
     line-height: 1.5;
+    color: #000;
   }
 
   html, body {
     margin: 0;
     padding: 0;
-    background: #fff !important;
+    background: white;
   }
 
-  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
+  header, footer, nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
     display: none !important;
   }
 
   h2, h3 {
-    color: #000;
-    font-weight: bold;
     margin-top: 2rem;
     margin-bottom: 1rem;
-  }
-
-  h2 {
     font-size: 16pt;
-    border-bottom: 2px solid #000;
-    padding-bottom: 0.25rem;
+    font-weight: bold;
   }
 
-  h3 {
-    font-size: 13pt;
-    margin-top: 1.5rem;
-    border-bottom: 1px solid #444;
-    padding-bottom: 0.25rem;
-  }
-
-  /* Table Styling */
-  table {
+  /* Summary and response tables */
+  #printContainer table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 2rem;
     font-size: 11pt;
-    color: #000;
   }
 
-  th, td {
-    border: 1px solid #000;
-    padding: 0.6rem;
-    vertical-align: top;
+  #printContainer th, #printContainer td {
+    border: 1px solid #ccc;
+    padding: 8px;
     text-align: left;
   }
 
-  th {
+  #printContainer th {
     background-color: #f1f1f1;
     font-weight: bold;
   }
 
-  /* Risk Status Coloring */
-  .risk-high {
+  /* Risk status coloring */
+  #printContainer .risk-high {
     background-color: #f8d7da !important;
     color: #721c24 !important;
     font-weight: bold;
   }
 
-  .risk-medium {
+  #printContainer .risk-medium {
     background-color: #fff3cd !important;
     color: #856404 !important;
     font-weight: bold;
   }
 
-  .risk-low {
+  #printContainer .risk-low {
     background-color: #d4edda !important;
     color: #155724 !important;
     font-weight: bold;
@@ -213,17 +197,11 @@
     border-left: 5px solid #28a745;
   }
 
-  /* Summary & Footer */
   .generated-on {
     font-size: 10pt;
+    margin-top: 3rem;
     text-align: right;
     color: #666;
-    margin-top: 3rem;
-  }
-
-  /* Avoid breaking categories across pages */
-  section {
-    page-break-inside: avoid;
   }
 </style>
   
