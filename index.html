@@ -267,61 +267,54 @@ h2, h3, table {
   body > *:not(#printContainer) {
     display: none !important;
   }
-
-  #printContainer,
-  #printContainer * {
+  #printContainer, #printContainer * {
     display: block !important;
     visibility: visible !important;
   }
 
   html, body {
+    font-size: 10pt;
     margin: 0;
     padding: 0;
     font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 10pt;
-    line-height: 1.4;
-    color: #000;
   }
 
-  #summaryTableContainer table {
-    border-collapse: separate;
-    border: 2px solid #000;
+  table {
     width: 100%;
-    margin-bottom: 2rem;
-    border-spacing: 0;
+    border-collapse: collapse;
+    border: 2px solid #000;
+    margin-bottom: 1rem;
   }
 
-  #summaryTableContainer th {
+  thead th {
+    font-size: 11pt;
     font-weight: bold;
-    font-size: 12pt;
     background-color: #f1f1f1;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #000;
+  }
+
+  td {
+    padding: 8px;
     text-align: left;
   }
 
-  #summaryTableContainer td {
-    padding: 10px;
-    font-size: 11pt;
-    vertical-align: top;
-    border-bottom: 1px solid #ddd;
-  }
-
-  #summaryTableContainer td.risk-high {
-    background-color: #f8d7da;
-    color: #721c24;
+  .risk-high {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
     font-weight: bold;
   }
 
-  #summaryTableContainer td.risk-medium {
-    background-color: #fff3cd;
-    color: #856404;
+  .risk-medium {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
     font-weight: bold;
   }
 
-  #summaryTableContainer td.risk-low {
-    background-color: #d4edda;
-    color: #155724;
+  .risk-low {
+    background-color: #d4edda !important;
+    color: #155724 !important;
     font-weight: bold;
   }
 
