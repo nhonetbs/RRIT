@@ -1168,16 +1168,7 @@ printContainer {
 
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
-        <thead>
-          <tr>
-            <th data-lang="en">Category</th>
-            <th data-lang="fr" class="hidden">Catégorie</th>
-            <th data-lang="en">Risk Score</th>
-            <th data-lang="fr" class="hidden">Score de risque</th>
-            <th data-lang="en">Risk Status</th>
-            <th data-lang="fr" class="hidden">Statut de risque</th>
-          </tr>
-        </thead>
+
         <tbody id="summaryTableBody"></tbody>
       </table>
     </div>
@@ -1230,10 +1221,35 @@ const categories = {
 function generateSummary() {
   const lang = currentLang || "en";
 
-  const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = ""; // clear previous
+ function generateSummary() {
+  const lang = currentLang || "en";
 
-  const printResponses = []; // <-- NEW: Array to collect responses for printing
+  const summaryBody = document.getElementById('summaryTableBody');
+  summaryBody.innerHTML = ""; // Clear previous
+
+  // 🔁 REMOVE any existing thead (in case of regeneration)
+  const existingThead = summaryBody.parentElement.querySelector('thead');
+  if (existingThead) existingThead.remove();
+
+  // ✅ Add language-specific <thead>
+  const summaryHeaders = {
+    en: ['Category', 'Risk Score', 'Risk Status'],
+    fr: ['Catégorie', 'Score de risque', 'Statut de risque']
+  };
+
+  const table = summaryBody.parentElement; // Get the full table
+  const thead = document.createElement('thead');
+  thead.innerHTML = `
+    <tr>
+      <th>${summaryHeaders[lang][0]}</th>
+      <th>${summaryHeaders[lang][1]}</th>
+      <th>${summaryHeaders[lang][2]}</th>
+    </tr>
+  `;
+  table.insertBefore(thead, summaryBody);
+
+  // 🌐 Continue with risk processing
+  const printResponses = [];
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
@@ -1241,30 +1257,24 @@ function generateSummary() {
     let accumulatedWeight = 0;
     let questions = [];
 
-    // English responses
+    // English and French responses
     document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
       const questionText = input.closest('fieldset').querySelector('legend').textContent;
       const answer = input.value;
       questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) {
-        accumulatedWeight += questionWeights[answer];
-      }
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
       totalPossibleWeight += 1;
     });
 
-    // French responses
     document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
       const questionText = input.closest('fieldset').querySelector('legend').textContent;
       const answer = input.value;
       questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) {
-        accumulatedWeight += questionWeights[answer];
-      }
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
       totalPossibleWeight += 1;
     });
 
-    let riskStatus = "";
-    let riskClass = "";
+    let riskStatus = "", riskClass = "";
 
     if (totalPossibleWeight === 0) {
       riskStatus = riskLabels.notReviewed[lang];
@@ -1283,15 +1293,14 @@ function generateSummary() {
       }
     }
 
-    // Create Risk Summary Row
-const row = `<tr>
-  <td>${categories[cat][lang]}</td>
-  <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
-  <td class="${riskClass}">${riskStatus}</td>
-</tr>`;
+    // 🧱 Row for summary table
+    const row = `<tr>
+      <td>${categories[cat][lang]}</td>
+      <td>${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}</td>
+      <td class="${riskClass}">${riskStatus}</td>
+    </tr>`;
     summaryBody.insertAdjacentHTML('beforeend', row);
 
-    // Save detailed responses if user reviewed this category
     if (questions.length > 0) {
       printResponses.push({
         category: categories[cat][lang],
@@ -1300,12 +1309,9 @@ const row = `<tr>
     }
   });
 
-  // Save the collected responses in a global variable for printing
   window.collectedResponses = printResponses;
-
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
-
   function buildResponsesHTML(lang) {
   let html = "";
 
