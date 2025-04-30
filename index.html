@@ -1427,6 +1427,7 @@ function preparePrint() {
 
   // 4. Unhide and trigger the browser print
   printContainer.classList.remove('hidden');
+  console.log(printContainer.innerHTML);
   window.print();
 
   // 5. Hide again after printing
