@@ -1295,90 +1295,84 @@ const row = `<tr>
 }
   
   //=========== Prepare Print =======================>
+// Improved and fault-tolerant version of preparePrint()
 function preparePrint() {
   const lang = currentLang || "en";
-  
   const summaryTable = document.getElementById('summaryTableContainer');
 
-  // First, check if the summary was generated
-  if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
-    alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
+  // Fallback: trigger generateSummary if needed
+  if (!window.collectedResponses || !Array.isArray(window.collectedResponses) || window.collectedResponses.length === 0) {
+    console.warn("No collectedResponses found. Triggering summary generation...");
+    generateSummary();
+  }
+
+  // After ensure summary, re-fetch collectedResponses
+  const responses = window.collectedResponses || [];
+
+  // Validate again
+  if (responses.length === 0) {
+    alert((lang === "en") ? "No responses recorded. Please complete the form." : "Aucune réponse enregistrée. Veuillez remplir le formulaire.");
     return;
   }
 
-  // Now safe to clear and rebuild
   const printContainer = document.getElementById('printContainer');
   printContainer.innerHTML = "";
 
-  // 1. Get Risk Profile Summary HTML
+  // 1. Copy Risk Summary
   const summaryHTML = summaryTable.innerHTML;
 
-  // 2. Build User Responses
+  // 2. Responses Table
   let responsesHTML = "";
-
-  if (window.collectedResponses && window.collectedResponses.length > 0) {
-    window.collectedResponses.forEach(cat => {
-      responsesHTML += `
-        <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
-        <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
-          <thead>
-            <tr>
-              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
-              <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      cat.questions.forEach(q => {
-        responsesHTML += `
+  responses.forEach(cat => {
+    responsesHTML += `
+      <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
+      <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
+        <thead>
           <tr>
-            <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
-            <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
+            <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
+            <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
           </tr>
-        `;
-      });
-
+        </thead>
+        <tbody>
+    `;
+    cat.questions.forEach(q => {
       responsesHTML += `
-          </tbody>
-        </table>
+        <tr>
+          <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
+          <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
+        </tr>
       `;
     });
-  } else {
-    responsesHTML = `<p style="margin-top:2rem;">${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
-  }
+    responsesHTML += `</tbody></table>`;
+  });
 
-  // 3. Build the full printable content
-  printContainer.innerHTML = `
-    <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    ${summaryHTML}
-
-    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
-    ${responsesHTML}
-  `;
-
-  // 3b. Add a "Generated on" footer
+  // 3. Timestamp footer
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
     timeStyle: "short"
   });
 
-  printContainer.innerHTML += `
+  // 4. Final Assembly
+  printContainer.innerHTML = `
+    <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
+    ${summaryHTML}
+
+    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
+    ${responsesHTML}
+
     <p style="text-align:right; font-size:0.9rem; color:#666; margin-top:3rem;">
       ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
     </p>
   `;
 
-  // 4. Unhide and trigger the browser print
   printContainer.classList.remove('hidden');
-  window.print();
-
-  // 5. Hide again after printing
   setTimeout(() => {
+    window.print();
     printContainer.classList.add('hidden');
-  }, 1000);
+  }, 150); // small delay ensures print rendering
 }
+
 </script>
   
 </main></div></div>
