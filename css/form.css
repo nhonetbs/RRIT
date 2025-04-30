@@ -117,6 +117,7 @@ table.table td {
     font-weight: bold;
     border-bottom: 1px solid #ccc;
     padding-bottom: 0.3rem;
+    page-break-before: always;
   }
 
   table {
@@ -161,50 +162,63 @@ table.table td {
     color: #666;
   }
 
+  #printContainer table,
+  #printContainer thead,
+  #printContainer tbody,
+  #printContainer tr,
+  #printContainer th,
+  #printContainer td {
+    display: table;
+    width: auto;
+    border-collapse: collapse;
+  }
 
-/* ADDED */
-/* Restore proper table layout for print */
-#printContainer table,
-#printContainer thead,
-#printContainer tbody,
-#printContainer tr,
-#printContainer th,
-#printContainer td {
-  display: table;
-  width: auto;
-  border-collapse: collapse;
-}
+  #printContainer thead {
+    display: table-header-group;
+  }
 
-#printContainer thead {
-  display: table-header-group;
-}
+  #printContainer tbody {
+    display: table-row-group;
+  }
 
-#printContainer tbody {
-  display: table-row-group;
-}
+  #printContainer tr {
+    display: table-row;
+  }
 
-#printContainer tr {
-  display: table-row;
-}
+  #printContainer th,
+  #printContainer td {
+    display: table-cell;
+  }
 
-#printContainer th,
-#printContainer td {
-  display: table-cell;
-}
-
-    .summary-table {
+  .summary-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* <-- This is the fix */
+  }
+
+  .summary-table th:nth-child(1),
+  .summary-table td:nth-child(1) {
+    width: 60%;
+  }
+
+  .summary-table th:nth-child(2),
+  .summary-table td:nth-child(2) {
+    width: 20%;
+  }
+
+  .summary-table th:nth-child(3),
+  .summary-table td:nth-child(3) {
+    width: 20%;
   }
 
   .summary-table th,
   .summary-table td {
-    display: table-cell !important; /* Force table-like rendering */
+    display: table-cell !important;
     padding: 8px;
     border: 1px solid #000;
     text-align: left;
     vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .summary-table th {
@@ -217,4 +231,3 @@ table.table td {
     page-break-inside: avoid;
   }
 }
-  
