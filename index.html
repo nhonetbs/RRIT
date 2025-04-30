@@ -111,9 +111,8 @@
 
 /* === UPDATED PRINT STYLES FOR RRIT === */
 
-@media print {
-
-  /* Hide all except the print container */
+<style media="print">
+  /* Reset non-print content */
   body > *:not(#printContainer) {
     display: none !important;
   }
@@ -124,60 +123,61 @@
   }
 
   #printContainer {
-    margin: 0;
-    padding: 0;
-    page-break-inside: avoid;
+    padding: 1.5cm;
+    color: #000;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.45;
   }
 
   html, body {
     margin: 0;
     padding: 0;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 10pt;
-    line-height: 1.4;
-    color: #000;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
   }
 
-  /* Language toggle: hide opposite language */
-  [data-lang]:not([data-lang=en]):not(.hidden) {
+  header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
     display: none !important;
   }
-  [data-lang=en] {
-    display: block !important;
+
+  h1, h2, h3 {
+    margin: 0.75rem 0 0.5rem;
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: 16pt;
   }
 
   h2 {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
     font-size: 13pt;
-    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.3rem;
   }
 
   h3 {
     font-size: 11.5pt;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+    margin-top: 1.25rem;
   }
 
-  /* Table formatting */
   table {
-    border-collapse: collapse;
     width: 100%;
-    margin-bottom: 1.25rem;
-    font-size: 10pt;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 10.5pt;
   }
 
   th {
-    background-color: #f1f1f1;
+    background-color: #f0f0f0;
     font-weight: bold;
-    padding: 6px 8px;
+    padding: 6px;
+    border: 1px solid #999;
     text-align: left;
-    border: 1px solid #ccc;
   }
 
   td {
-    padding: 6px 8px;
+    padding: 6px;
     border: 1px solid #ccc;
   }
 
@@ -200,25 +200,24 @@
   }
 
   tr.risk-high td {
-    border-left: 5px solid #dc3545;
+    border-left: 4px solid #dc3545;
   }
 
   tr.risk-medium td {
-    border-left: 5px solid #ffc107;
+    border-left: 4px solid #ffc107;
   }
 
   tr.risk-low td {
-    border-left: 5px solid #28a745;
+    border-left: 4px solid #28a745;
   }
 
   .generated-on {
-    font-size: 9pt;
-    margin-top: 2rem;
+    font-size: 10pt;
     text-align: right;
-    color: #666;
+    margin-top: 2rem;
+    color: #555;
   }
-}
-
+</style>
   
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
