@@ -110,79 +110,79 @@
 </style>
 
 <style media="print">
-  /* Hide everything initially */
+  /* Hide everything except the print container */
   body > *:not(#printContainer) {
     display: none !important;
   }
 
-  /* Explicitly show print container */
+  #printContainer, #printContainer * {
+    display: block !important;
+    visibility: visible !important;
+  }
+
   #printContainer {
-    display: block !important;
-    visibility: visible !important;
-    position: relative;
-    z-index: 9999;
     margin: 0;
-    padding: 0;
+    padding: 2rem;
     page-break-inside: avoid;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
   }
 
-  /* Ensure children are visible */
-  #printContainer * {
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  /* General page styles */
   html, body {
     margin: 0;
     padding: 0;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.4;
-    color: #000;
+    background: #fff !important;
   }
 
   header, footer, nav, .nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
     display: none !important;
   }
 
-  h2 {
+  h2, h3 {
+    color: #000;
+    font-weight: bold;
     margin-top: 2rem;
     margin-bottom: 1rem;
+  }
+
+  h2 {
     font-size: 16pt;
-    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.25rem;
   }
 
   h3 {
-    margin-top: 1.5rem;
     font-size: 13pt;
-    font-weight: bold;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 0.3rem;
+    margin-top: 1.5rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.25rem;
   }
 
-  /* Table formatting */
+  /* Table Styling */
   table {
-    border-collapse: collapse;
     width: 100%;
-    margin-bottom: 1rem;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
     font-size: 11pt;
+    color: #000;
+  }
+
+  th, td {
+    border: 1px solid #000;
+    padding: 0.6rem;
+    vertical-align: top;
+    text-align: left;
   }
 
   th {
     background-color: #f1f1f1;
     font-weight: bold;
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ccc;
   }
 
-  td {
-    padding: 8px;
-    border: 1px solid #ccc;
-    font-weight: normal;
-  }
-
+  /* Risk Status Coloring */
   .risk-high {
     background-color: #f8d7da !important;
     color: #721c24 !important;
@@ -213,11 +213,17 @@
     border-left: 5px solid #28a745;
   }
 
+  /* Summary & Footer */
   .generated-on {
     font-size: 10pt;
-    margin-top: 3rem;
     text-align: right;
     color: #666;
+    margin-top: 3rem;
+  }
+
+  /* Avoid breaking categories across pages */
+  section {
+    page-break-inside: avoid;
   }
 </style>
   
