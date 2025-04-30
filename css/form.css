@@ -160,7 +160,7 @@ table.table td {
     text-align: right;
     color: #666;
   }
-}
+
 
 <------ADDED------->
 /* Restore proper table layout for print */
@@ -191,3 +191,4 @@ table.table td {
 #printContainer td {
   display: table-cell;
 }
+  }
