@@ -1037,58 +1037,49 @@ console.log("Generated row HTML:", row);
   window.collectedResponses = printResponses;
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
-  function buildResponsesHTML(lang) {
-  let html = "";
+// ================= Modified print helpers =================
 
+function buildResponsesHTML(lang) {
+  let html = "";
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
-    console.log(`Processing category: ${cat}`);
     const section = document.getElementById("step" + cat);
-    if (!section || section.classList.contains("hidden")) return; // Only process visible categories
+    if (!section || section.classList.contains("hidden")) return;
 
     const title = categories[cat][lang];
+    html += `<h3 style="page-break-before: always; margin-top: 1.5rem;">${title}</h3>`;
 
-    html += `<h3 style="margin-top:1.5rem;">${title}</h3>`;
-
-    // Find fieldsets (each question)
-    const fieldsets = section.querySelectorAll(`fieldset`);
+    const prefix = (lang === "fr") ? `cat${cat}qf` : `cat${cat}q`;
+    const fieldsets = section.querySelectorAll("fieldset");
 
     fieldsets.forEach(fs => {
-      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
-      let answer = "-";
+      const question = fs.querySelector("legend")?.innerText || "";
+      const checked = fs.querySelector(`input[name^='${prefix}']:checked`);
+      const answer = checked ? checked.value : "-";
 
-      // Find the checked radio input
-      const checked = fs.querySelector('input[type="radio"]:checked');
-      if (checked) {
-        answer = checked.value;
-      }
-
-      html += `<p><strong>${question}</strong><br>Response: ${answer}</p>`;
+      html += `<p><strong>${question}</strong><br>Réponse: ${answer}</p>`;
     });
   });
 
   return html;
 }
+
   
   //=========== Prepare Print =======================>
 function preparePrint() {
   const lang = currentLang || "en";
-
   const summaryTableBody = document.getElementById('summaryTableBody');
   const summaryTableContainer = document.getElementById('summaryTableContainer');
   const printContainer = document.getElementById('printContainer');
 
-  // Check if summary exists
   if (!summaryTableBody || summaryTableBody.innerHTML.trim() === "" || summaryTableContainer.classList.contains('hidden')) {
-    alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
+    alert(lang === "en" ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
-  // Clear previous print content
   printContainer.innerHTML = "";
 
-  // === Reconstruct the Risk Profile Summary Table ===
   const summaryHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
     <table class="summary-table">
@@ -1099,42 +1090,31 @@ function preparePrint() {
           <th>${lang === "en" ? "Risk Status" : "Statut de risque"}</th>
         </tr>
       </thead>
-      <tbody>
-        ${summaryTableBody.innerHTML}
-      </tbody>
-    </table>
-  `;
+      <tbody>${summaryTableBody.innerHTML}</tbody>
+    </table>`;
 
-  // === Build User Responses Section ===
   const responsesHTML = buildResponsesHTML(lang);
-
-  // === Add Timestamp ===
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
     timeStyle: "short"
-  });
+  }).replace(/\s(?=h)/, "\u00A0").replace(/\s(?=\d)/g, "\u00A0");
 
-  const footerHTML = `
-    <p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>
-  `;
+  const footerHTML = `<p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>`;
 
-  // === Combine all into the print container ===
   printContainer.innerHTML = `
     ${summaryHTML}
     <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
     ${responsesHTML}
-    ${footerHTML}
-  `;
+    ${footerHTML}`;
 
-  // === Trigger print ===
   printContainer.classList.remove('hidden');
   setTimeout(() => {
     window.print();
     setTimeout(() => {
       printContainer.classList.add('hidden');
     }, 1000);
-  }, 100); // Allow DOM to update before print
+  }, 100);
 }
 </script>
   
