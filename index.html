@@ -109,13 +109,15 @@
 }
 </style>
 
-<style media="print">
-  /* Hide all content except print container */
+/* === UPDATED PRINT STYLES FOR RRIT === */
+
+@media print {
+
+  /* Hide all except the print container */
   body > *:not(#printContainer) {
     display: none !important;
   }
 
-  /* Ensure print container is visible */
   #printContainer, #printContainer * {
     display: block !important;
     visibility: visible !important;
@@ -123,63 +125,75 @@
 
   #printContainer {
     margin: 0;
-    padding: 2rem;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.5;
-    color: #000;
+    padding: 0;
+    page-break-inside: avoid;
   }
 
   html, body {
     margin: 0;
     padding: 0;
-    background: white;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000;
   }
 
-  header, footer, nav, #wb-info, #wb-bnr, #wb-srch, #wb-lng {
+  /* Language toggle: hide opposite language */
+  [data-lang]:not([data-lang=en]):not(.hidden) {
     display: none !important;
   }
+  [data-lang=en] {
+    display: block !important;
+  }
 
-  h2, h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 16pt;
+  h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 13pt;
     font-weight: bold;
   }
 
-  /* Summary and response tables */
-  #printContainer table {
-    width: 100%;
+  h3 {
+    font-size: 11.5pt;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  /* Table formatting */
+  table {
     border-collapse: collapse;
-    margin-bottom: 2rem;
-    font-size: 11pt;
+    width: 100%;
+    margin-bottom: 1.25rem;
+    font-size: 10pt;
   }
 
-  #printContainer th, #printContainer td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-
-  #printContainer th {
+  th {
     background-color: #f1f1f1;
     font-weight: bold;
+    padding: 6px 8px;
+    text-align: left;
+    border: 1px solid #ccc;
   }
 
-  /* Risk status coloring */
-  #printContainer .risk-high {
+  td {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+  }
+
+  .risk-high {
     background-color: #f8d7da !important;
     color: #721c24 !important;
     font-weight: bold;
   }
 
-  #printContainer .risk-medium {
+  .risk-medium {
     background-color: #fff3cd !important;
     color: #856404 !important;
     font-weight: bold;
   }
 
-  #printContainer .risk-low {
+  .risk-low {
     background-color: #d4edda !important;
     color: #155724 !important;
     font-weight: bold;
@@ -198,12 +212,13 @@
   }
 
   .generated-on {
-    font-size: 10pt;
-    margin-top: 3rem;
+    font-size: 9pt;
+    margin-top: 2rem;
     text-align: right;
     color: #666;
   }
-</style>
+}
+
   
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
@@ -1268,82 +1283,74 @@ const row = `<tr>
   return html;
 }
   
- // Improved and deduplicated version of preparePrint()
 function preparePrint() {
   const lang = currentLang || "en";
+
+  // 1. Validate summary content
   const summaryTable = document.getElementById('summaryTableContainer');
-
-  // Fallback: trigger generateSummary if needed
-  if (!window.collectedResponses || !Array.isArray(window.collectedResponses) || window.collectedResponses.length === 0) {
-    console.warn("No collectedResponses found. Triggering summary generation...");
-    generateSummary();
-  }
-
-  // After ensure summary, re-fetch collectedResponses
-  const responses = window.collectedResponses || [];
-
-  // Validate again
-  if (responses.length === 0) {
-    alert((lang === "en") ? "No responses recorded. Please complete the form." : "Aucune réponse enregistrée. Veuillez remplir le formulaire.");
+  if (!summaryTable || summaryTable.innerHTML.trim() === "" || summaryTable.classList.contains('hidden')) {
+    alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
+  // 2. Clear old print container
   const printContainer = document.getElementById('printContainer');
   printContainer.innerHTML = "";
 
-  // 1. Copy Risk Summary
-  const summaryHTML = summaryTable.innerHTML;
+  // 3. Add title headers
+  printContainer.innerHTML += `
+    <h1>${lang === "en" ? "Rapid Risk Identification Tool (RRIT)" : "Outil d’identification rapide des risques (OIRR)"}</h1>
+    <h2 style="margin-top:1rem;">${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
+    ${summaryTable.innerHTML}
+    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
+  `;
 
-  // 2. Responses Table
-  let responsesHTML = "";
-  responses.forEach(cat => {
-    responsesHTML += `
-      <h3>${cat.category}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>${lang === "en" ? "Question" : "Question"}</th>
-            <th>${lang === "en" ? "Answer" : "Réponse"}</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-    cat.questions.forEach(q => {
-      responsesHTML += `
-        <tr>
-          <td>${q.question}</td>
-          <td>${q.answer}</td>
-        </tr>
+  // 4. Add question responses
+  if (window.collectedResponses && window.collectedResponses.length > 0) {
+    window.collectedResponses.forEach(cat => {
+      printContainer.innerHTML += `
+        <h3 style="margin-top:1.5rem;">${cat.category}</h3>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:10.5pt;">
+          <thead>
+            <tr>
+              <th style="padding:6px; border:1px solid #aaa; background:#f0f0f0;">${lang === "en" ? "Question" : "Question"}</th>
+              <th style="padding:6px; border:1px solid #aaa; background:#f0f0f0;">${lang === "en" ? "Answer" : "Réponse"}</th>
+            </tr>
+          </thead>
+          <tbody>
       `;
-    });
-    responsesHTML += `</tbody></table>`;
-  });
 
-  // 3. Timestamp footer
+      cat.questions.forEach(q => {
+        printContainer.innerHTML += `
+          <tr>
+            <td style="padding:6px; border:1px solid #ccc;">${q.question}</td>
+            <td style="padding:6px; border:1px solid #ccc;">${q.answer}</td>
+          </tr>
+        `;
+      });
+
+      printContainer.innerHTML += `</tbody></table>`;
+    });
+  } else {
+    printContainer.innerHTML += `<p>${(lang === "en") ? "No responses collected." : "Aucune réponse recueillie."}</p>`;
+  }
+
+  // 5. Add generation date
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
     timeStyle: "short"
   });
-
-  // 4. Final Assembly
-  printContainer.innerHTML = `
-    <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    ${summaryHTML}
-
-    <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
-    ${responsesHTML}
-
-    <p style="text-align:right; font-size:0.9rem; color:#666; margin-top:3rem;">
+  printContainer.innerHTML += `
+    <p class="generated-on" style="font-size:10pt; text-align:right; margin-top:2rem;">
       ${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}
     </p>
   `;
 
-  printContainer.classList.remove('hidden');
-  setTimeout(() => {
-    window.print();
-    printContainer.classList.add('hidden');
-  }, 150);
+  // 6. Print
+  printContainer.classList.remove("hidden");
+  window.print();
+  setTimeout(() => printContainer.classList.add("hidden"), 1000);
 }
 
 </script>
