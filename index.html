@@ -1036,6 +1036,8 @@ function generateSummary() {
       <td>${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}</td>
       <td class="${riskClass}">${riskStatus}</td>
     </tr>`;
+    // ✅ Log the row output
+console.log("Generated row HTML:", row);
     summaryBody.insertAdjacentHTML('beforeend', row);
 
     if (questions.length > 0) {
