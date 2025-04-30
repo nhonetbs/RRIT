@@ -162,7 +162,7 @@ table.table td {
   }
 
 
-<------ADDED------->
+/* ADDED */
 /* Restore proper table layout for print */
 #printContainer table,
 #printContainer thead,
