@@ -1284,8 +1284,7 @@ const row = `<tr>
   return html;
 }
   
-  //=========== Prepare Print =======================>
-// Improved and fault-tolerant version of preparePrint()
+ // Improved and deduplicated version of preparePrint()
 function preparePrint() {
   const lang = currentLang || "en";
   const summaryTable = document.getElementById('summaryTableContainer');
@@ -1315,12 +1314,12 @@ function preparePrint() {
   let responsesHTML = "";
   responses.forEach(cat => {
     responsesHTML += `
-      <h3 style="margin-top:2rem; font-size:1.5rem; border-bottom:1px solid #ccc; padding-bottom:0.5rem;">${cat.category}</h3>
-      <table style="width:100%; border-collapse:collapse; margin-bottom:2rem;">
+      <h3>${cat.category}</h3>
+      <table>
         <thead>
           <tr>
-            <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Question" : "Question"}</th>
-            <th style="text-align:left; padding:0.5rem; border:1px solid #ccc; background-color:#f9f9f9;">${lang === "en" ? "Answer" : "Réponse"}</th>
+            <th>${lang === "en" ? "Question" : "Question"}</th>
+            <th>${lang === "en" ? "Answer" : "Réponse"}</th>
           </tr>
         </thead>
         <tbody>
@@ -1328,8 +1327,8 @@ function preparePrint() {
     cat.questions.forEach(q => {
       responsesHTML += `
         <tr>
-          <td style="padding:0.5rem; border:1px solid #ccc;">${q.question}</td>
-          <td style="padding:0.5rem; border:1px solid #ccc;">${q.answer}</td>
+          <td>${q.question}</td>
+          <td>${q.answer}</td>
         </tr>
       `;
     });
@@ -1360,7 +1359,7 @@ function preparePrint() {
   setTimeout(() => {
     window.print();
     printContainer.classList.add('hidden');
-  }, 150); // small delay ensures print rendering
+  }, 150);
 }
 
 </script>
