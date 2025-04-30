@@ -970,27 +970,7 @@ function generateSummary() {
   const summaryBody = document.getElementById('summaryTableBody');
   summaryBody.innerHTML = ""; // Clear previous
 
-  // 🔁 REMOVE any existing thead (in case of regeneration)
-  const existingThead = summaryBody.parentElement.querySelector('thead');
-  if (existingThead) existingThead.remove();
-
-  // ✅ Add language-specific <thead>
-  const summaryHeaders = {
-    en: ['Category', 'Risk Score', 'Risk Status'],
-    fr: ['Catégorie', 'Score de risque', 'Statut de risque']
-  };
-
-  const table = summaryBody.parentElement; // Get the full table
-  const thead = document.createElement('thead');
-  thead.innerHTML = `
-    <tr>
-      <th>${summaryHeaders[lang][0]}</th>
-      <th>${summaryHeaders[lang][1]}</th>
-      <th>${summaryHeaders[lang][2]}</th>
-    </tr>
-  `;
-  table.insertBefore(thead, summaryBody);
-
+ 
   // 🌐 Continue with risk processing
   const printResponses = [];
   const categoryKeys = Object.keys(categories);
