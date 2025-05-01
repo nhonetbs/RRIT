@@ -962,81 +962,66 @@ const categories = {
 
 // ===== generateSummary FUNCTION =====
 
+// Updated JS: WET-compatible HTML for summary table rows
 function generateSummary() {
- console.log("✅ generateSummary called");
   const lang = currentLang || "en";
-
-
   const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = ""; // Clear previous
-
- 
-  // 🌐 Continue with risk processing
+  summaryBody.innerHTML = "";
   const printResponses = [];
-  const categoryKeys = Object.keys(categories);
 
-  categoryKeys.forEach(cat => {
-    let totalPossibleWeight = 0;
-    let accumulatedWeight = 0;
-    let questions = [];
+  Object.keys(categories).forEach(cat => {
+    let total = 0, score = 0, questions = [];
 
-    // English and French responses
     document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-      totalPossibleWeight += 1;
+      const q = input.closest('fieldset').querySelector('legend').textContent;
+      const a = input.value;
+      questions.push({ question: q, answer: a });
+      if (a in questionWeights) score += questionWeights[a];
+      total++;
     });
-
     document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-      totalPossibleWeight += 1;
+      const q = input.closest('fieldset').querySelector('legend').textContent;
+      const a = input.value;
+      questions.push({ question: q, answer: a });
+      if (a in questionWeights) score += questionWeights[a];
+      total++;
     });
 
-    let riskStatus = "", riskClass = "";
-
-    if (totalPossibleWeight === 0) {
-      riskStatus = riskLabels.notReviewed[lang];
-      riskClass = "text-muted";
-    } else {
-      const riskRatio = accumulatedWeight / totalPossibleWeight;
-      if (riskRatio >= riskThresholds.high) {
-        riskStatus = riskLabels.high[lang];
+    let riskLabel = lang === "fr" ? "Non examiné" : "Not reviewed";
+    let riskClass = "text-muted";
+    if (total > 0) {
+      const ratio = score / total;
+      if (ratio >= riskThresholds.high) {
+        riskLabel = riskLabels.high[lang];
         riskClass = "risk-high";
-      } else if (riskRatio >= riskThresholds.medium) {
-        riskStatus = riskLabels.medium[lang];
+      } else if (ratio >= riskThresholds.medium) {
+        riskLabel = riskLabels.medium[lang];
         riskClass = "risk-medium";
       } else {
-        riskStatus = riskLabels.low[lang];
+        riskLabel = riskLabels.low[lang];
         riskClass = "risk-low";
       }
     }
 
-    // 🧱 Row for summary table
-    const row = `<tr>
+    const row = `<tr class="${riskClass}">
       <td>${categories[cat][lang]}</td>
-      <td>${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}</td>
-      <td class="${riskClass}">${riskStatus}</td>
+      <td style="text-align:center">${score.toFixed(1)} / ${total}</td>
+      <td>${riskLabel}</td>
     </tr>`;
-    // ✅ Log the row output
-console.log("Generated row HTML:", row);
     summaryBody.insertAdjacentHTML('beforeend', row);
 
     if (questions.length > 0) {
-      printResponses.push({
-        category: categories[cat][lang],
-        questions: questions
-      });
+      printResponses.push({ category: categories[cat][lang], questions });
     }
   });
 
   window.collectedResponses = printResponses;
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
+
+// Ensure the print layout uses WET's .table classes
+document.getElementById('summaryTableContainer').querySelector('table').className = 'table table-bordered';
+
 // ================= Modified print helpers =================
 
 function buildResponsesHTML(lang) {
