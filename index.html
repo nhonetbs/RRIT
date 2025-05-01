@@ -1024,8 +1024,10 @@ document.getElementById('summaryTableContainer').querySelector('table').classNam
 
 // ================= Modified print helpers =================
 
+// WET-compatible buildResponsesHTML()
 function buildResponsesHTML(lang) {
   let html = "";
+
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
@@ -1033,25 +1035,31 @@ function buildResponsesHTML(lang) {
     if (!section || section.classList.contains("hidden")) return;
 
     const title = categories[cat][lang];
-    html += `<h3 style="page-break-before: always; margin-top: 1.5rem;">${title}</h3>`;
 
-    const prefix = (lang === "fr") ? `cat${cat}qf` : `cat${cat}q`;
+    html += `<section class="print-block">
+      <h3>${title}</h3>`;
+
     const fieldsets = section.querySelectorAll("fieldset");
 
     fieldsets.forEach(fs => {
-      const question = fs.querySelector("legend")?.innerText || "";
-      const checked = fs.querySelector(`input[name^='${prefix}']:checked`);
-      const answer = checked ? checked.value : "-";
+      const question = fs.querySelector('legend')?.innerText || '';
+      let answer = "-";
+      const checked = fs.querySelector('input[type="radio"]:checked');
+      if (checked) answer = checked.value;
 
-      html += `<p><strong>${question}</strong><br>Réponse: ${answer}</p>`;
+      html += `<div class="print-block">
+        <p><strong>${question}</strong><br>${lang === 'fr' ? 'Réponse' : 'Response'}: ${answer}</p>
+      </div>`;
     });
+
+    html += `</section>`;
   });
 
   return html;
 }
 
   
-  //=========== Prepare Print =======================>
+// WET-compatible preparePrint()
 function preparePrint() {
   const lang = currentLang || "en";
   const summaryTableBody = document.getElementById('summaryTableBody');
@@ -1059,7 +1067,7 @@ function preparePrint() {
   const printContainer = document.getElementById('printContainer');
 
   if (!summaryTableBody || summaryTableBody.innerHTML.trim() === "" || summaryTableContainer.classList.contains('hidden')) {
-    alert(lang === "en" ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
+    alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
@@ -1067,7 +1075,7 @@ function preparePrint() {
 
   const summaryHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    <table class="summary-table">
+    <table class="table table-bordered">
       <thead>
         <tr>
           <th>${lang === "en" ? "Category" : "Catégorie"}</th>
@@ -1075,23 +1083,30 @@ function preparePrint() {
           <th>${lang === "en" ? "Risk Status" : "Statut de risque"}</th>
         </tr>
       </thead>
-      <tbody>${summaryTableBody.innerHTML}</tbody>
-    </table>`;
+      <tbody>
+        ${summaryTableBody.innerHTML}
+      </tbody>
+    </table>
+  `;
 
   const responsesHTML = buildResponsesHTML(lang);
+
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
     timeStyle: "short"
-  }).replace(/\s(?=h)/, "\u00A0").replace(/\s(?=\d)/g, "\u00A0");
+  });
 
-  const footerHTML = `<p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>`;
+  const footerHTML = `
+    <p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>
+  `;
 
   printContainer.innerHTML = `
     ${summaryHTML}
     <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
     ${responsesHTML}
-    ${footerHTML}`;
+    ${footerHTML}
+  `;
 
   printContainer.classList.remove('hidden');
   setTimeout(() => {
@@ -1100,7 +1115,6 @@ function preparePrint() {
       printContainer.classList.add('hidden');
     }, 1000);
   }, 100);
-}
 </script>
   
       </main>
