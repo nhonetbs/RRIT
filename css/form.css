@@ -117,10 +117,9 @@ table.table td {
     font-weight: bold;
     border-bottom: 1px solid #ccc;
     padding-bottom: 0.3rem;
-    page-break-before: always;
   }
 
-  table {
+  table.table {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid #000;
@@ -128,19 +127,23 @@ table.table td {
     font-size: 11pt;
   }
 
-  thead th {
-    font-size: 11pt;
-    font-weight: bold;
-    background-color: #f1f1f1;
+  table.table th,
+  table.table td {
+    border: 1px solid #000;
     padding: 8px;
     text-align: left;
-    border-bottom: 1px solid #000;
+    vertical-align: top;
+    word-break: break-word;
   }
 
-  td {
-    padding: 8px;
-    text-align: left;
-    font-weight: normal;
+  table.table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    font-size: 11pt;
+  }
+
+  table.table tr {
+    page-break-inside: avoid;
   }
 
   tr.risk-high td {
@@ -161,75 +164,4 @@ table.table td {
     text-align: right;
     color: #666;
   }
-
-  #printContainer table,
-  #printContainer thead,
-  #printContainer tbody,
-  #printContainer tr,
-  #printContainer th,
-  #printContainer td {
-    display: table;
-    width: auto;
-    border-collapse: collapse;
-  }
-
-  #printContainer thead {
-    display: table-header-group;
-  }
-
-  #printContainer tbody {
-    display: table-row-group;
-  }
-
-  #printContainer tr {
-    display: table-row;
-  }
-
-  #printContainer th,
-  #printContainer td {
-    display: table-cell;
-  }
-
-  .summary-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto; /* allow browser to calculate natural widths */
-}
-
-.summary-table th,
-.summary-table td {
-  border: 1px solid #000;
-  padding: 8px;
-  text-align: left;
-  vertical-align: top;
-  word-break: break-word;
-}
-
-/* Explicit column widths */
-.summary-table th:nth-child(1),
-.summary-table td:nth-child(1) {
-  width: 55%;
-}
-
-.summary-table th:nth-child(2),
-.summary-table td:nth-child(2) {
-  width: 20%;
-  text-align: center;
-}
-
-.summary-table th:nth-child(3),
-.summary-table td:nth-child(3) {
-  width: 25%;
-  font-weight: bold;
-}
-
-.summary-table th {
-  background-color: #f1f1f1;
-  font-size: 11pt;
-}
-
-.summary-table tr {
-  page-break-inside: avoid;
-}
-
 }
