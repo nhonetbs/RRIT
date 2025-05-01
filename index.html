@@ -1013,21 +1013,20 @@ function generateSummary() {
     let questions = [];
 
     // English and French responses
-    document.querySelectorAll(input[name^="cat${cat}q"]:checked).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-      totalPossibleWeight += 1;
-    });
-
-    document.querySelectorAll(input[name^="cat${cat}qf"]:checked).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-      totalPossibleWeight += 1;
-    });
+ document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
+  const questionText = input.closest('fieldset').querySelector('legend').textContent;
+  const answer = input.value;
+  questions.push({ question: questionText, answer: answer });
+  if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+  totalPossibleWeight += 1;
+});
+document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
+  const questionText = input.closest('fieldset').querySelector('legend').textContent;
+  const answer = input.value;
+  questions.push({ question: questionText, answer: answer });
+  if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+  totalPossibleWeight += 1;
+});
 
     let riskStatus = "", riskClass = "";
 
@@ -1262,5 +1261,6 @@ function collectCategories() {
 
   <div id="printSummary"></div>
 </div>
+  <div id="printContainer" class="hidden"></div>
   </body>
 </html>
