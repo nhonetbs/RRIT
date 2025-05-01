@@ -962,120 +962,136 @@ const categories = {
 
 // ===== generateSummary FUNCTION =====
 
-// Updated JS: WET-compatible HTML for summary table rows
 function generateSummary() {
+ console.log("✅ generateSummary called");
   const lang = currentLang || "en";
+
+
   const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = "";
+  summaryBody.innerHTML = ""; // Clear previous
+
+ 
+  // 🌐 Continue with risk processing
   const printResponses = [];
+  const categoryKeys = Object.keys(categories);
 
-  Object.keys(categories).forEach(cat => {
-    let total = 0, score = 0, questions = [];
+  categoryKeys.forEach(cat => {
+    let totalPossibleWeight = 0;
+    let accumulatedWeight = 0;
+    let questions = [];
 
-    document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-      const q = input.closest('fieldset').querySelector('legend').textContent;
-      const a = input.value;
-      questions.push({ question: q, answer: a });
-      if (a in questionWeights) score += questionWeights[a];
-      total++;
-    });
-    document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-      const q = input.closest('fieldset').querySelector('legend').textContent;
-      const a = input.value;
-      questions.push({ question: q, answer: a });
-      if (a in questionWeights) score += questionWeights[a];
-      total++;
+    // English and French responses
+    document.querySelectorAll(input[name^="cat${cat}q"]:checked).forEach(input => {
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+      totalPossibleWeight += 1;
     });
 
-    let riskLabel = lang === "fr" ? "Non examiné" : "Not reviewed";
-    let riskClass = "text-muted";
-    if (total > 0) {
-      const ratio = score / total;
-      if (ratio >= riskThresholds.high) {
-        riskLabel = riskLabels.high[lang];
+    document.querySelectorAll(input[name^="cat${cat}qf"]:checked).forEach(input => {
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+      totalPossibleWeight += 1;
+    });
+
+    let riskStatus = "", riskClass = "";
+
+    if (totalPossibleWeight === 0) {
+      riskStatus = riskLabels.notReviewed[lang];
+      riskClass = "text-muted";
+    } else {
+      const riskRatio = accumulatedWeight / totalPossibleWeight;
+      if (riskRatio >= riskThresholds.high) {
+        riskStatus = riskLabels.high[lang];
         riskClass = "risk-high";
-      } else if (ratio >= riskThresholds.medium) {
-        riskLabel = riskLabels.medium[lang];
+      } else if (riskRatio >= riskThresholds.medium) {
+        riskStatus = riskLabels.medium[lang];
         riskClass = "risk-medium";
       } else {
-        riskLabel = riskLabels.low[lang];
+        riskStatus = riskLabels.low[lang];
         riskClass = "risk-low";
       }
     }
 
-    const row = `<tr class="${riskClass}">
+    // 🧱 Row for summary table
+    const row = <tr>
       <td>${categories[cat][lang]}</td>
-      <td style="text-align:center">${score.toFixed(1)} / ${total}</td>
-      <td>${riskLabel}</td>
-    </tr>`;
+      <td>${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}</td>
+      <td class="${riskClass}">${riskStatus}</td>
+    </tr>;
+    // ✅ Log the row output
+console.log("Generated row HTML:", row);
     summaryBody.insertAdjacentHTML('beforeend', row);
 
     if (questions.length > 0) {
-      printResponses.push({ category: categories[cat][lang], questions });
+      printResponses.push({
+        category: categories[cat][lang],
+        questions: questions
+      });
     }
   });
 
   window.collectedResponses = printResponses;
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
-
-// Ensure the print layout uses WET's .table classes
-document.getElementById('summaryTableContainer').querySelector('table').className = 'table table-bordered';
-
-// ================= Modified print helpers =================
-
-// WET-compatible buildResponsesHTML()
-function buildResponsesHTML(lang) {
+  function buildResponsesHTML(lang) {
   let html = "";
 
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
+    console.log(Processing category: ${cat});
     const section = document.getElementById("step" + cat);
-    if (!section || section.classList.contains("hidden")) return;
+    if (!section || section.classList.contains("hidden")) return; // Only process visible categories
 
     const title = categories[cat][lang];
 
-    html += `<section class="print-block">
-      <h3>${title}</h3>`;
+    html += <h3 style="margin-top:1.5rem;">${title}</h3>;
 
-    const fieldsets = section.querySelectorAll("fieldset");
+    // Find fieldsets (each question)
+    const fieldsets = section.querySelectorAll(fieldset);
 
     fieldsets.forEach(fs => {
-      const question = fs.querySelector('legend')?.innerText || '';
+      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
       let answer = "-";
+
+      // Find the checked radio input
       const checked = fs.querySelector('input[type="radio"]:checked');
-      if (checked) answer = checked.value;
+      if (checked) {
+        answer = checked.value;
+      }
 
-      html += `<div class="print-block">
-        <p><strong>${question}</strong><br>${lang === 'fr' ? 'Réponse' : 'Response'}: ${answer}</p>
-      </div>`;
+      html += <p><strong>${question}</strong><br>Response: ${answer}</p>;
     });
-
-    html += `</section>`;
   });
 
   return html;
 }
-
   
-// WET-compatible preparePrint()
+  //=========== Prepare Print =======================>
 function preparePrint() {
   const lang = currentLang || "en";
+
   const summaryTableBody = document.getElementById('summaryTableBody');
   const summaryTableContainer = document.getElementById('summaryTableContainer');
   const printContainer = document.getElementById('printContainer');
 
+  // Check if summary exists
   if (!summaryTableBody || summaryTableBody.innerHTML.trim() === "" || summaryTableContainer.classList.contains('hidden')) {
     alert((lang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
     return;
   }
 
+  // Clear previous print content
   printContainer.innerHTML = "";
 
-  const summaryHTML = `
+  // === Reconstruct the Risk Profile Summary Table ===
+  const summaryHTML = 
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    <table class="table table-bordered">
+    <table class="summary-table">
       <thead>
         <tr>
           <th>${lang === "en" ? "Category" : "Catégorie"}</th>
@@ -1087,34 +1103,38 @@ function preparePrint() {
         ${summaryTableBody.innerHTML}
       </tbody>
     </table>
-  `;
+  ;
 
+  // === Build User Responses Section ===
   const responsesHTML = buildResponsesHTML(lang);
 
+  // === Add Timestamp ===
   const now = new Date();
   const formattedDate = now.toLocaleString(lang === "en" ? "en-CA" : "fr-CA", {
     dateStyle: "long",
     timeStyle: "short"
   });
 
-  const footerHTML = `
+  const footerHTML = 
     <p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>
-  `;
+  ;
 
-  printContainer.innerHTML = `
+  // === Combine all into the print container ===
+  printContainer.innerHTML = 
     ${summaryHTML}
     <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
     ${responsesHTML}
     ${footerHTML}
-  `;
+  ;
 
+  // === Trigger print ===
   printContainer.classList.remove('hidden');
   setTimeout(() => {
     window.print();
     setTimeout(() => {
       printContainer.classList.add('hidden');
     }, 1000);
-  }, 100);
+  }, 100); // Allow DOM to update before print
 }
 </script>
   
