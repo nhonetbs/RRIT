@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-17</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-18</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -972,6 +972,7 @@ document.addEventListener("DOMContentLoaded", () => {
     el.classList.toggle("hidden", !match);
     el.setAttribute("aria-hidden", !match);
   });
+  
   // Set bilingual table headers
   const thCategory = document.getElementById("summaryHeaderCategory");
   const thScore = document.getElementById("summaryHeaderScore");
@@ -986,7 +987,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (thStatus) {
     thStatus.textContent = currentLang === "en" ? "Risk Status" : "Statut de risque";
   }
-});
 
   // Update bilingual buttons
   const genButton = document.querySelector('button[onclick="generateSummary()"]');
@@ -1004,6 +1004,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (summaryVisible) {
     generateSummary();
   }
+  
   console.log("🌐 Detected lang:", currentLang);
 });
   
