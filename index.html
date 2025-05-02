@@ -1126,7 +1126,7 @@ function preparePrint() {
   printContainer.innerHTML = "";
 
   // === Reconstruct the Risk Profile Summary Table ===
-  const summaryHTML = 
+  const summaryHTML = `
     <h2>${lang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
     <table class="summary-table">
       <thead>
@@ -1140,7 +1140,7 @@ function preparePrint() {
         ${summaryTableBody.innerHTML}
       </tbody>
     </table>
-  ;
+ ` ;
 
   // === Build User Responses Section ===
   const responsesHTML = buildResponsesHTML(lang);
@@ -1152,17 +1152,17 @@ function preparePrint() {
     timeStyle: "short"
   });
 
-  const footerHTML = 
+  const footerHTML = `
     <p class="generated-on">${lang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>
-  ;
+ `;
 
   // === Combine all into the print container ===
-  printContainer.innerHTML = 
+  printContainer.innerHTML = `
     ${summaryHTML}
     <h2 style="margin-top:2rem;">${lang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
     ${responsesHTML}
     ${footerHTML}
-  ;
+  `;
 
   // === Trigger print ===
   printContainer.classList.remove('hidden');
