@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-27</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-28</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1023,7 +1023,7 @@ function generateSummary() {
 
   const summaryBody = document.getElementById('summaryTableBody');
   summaryBody.innerHTML = ""; // Clear previous
-
+window.generatedSummaryRows = []; // Reset or initialize global array
  
   // 🌐 Continue with risk processing
   const printResponses = [];
@@ -1090,6 +1090,8 @@ const row = `
 console.log("Generated row HTML:", row);
     summaryBody.insertAdjacentHTML('beforeend', row);
 
+window.generatedSummaryRows.push(row); // Add to array for printing
+  
     if (questions.length > 0) {
       printResponses.push({
         category: categories[cat][lang],
@@ -1163,7 +1165,7 @@ function preparePrint() {
   // Clear previous print content
   printContainer.innerHTML = "";
 
-  // === Reconstruct the Risk Profile Summary Table ===
+// === Reconstruct the Risk Profile Summary Table using saved rows ===
 const summaryHTML = `
   <h2>${currentLang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
   <table class="summary-table" style="width:100%; border-collapse: collapse;" border="1" cellspacing="0" cellpadding="6">
@@ -1175,7 +1177,7 @@ const summaryHTML = `
       </tr>
     </thead>
     <tbody>
-      ${summaryTableBody.innerHTML}
+      ${window.generatedSummaryRows ? window.generatedSummaryRows.join("") : ""}
     </tbody>
   </table>
 `;
