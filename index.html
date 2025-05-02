@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-20</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-21</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1091,24 +1091,24 @@ console.log("Generated row HTML:", row);
   window.collectedResponses = printResponses;
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
-  function buildResponsesHTML(lang) {
+function buildResponsesHTML(lang) {
   let html = "";
 
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
-   console.log(`Processing category: ${cat}`);
+    console.log(`Processing category: ${cat}`);
     const section = document.getElementById("step" + cat);
     if (!section || section.classList.contains("hidden")) return; // Only process visible categories
 
     const title = categories[cat][lang];
 
     html += `
-    <h3 style="margin-top:1.5rem;">${title}</h3>
+      <h3 style="margin-top:1.5rem;">${title}</h3>
     `;
 
-    // Find fieldsets (each question)
-    const fieldsets = section.querySelectorAll("fieldset");
+    // 🔧 Only get fieldsets that match the selected language
+    const fieldsets = section.querySelectorAll(`fieldset[data-lang="${lang}"]`);
 
     fieldsets.forEach(fs => {
       const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
@@ -1121,7 +1121,7 @@ console.log("Generated row HTML:", row);
       }
 
       html += `
-      <p><strong>${question}</strong><br>Response: ${answer}</p>
+        <p><strong>${question}</strong><br>Response: ${answer}</p>
       `;
     });
   });
