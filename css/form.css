@@ -85,6 +85,7 @@ table.table td {
 }
 
 /* ========== PRINT STYLES ========== */
+/* ========== PRINT STYLES ========== */
 @media print {
   body > *:not(#printContainer) {
     display: none !important;
@@ -119,12 +120,13 @@ table.table td {
     padding-bottom: 0.3rem;
   }
 
-  #printContainer {
+  table.table {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid #000;
     margin-bottom: 1rem;
     font-size: 11pt;
+    table-layout: fixed;
   }
 
   table.table th,
@@ -146,6 +148,21 @@ table.table td {
     page-break-inside: avoid;
   }
 
+  table.table th:nth-child(1),
+  table.table td:nth-child(1) {
+    width: 40%;
+  }
+
+  table.table th:nth-child(2),
+  table.table td:nth-child(2) {
+    width: 20%;
+  }
+
+  table.table th:nth-child(3),
+  table.table td:nth-child(3) {
+    width: 40%;
+  }
+
   tr.risk-high td {
     border-left: 5px solid #dc3545;
   }
@@ -164,5 +181,4 @@ table.table td {
     text-align: right;
     color: #666;
   }
-
 }
