@@ -1164,21 +1164,21 @@ function preparePrint() {
   printContainer.innerHTML = "";
 
   // === Reconstruct the Risk Profile Summary Table ===
-  const summaryHTML = `
-    <h2>${currentLang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-    <table class="summary-table">
-      <thead>
-  <tr>
-    <th id="summaryHeaderCategory"></th>
-    <th id="summaryHeaderScore"></th>
-    <th id="summaryHeaderStatus"></th>
-  </tr>
-</thead>
-      <tbody>
-        ${summaryTableBody.innerHTML}
-      </tbody>
-    </table>
- ` ;
+const summaryHTML = `
+  <h2>${currentLang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
+  <table class="summary-table" style="width:100%; border-collapse: collapse;" border="1" cellspacing="0" cellpadding="6">
+    <thead>
+      <tr>
+        <th>${currentLang === "en" ? "Category" : "Catégorie"}</th>
+        <th>${currentLang === "en" ? "Risk Score" : "Score de risque"}</th>
+        <th>${currentLang === "en" ? "Risk Status" : "Statut de risque"}</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${summaryTableBody.innerHTML}
+    </tbody>
+  </table>
+`;
 
   // === Build User Responses Section ===
   const responsesHTML = buildResponsesHTML(lang);
@@ -1195,6 +1195,9 @@ function preparePrint() {
  `;
 
   // === Combine all into the print container ===
+
+
+  
   printContainer.innerHTML = `
     ${summaryHTML}
     <h2 style="margin-top:2rem;">${currentLang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
