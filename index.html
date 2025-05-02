@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-22</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-23</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1068,14 +1068,23 @@ document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input =>
       }
     }
 
-    // 🧱 Row for summary table
-    const row = `   
-      <tr>
-      <td>${categories[cat][lang]}</td>
-      <td>${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}</td>
-      <td class="${riskClass}">${riskStatus}</td>
-    </tr>
-    `;
+// 🧱 Row for summary table
+let scoreText = `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}`;
+let statusText = riskStatus;
+
+if (totalPossibleWeight === 0) {
+  scoreText = (lang === "en") ? "0 / 0 (no questions)" : "0 / 0 (aucune question)";
+  statusText = (lang === "en") ? "Not reviewed" : "Non examiné";
+  riskClass = "risk-none";
+}
+
+const row = `   
+  <tr>
+    <td>${categories[cat][lang]}</td>
+    <td>${scoreText}</td>
+    <td class="${riskClass}">${statusText}</td>
+  </tr>
+`;
     // ✅ Log the row output
 console.log("Generated row HTML:", row);
     summaryBody.insertAdjacentHTML('beforeend', row);
@@ -1097,34 +1106,38 @@ function buildResponsesHTML(lang) {
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
-    console.log(`Processing category: ${cat}`);
     const section = document.getElementById("step" + cat);
-    if (!section || section.classList.contains("hidden")) return; // Only process visible categories
-
-    const title = categories[cat][lang];
-
-    html += `
-      <h3 style="margin-top:1.5rem;">${title}</h3>
-    `;
+    if (!section || section.classList.contains("hidden")) return;
 
     // 🔧 Only get fieldsets that match the selected language
     const fieldsets = section.querySelectorAll(`fieldset[data-lang="${lang}"]`);
+    if (fieldsets.length === 0) return; // ❌ Skip this category if no questions exist
+
+    const title = categories[cat][lang];
+    html += `
+      <h3 style="margin-top:1.5rem;">${title}</h3>
+    `;
 
     fieldsets.forEach(fs => {
       const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
       let answer = "-";
 
-      // Find the checked radio input
       const checked = fs.querySelector('input[type="radio"]:checked');
       if (checked) {
         answer = checked.value;
       }
 
-      html += `
-        <p><strong>${question}</strong><br>Response: ${answer}</p>
-      `;
+      // ✅ Only include meaningful questions
+      if (question.trim() !== "") {
+        html += `
+          <p><strong>${question}</strong><br>Response: ${answer}</p>
+        `;
+      }
     });
   });
+
+  return html;
+}
 
   return html;
 }
@@ -1143,6 +1156,11 @@ function preparePrint() {
     return;
   }
 
+   // ✅ Unhide selected category sections to ensure responses are included
+  document.querySelectorAll(".step").forEach(section => {
+    section.classList.remove("hidden");
+  });
+  
   // Clear previous print content
   printContainer.innerHTML = "";
 
