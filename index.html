@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-38</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-39</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -962,6 +962,29 @@ const categories = {
   K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
 };
 
+const localization = {
+  en: {
+    generateSummary: "Generate Summary",
+    print: "Print / Save as PDF",
+    notReviewed: "Not reviewed",
+    categoriesShown: "Categories shown: ",
+    pleaseGenerateSummary: "Please generate the summary before printing.",
+    riskProfileSummary: "Risk Profile Summary",
+    riskAssessmentDetails: "Risk Assessment Details",
+    generatedOn: "Generated on"
+  },
+  fr: {
+    generateSummary: "Générer le résumé",
+    print: "Imprimer / Enregistrer en PDF",
+    notReviewed: "Non examiné",
+    categoriesShown: "Catégories affichées : ",
+    pleaseGenerateSummary: "Veuillez générer le résumé avant d’imprimer.",
+    riskProfileSummary: "Résumé du profil de risque",
+    riskAssessmentDetails: "Détails de l’évaluation des risques",
+    generatedOn: "Généré le"
+  }
+};
+
 // ===== END CONFIGURATION =====
 
   // Parse the URL and set currentLang globally
@@ -1017,14 +1040,18 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===== generateSummary FUNCTION =====
 
 function generateSummary() {
- console.log("✅ generateSummary called");
+  console.log("✅ generateSummary called");
+
+  // Validate mandatory questions
+  if (!validateMandatoryQuestions()) {
+    return; // Stop if validation fails
+  }
+
   const lang = currentLang || "en";
-
-
   const summaryBody = document.getElementById('summaryTableBody');
   summaryBody.innerHTML = ""; // Clear previous
-window.generatedSummaryRows = []; // Reset or initialize global array
- 
+  window.generatedSummaryRows = []; // Reset or initialize global array
+
   // 🌐 Continue with risk processing
   const printResponses = [];
   const categoryKeys = Object.keys(categories);
@@ -1035,20 +1062,20 @@ window.generatedSummaryRows = []; // Reset or initialize global array
     let questions = [];
 
     // English and French responses
- document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-  const questionText = input.closest('fieldset').querySelector('legend').textContent;
-  const answer = input.value;
-  questions.push({ question: questionText, answer: answer });
-  if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-  totalPossibleWeight += 1;
-});
-document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-  const questionText = input.closest('fieldset').querySelector('legend').textContent;
-  const answer = input.value;
-  questions.push({ question: questionText, answer: answer });
-  if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-  totalPossibleWeight += 1;
-});
+    document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+      totalPossibleWeight += 1;
+    });
+    document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
+      const questionText = input.closest('fieldset').querySelector('legend').textContent;
+      const answer = input.value;
+      questions.push({ question: questionText, answer: answer });
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+      totalPossibleWeight += 1;
+    });
 
     let riskStatus = "", riskClass = "";
 
@@ -1069,29 +1096,29 @@ document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input =>
       }
     }
 
-// 🧱 Row for summary table
-let scoreText = `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}`;
-let statusText = riskStatus;
+    // 🧱 Row for summary table
+    let scoreText = `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}`;
+    let statusText = riskStatus;
 
-if (totalPossibleWeight === 0) {
-  scoreText = (lang === "en") ? "0 / 0 (no questions)" : "0 / 0 (aucune question)";
-  statusText = (lang === "en") ? "Not reviewed" : "Non examiné";
-  riskClass = "risk-none";
-}
+    if (totalPossibleWeight === 0) {
+      scoreText = (lang === "en") ? "0 / 0 (no questions)" : "0 / 0 (aucune question)";
+      statusText = (lang === "en") ? "Not reviewed" : "Non examiné";
+      riskClass = "risk-none";
+    }
 
-const row = `   
-  <tr>
-    <td>${categories[cat][lang]}</td>
-    <td>${scoreText}</td>
-    <td class="${riskClass}">${statusText}</td>
-  </tr>
-`;
+    const row = `   
+      <tr>
+        <td>${categories[cat][lang]}</td>
+        <td>${scoreText}</td>
+        <td class="${riskClass}">${statusText}</td>
+      </tr>
+    `;
     // ✅ Log the row output
-console.log("Generated row HTML:", row);
+    console.log("Generated row HTML:", row);
     summaryBody.insertAdjacentHTML('beforeend', row);
 
-window.generatedSummaryRows.push(row); // Add to array for printing
-  
+    window.generatedSummaryRows.push(row); // Add to array for printing
+
     if (questions.length > 0) {
       printResponses.push({
         category: categories[cat][lang],
@@ -1103,6 +1130,7 @@ window.generatedSummaryRows.push(row); // Add to array for printing
   window.collectedResponses = printResponses;
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 }
+
 function buildResponsesHTML(lang) {
   let html = "";
 
@@ -1153,7 +1181,7 @@ function preparePrint() {
 
   // Check if summary exists
   if (!summaryTableBody || summaryTableBody.innerHTML.trim() === "" || summaryTableContainer.classList.contains('hidden')) {
-    alert((currentLang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
+    alert(localization[currentLang].pleaseGenerateSummary);
     return;
   }
 
@@ -1169,13 +1197,13 @@ function preparePrint() {
 
 // === Reconstruct the Risk Profile Summary Table using saved rows ===
 const summaryHTML = `
-  <h2>${currentLang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
+  <h2>${localization[currentLang].riskProfileSummary}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>${currentLang === "en" ? "Category" : "Catégorie"}</th>
-        <th>${currentLang === "en" ? "Risk Score" : "Score de risque"}</th>
-        <th>${currentLang === "en" ? "Risk Status" : "Statut de risque"}</th>
+        <th>${localization[currentLang].riskProfileSummary}</th>
+        <th>${localization[currentLang].riskAssessmentDetails}</th>
+        <th>${localization[currentLang].notReviewed}</th>
       </tr>
     </thead>
     <tbody>
@@ -1217,6 +1245,25 @@ const summaryHTML = `
       printContainer.classList.add('hidden');
     }, 1000);
   }, 100); // Allow DOM to update before print
+}
+
+function validateMandatoryQuestions() {
+  const mandatoryCategories = ["A", "B"];
+  let allAnswered = true;
+
+  mandatoryCategories.forEach(cat => {
+    const questions = document.querySelectorAll(`#step${cat} fieldset`);
+    questions.forEach(fieldset => {
+      const isAnswered = fieldset.querySelector('input[type="radio"]:checked');
+      if (!isAnswered) {
+        allAnswered = false;
+        const questionText = fieldset.querySelector('legend').textContent.trim();
+        alert(`${localization[currentLang].pleaseAnswerMandatory}: ${questionText}`);
+      }
+    });
+  });
+
+  return allAnswered;
 }
 </script>
   
