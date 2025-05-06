@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-38</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-40</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -903,7 +903,7 @@
     <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
     <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
-    <button class="btn btn-secondary" onclick="preparePrint()">Print / Save as PDF</button>
+    
 
 <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
   <table class="wb-tables table table-striped" data-wb-tables='{
@@ -926,13 +926,14 @@
 </section>
 
 <script>
+
 // ===== CONFIGURATION BLOCK =====
 
 const questionWeights = {
   "No": 1,
   "Unknown": 0.5,
-  "Non": 1,           // French "No"
-  "Inconnu": 0.5      // French "Unknown"
+  "Non": 1,
+  "Inconnu": 0.5
 };
 
 const riskLabels = {
@@ -943,9 +944,8 @@ const riskLabels = {
 };
 
 const riskThresholds = {
-  high: 0.4,    // High if ≥ 40% "bad" weight
-  medium: 0.2   // Medium if ≥ 20% but < 40%
-  // Otherwise Low
+  high: 0.4,
+  medium: 0.2
 };
 
 const categories = {
@@ -963,6 +963,69 @@ const categories = {
 };
 
 // ===== END CONFIGURATION =====
+
+const urlParams = new URLSearchParams(window.location.search);
+const currentLang = urlParams.get('lang') || 'en';
+document.documentElement.lang = currentLang;
+document.documentElement.setAttribute('dir', 'ltr');
+
+function generateSummary() {
+  const lang = currentLang;
+  const tableBody = document.getElementById("summaryTableBody");
+  tableBody.innerHTML = "";
+
+  Object.entries(categories).forEach(([code, names]) => {
+    const section = document.getElementById("step" + code);
+    if (!section || section.classList.contains("hidden")) return;
+
+    const inputs = section.querySelectorAll("input[type=radio]:checked");
+    let total = 0, bad = 0;
+
+    inputs.forEach(input => {
+      const val = input.value;
+      total++;
+      if (questionWeights[val] !== undefined) bad += questionWeights[val];
+    });
+
+    const score = total === 0 ? 0 : bad / total;
+    let statusKey = 'low';
+    if (total === 0) statusKey = 'notReviewed';
+    else if (score >= riskThresholds.high) statusKey = 'high';
+    else if (score >= riskThresholds.medium) statusKey = 'medium';
+
+    const tr = document.createElement("tr");
+    const tdCat = document.createElement("td");
+    const tdScore = document.createElement("td");
+    const tdStatus = document.createElement("td");
+
+    tdCat.textContent = names[lang];
+    tdScore.textContent = total ? (score * 100).toFixed(0) + "%" : "-";
+    tdStatus.textContent = riskLabels[statusKey][lang];
+
+    tr.appendChild(tdCat);
+    tr.appendChild(tdScore);
+    tr.appendChild(tdStatus);
+    tableBody.appendChild(tr);
+  });
+
+  document.getElementById("summaryTableContainer").classList.remove("hidden");
+}
+
+function collectCategories() {
+  const lang = currentLang;
+  const formId = (currentLang === "en") ? "categoryFormEN" : "categoryFormFR";
+  const chosen = [...document.querySelectorAll("#" + formId + " input:checked")].map(cb => cb.value);
+  const cats = ["A", "B", ...chosen];
+  cats.forEach(c => {
+    const sec = document.getElementById("step" + c);
+    if (sec) sec.classList.remove("hidden");
+  });
+  document.getElementById("statusMsg").textContent =
+    (currentLang === "en" ? "Categories shown: " : "Catégories affichées : ") + cats.join(", ");
+}
+
+</script>
+
 
   // Parse the URL and set currentLang globally
 const urlParams = new URLSearchParams(window.location.search);
@@ -1014,211 +1077,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("🌐 Detected lang:", currentLang);
 });
   
-// ===== generateSummary FUNCTION =====
 
-function generateSummary() {
- console.log("✅ generateSummary called");
-  const lang = currentLang || "en";
-
-
-  const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = ""; // Clear previous
-window.generatedSummaryRows = []; // Reset or initialize global array
- 
-  // 🌐 Continue with risk processing
-  const printResponses = [];
-  const categoryKeys = Object.keys(categories);
-
-  categoryKeys.forEach(cat => {
-    let totalPossibleWeight = 0;
-    let accumulatedWeight = 0;
-    let questions = [];
-
-    // English and French responses
- document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-  const questionText = input.closest('fieldset').querySelector('legend').textContent;
-  const answer = input.value;
-  questions.push({ question: questionText, answer: answer });
-  if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-  totalPossibleWeight += 1;
-});
-document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-  const questionText = input.closest('fieldset').querySelector('legend').textContent;
-  const answer = input.value;
-  questions.push({ question: questionText, answer: answer });
-  if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-  totalPossibleWeight += 1;
-});
-
-    let riskStatus = "", riskClass = "";
-
-    if (totalPossibleWeight === 0) {
-      riskStatus = riskLabels.notReviewed[lang];
-      riskClass = "text-muted";
-    } else {
-      const riskRatio = accumulatedWeight / totalPossibleWeight;
-      if (riskRatio >= riskThresholds.high) {
-        riskStatus = riskLabels.high[lang];
-        riskClass = "risk-high";
-      } else if (riskRatio >= riskThresholds.medium) {
-        riskStatus = riskLabels.medium[lang];
-        riskClass = "risk-medium";
-      } else {
-        riskStatus = riskLabels.low[lang];
-        riskClass = "risk-low";
-      }
-    }
-
-// 🧱 Row for summary table
-let scoreText = `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}`;
-let statusText = riskStatus;
-
-if (totalPossibleWeight === 0) {
-  scoreText = (lang === "en") ? "0 / 0 (no questions)" : "0 / 0 (aucune question)";
-  statusText = (lang === "en") ? "Not reviewed" : "Non examiné";
-  riskClass = "risk-none";
-}
-
-const row = `   
-  <tr>
-    <td>${categories[cat][lang]}</td>
-    <td>${scoreText}</td>
-    <td class="${riskClass}">${statusText}</td>
-  </tr>
-`;
-    // ✅ Log the row output
-console.log("Generated row HTML:", row);
-    summaryBody.insertAdjacentHTML('beforeend', row);
-
-window.generatedSummaryRows.push(row); // Add to array for printing
-  
-    if (questions.length > 0) {
-      printResponses.push({
-        category: categories[cat][lang],
-        questions: questions
-      });
-    }
-  });
-
-  window.collectedResponses = printResponses;
-  document.getElementById('summaryTableContainer').classList.remove('hidden');
-}
-function buildResponsesHTML(lang) {
-  let html = "";
-
-  const categoryKeys = Object.keys(categories);
-
-  categoryKeys.forEach(cat => {
-    const section = document.getElementById("step" + cat);
-    if (!section || section.classList.contains("hidden")) return;
-
-    // 🔧 Only get fieldsets that match the selected language
-    const fieldsets = section.querySelectorAll(`fieldset[data-lang="${lang}"]`);
-    if (fieldsets.length === 0) return; // ❌ Skip this category if no questions exist
-
-    const title = categories[cat][lang];
-    html += `
-      <h3 style="margin-top:1.5rem;">${title}</h3>
-    `;
-
-    fieldsets.forEach(fs => {
-      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
-      let answer = "-";
-
-      const checked = fs.querySelector('input[type="radio"]:checked');
-      if (checked) {
-        answer = checked.value;
-      }
-
-      // ✅ Only include meaningful questions
-      if (question.trim() !== "") {
-        html += `
-          <p><strong>${question}</strong><br>Response: ${answer}</p>
-        `;
-      }
-    });
-  });
-
-  return html;
-}
-
-  
-  //=========== Prepare Print =======================>
-function preparePrint() {
-  const lang = currentLang || "en";
-
-  const summaryTableBody = document.getElementById('summaryTableBody');
-  const summaryTableContainer = document.getElementById('summaryTableContainer');
-  const printContainer = document.getElementById('printContainer');
-
-  // Check if summary exists
-  if (!summaryTableBody || summaryTableBody.innerHTML.trim() === "" || summaryTableContainer.classList.contains('hidden')) {
-    alert((currentLang === "en") ? "Please generate the summary before printing." : "Veuillez générer le résumé avant d’imprimer.");
-    return;
-  }
-
-   // ✅ Unhide selected category sections to ensure responses are included
-  document.querySelectorAll(".step").forEach(section => {
-    section.classList.remove("hidden");
-  });
-
-  console.log("🔍 Print Rows Preview:\n", window.generatedSummaryRows.join(""));
-  
-  // Clear previous print content
-  printContainer.innerHTML = "";
-
-// === Reconstruct the Risk Profile Summary Table using saved rows ===
-const summaryHTML = `
-  <h2>${currentLang === "en" ? "Risk Profile Summary" : "Résumé du profil de risque"}</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>${currentLang === "en" ? "Category" : "Catégorie"}</th>
-        <th>${currentLang === "en" ? "Risk Score" : "Score de risque"}</th>
-        <th>${currentLang === "en" ? "Risk Status" : "Statut de risque"}</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${window.generatedSummaryRows ? window.generatedSummaryRows.join("") : ""}
-    </tbody>
-  </table>
-`;
-
-  // === Build User Responses Section ===
-  const responsesHTML = buildResponsesHTML(lang);
-
-  // === Add Timestamp ===
-  const now = new Date();
-  const formattedDate = now.toLocaleString(currentLang === "en" ? "en-CA" : "fr-CA", {
-    dateStyle: "long",
-    timeStyle: "short"
-  });
-
-  const footerHTML = `
-    <p class="generated-on">${currentLang === "en" ? "Generated on" : "Généré le"} ${formattedDate}</p>
- `;
-
-  // === Combine all into the print container ===
-
-
-  
-  printContainer.innerHTML = `
-    ${summaryHTML}
-    <h2 style="margin-top:2rem;">${currentLang === "en" ? "Risk Assessment Details" : "Détails de l’évaluation des risques"}</h2>
-    ${responsesHTML}
-    ${footerHTML}
-  `;
-
-  // === Trigger print ===
-  printContainer.classList.remove('hidden');
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      printContainer.classList.add('hidden');
-    }, 1000);
-  }, 100); // Allow DOM to update before print
-}
-</script>
   
       </main>
       </div>
@@ -1289,7 +1148,7 @@ function collectCategories() {
   <script src="/RRIT/wet-boew/js/wet-boew.min.js"></script>
   <script src="/RRIT/GCWeb/js/theme.min.js"></script>
 
-<div id="printContainer" class="hidden" style="margin-top:2rem;"></div>
+
  
   </body>
 </html>
