@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-42</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-43</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -972,17 +972,15 @@ function generateSummary() {
 
   Object.entries(categories).forEach(([code, names]) => {
     const section = document.getElementById("step" + code);
+
+    const inputs = section ? section.querySelectorAll("input[type=radio]:checked") : [];
     let total = 0, bad = 0;
 
-    let inputs = [];
-    if (section) {
-      inputs = section.querySelectorAll("input[type=radio]:checked");
-      inputs.forEach(input => {
-        const val = input.value;
-        total++;
-        if (questionWeights[val] !== undefined) bad += questionWeights[val];
-      });
-    }
+    inputs.forEach(input => {
+      const val = input.value;
+      total++;
+      if (questionWeights[val] !== undefined) bad += questionWeights[val];
+    });
 
     const score = total === 0 ? 0 : bad / total;
     let statusKey = 'low';
