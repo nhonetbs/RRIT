@@ -1279,6 +1279,14 @@ if (printButton) {
   }
 }
 
+/* ===== Keep all questions expanded ===== */
+function expandAllQuestions() {
+  /* Only target <details> that are inside visible category panels */
+  document.querySelectorAll(
+    'section[id^="step"]:not(.hidden) details'
+  ).forEach(det => det.setAttribute('open', ''));
+}  
+  
 /* reveal the category panels the user selected in Step-0 */
 function collectCategories() {
   /* use the variable we just set instead of reading #langSel */
