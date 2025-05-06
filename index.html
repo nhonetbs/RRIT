@@ -255,7 +255,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives 50</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives 51</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1250,16 +1250,22 @@ const row = `<tr>
   
   // Hide the intro and initial category selector
 const intro = document.getElementById('rrit-intro');
+if (intro){
 intro.classList.add('hidden');
 intro.setAttribute('aria-hidden','true');
+}
 const step0 = document.getElementById('step0');
-step0.classList.add('hidden');
-step0.setAttribute('aria-hidden','true');
+if (step0) {
+  step0.classList.add('hidden');
+  step0.setAttribute('aria-hidden','true');
+}
 const summary = document.getElementById('summaryTableContainer');
-summary.setAttribute('tabindex','-1');
+if (summary) {
+  summary.setAttribute('tabindex','-1');
 summary.focus();
 }
-
+// ===== INSERT HIDE + FOCUS BLOCK END =====
+}
   function buildResponsesHTML(lang) {
   let html = "";
 
