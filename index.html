@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-41</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-42</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -925,6 +925,7 @@
 
 </section>
 
+
 <script>
 
 // ===== CONFIGURATION BLOCK =====
@@ -964,11 +965,6 @@ const categories = {
 
 // ===== END CONFIGURATION =====
 
-const urlParams = new URLSearchParams(window.location.search);
-const currentLang = urlParams.get('lang') || 'en';
-document.documentElement.lang = currentLang;
-document.documentElement.setAttribute('dir', 'ltr');
-
 function generateSummary() {
   const lang = currentLang;
   const tableBody = document.getElementById("summaryTableBody");
@@ -976,16 +972,17 @@ function generateSummary() {
 
   Object.entries(categories).forEach(([code, names]) => {
     const section = document.getElementById("step" + code);
-    if (!section || section.classList.contains("hidden")) return;
-
-    const inputs = section.querySelectorAll("input[type=radio]:checked");
     let total = 0, bad = 0;
 
-    inputs.forEach(input => {
-      const val = input.value;
-      total++;
-      if (questionWeights[val] !== undefined) bad += questionWeights[val];
-    });
+    let inputs = [];
+    if (section) {
+      inputs = section.querySelectorAll("input[type=radio]:checked");
+      inputs.forEach(input => {
+        const val = input.value;
+        total++;
+        if (questionWeights[val] !== undefined) bad += questionWeights[val];
+      });
+    }
 
     const score = total === 0 ? 0 : bad / total;
     let statusKey = 'low';
@@ -1023,9 +1020,7 @@ function collectCategories() {
   document.getElementById("statusMsg").textContent =
     (currentLang === "en" ? "Categories shown: " : "Catégories affichées : ") + cats.join(", ");
 }
-
 </script>
-
 <script>
   // Parse the URL and set currentLang globally
 const urlParams = new URLSearchParams(window.location.search);
