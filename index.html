@@ -51,7 +51,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-44</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives X-45</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1034,6 +1034,32 @@ document.addEventListener("DOMContentLoaded", () => {
     el.classList.toggle("hidden", !match);
     el.setAttribute("aria-hidden", !match);
   });
+
+  // Sync responses between English and French views
+const syncResponses = () => {
+  const allInputs = document.querySelectorAll("input[type=radio]");
+  const seen = new Set();
+
+  allInputs.forEach(input => {
+    const name = input.name;
+    if (seen.has(name)) return;
+    seen.add(name);
+
+    const group = [...document.querySelectorAll(`input[name="${name}"]`)];
+    const selected = group.find(i => i.checked);
+    if (!selected) return;
+
+    const base = name.replace(/f$/, ''); // handle bilingual names like catAq1 / catAq1f
+    const counterpartName = name.endsWith("f") ? base : base + "f";
+    const counterpartGroup = [...document.querySelectorAll(`input[name="${counterpartName}"]`)];
+
+    counterpartGroup.forEach(r => {
+      r.checked = (r.value === selected.value);
+    });
+  });
+};
+
+syncResponses();
   
   // Set bilingual table headers
   const thCategory = document.getElementById("summaryHeaderCategory");
@@ -1095,6 +1121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const hide = el.getAttribute("data-lang") !== currentLang;
     el.classList.toggle("hidden", hide);
     el.setAttribute("aria-hidden", hide);
+    syncResponses();
   });
 
   // Update the Generate Summary button text bilingualy
