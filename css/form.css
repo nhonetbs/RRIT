@@ -195,7 +195,7 @@ tr.risk-low td {
   /* ========== FOOTER IMAGE STYLE ========== */
 .footer-canada img {
   float: right;       /* push it to the right */
-  width: 150px;       /* or whatever fixed/max you like */
+  width: 50px;       /* or whatever fixed/max you like */
   height: auto;       /* maintain aspect ratio */
 }
 }
