@@ -1,3 +1,10 @@
+/*========== TBS LOGO ===============*/
+.tbs-logo img {
+  vertical-align: middle;
+  height: 24px;    /* match your banner height */
+  width: auto;
+}
+
 /* ========== SCREEN STYLES ========== */
 .hidden {
   display: none !important;
