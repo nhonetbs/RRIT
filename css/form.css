@@ -199,13 +199,5 @@ tr.risk-low td {
 }
 
 /* float the SVG to the right */
-#wb-info .footer-wmms img {
-  float: right;         /* push to the right */
-  display: block;       /* avoid inline quirks */
-  max-height: 3rem;     /* whatever height you want */
-  width: auto;          /* honor aspect ratio */
-  /* optional: limit its maximum width too */
-  max-width: 30%;       
-  margin-left: 1rem;    /* spacing from any text */
-}
+
 }
