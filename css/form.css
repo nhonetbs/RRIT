@@ -1,7 +1,9 @@
 /*===========PLACING THE CANADA MARK============*/
 
 .gc-sub-footer .wtrmrk {
-  margin-left: auto !important;
+  float: right;
+  /* Optionally constrain its size so it doesn’t stretch full width: */
+  max-width: 200px;
 }
 
 /*========== TBS LOGO ===============*/
