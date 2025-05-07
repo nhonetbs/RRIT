@@ -59,21 +59,32 @@ table.table td {
   vertical-align: middle;
 }
 
+/* Row accent indicators */
+tr.risk-high td {
+  border-left: 4px solid #dc3545;
+}
+tr.risk-medium td {
+  border-left: 4px solid #ffc107;
+}
+tr.risk-low td {
+  border-left: 4px solid #28a745;
+}
+
 .risk-high {
-  background-color: #f8d7da !important;
-  color: #721c24 !important;
+  background-color: #f8d7da;
+  color: #721c24;
   font-weight: bold;
 }
 
 .risk-medium {
-  background-color: #fff3cd !important;
-  color: #856404 !important;
+  background-color: #fff3cd;
+  color: #856404;
   font-weight: bold;
 }
 
 .risk-low {
-  background-color: #d4edda !important;
-  color: #155724 !important;
+  background-color: #d4edda;
+  color: #155724;
   font-weight: bold;
 }
 
@@ -85,17 +96,22 @@ table.table td {
 }
 
 /* ========== PRINT STYLES ========== */
-/* ========== PRINT STYLES ========== */
 @media print {
-  body > *:not(#printContainer) {
+  /* Hide header, nav, language selector, intro, and initial selection */
+  #wb-bnr,
+  #wb-tphp,
+  #wb-lng,
+  #rrit-intro,
+  #step0 {
     display: none !important;
   }
 
-  #printContainer, #printContainer * {
-    display: block !important;
-    visibility: visible !important;
+  /* Hide any collapsed details panels */
+  details:not([open]) {
+    display: none !important;
   }
 
+  /* Base print typography */
   html, body {
     margin: 0;
     padding: 0;
@@ -105,13 +121,13 @@ table.table td {
     color: #000;
   }
 
+  /* Headings */
   h2 {
     margin-top: 2rem;
     margin-bottom: 1rem;
     font-size: 16pt;
     font-weight: bold;
   }
-
   h3 {
     margin-top: 1.5rem;
     font-size: 13pt;
@@ -120,6 +136,7 @@ table.table td {
     padding-bottom: 0.3rem;
   }
 
+  /* Table styling */
   table.table {
     width: 100%;
     border-collapse: collapse;
@@ -128,7 +145,6 @@ table.table td {
     font-size: 11pt;
     table-layout: fixed;
   }
-
   table.table th,
   table.table td {
     border: 1px solid #000;
@@ -137,40 +153,28 @@ table.table td {
     vertical-align: top;
     word-break: break-word;
   }
-
   table.table th {
     background-color: #f1f1f1;
     font-weight: bold;
     font-size: 11pt;
   }
-
   table.table tr {
     page-break-inside: avoid;
   }
-
   table.table th:nth-child(1),
-  table.table td:nth-child(1) {
-    width: 40%;
-  }
-
+  table.table td:nth-child(1) { width: 40%; }
   table.table th:nth-child(2),
-  table.table td:nth-child(2) {
-    width: 20%;
-  }
-
+  table.table td:nth-child(2) { width: 20%; }
   table.table th:nth-child(3),
-  table.table td:nth-child(3) {
-    width: 40%;
-  }
+  table.table td:nth-child(3) { width: 40%; }
 
+  /* Row accent indicators for print */
   tr.risk-high td {
     border-left: 5px solid #dc3545;
   }
-
   tr.risk-medium td {
     border-left: 5px solid #ffc107;
   }
-
   tr.risk-low td {
     border-left: 5px solid #28a745;
   }
