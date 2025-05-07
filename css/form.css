@@ -192,12 +192,5 @@ tr.risk-low td {
     text-align: right;
     color: #666;
   }
-  /* contain any floats inside the footer */
-#wb-info .footer-wmms {
-  overflow: hidden;
-  margin-top: 1rem;         /* adjust vertical spacing if you like */
-}
-
-/* float the SVG to the right */
 
 }
