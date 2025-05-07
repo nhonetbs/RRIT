@@ -192,7 +192,8 @@ tr.risk-low td {
     text-align: right;
     color: #666;
   }
-.footer-wmms img {
+  
+.footer-canada img {
   float: right;       /* push it to the right */
   width: 150px;       /* or whatever fixed/max you like */
   height: auto;       /* maintain aspect ratio */
