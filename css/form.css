@@ -1,3 +1,9 @@
+/*===========PLACING THE CANADA MARK============*/
+
+.float-right {
+  float: right;
+}
+
 /*========== TBS LOGO ===============*/
 .tbs-logo img {
   vertical-align: middle;
