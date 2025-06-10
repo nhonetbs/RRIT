@@ -13,6 +13,12 @@
   width: auto;
 }
 
+/* ========== LANGUAGE TOGGLE VISIBILITY ========== */
+html[lang="en"] .lng-en,
+html[lang="fr"] .lng-fr {
+  display: none;
+}
+
 /* ========== SCREEN STYLES ========== */
 .hidden {
   display: none !important;
