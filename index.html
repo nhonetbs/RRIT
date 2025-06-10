@@ -34,12 +34,22 @@
   </div>
 </div>
     <section id="wb-lng" class="col-xs-7 col-md-8 text-right">
-  <h2 class="wb-inv">Language selection</h2>
+  <h2 class="wb-inv">
+    <span lang="en">Language selection</span>
+    <span lang="fr">Sélection de la langue</span>
+  </h2>
   <ul class="list-inline mrgn-bttm-0">
-    <li class="lng-fr"><a href="policy-library-fr.html" lang="fr">Français</a></li>
-    <li class="lng-en"><a href="policy-library-en.html" lang="en">English</a></li>
+    <li class="lang-en">
+      <a href="#" lang="fr" hreflang="fr" aria-label="Français - version française de cette page"
+         onclick="toggleLanguage('fr'); return false;">Français</a>
+    </li>
+    <li class="lang-fr hidden">
+      <a href="#" lang="en" hreflang="en" aria-label="English - English version of this page"
+         onclick="toggleLanguage('en'); return false;">English</a>
+    </li>
   </ul>
 </section>
+
   </div>
 </header>
 
