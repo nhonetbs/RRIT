@@ -1260,9 +1260,16 @@ if (printButton) {
   printButton.textContent = (lang === "en") ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
 }
 
-  // Keep answers in sync across languages
+  // Keep answers in  across languages
   syncResponses();  
-  
+
+  // Move focus to the first visible heading after switching language
+const newHeading = document.querySelector(`[data-lang="${lang}"] h1, [data-lang="${lang}"] h2`);
+if (newHeading) {
+  newHeading.setAttribute("tabindex", "-1"); // make focusable temporarily
+  newHeading.focus();
+  newHeading.removeAttribute("tabindex"); // clean up
+}
   // If the summary table is showing, regenerate it to update the language
   const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
   if (summaryVisible) {
