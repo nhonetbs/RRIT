@@ -56,7 +56,7 @@
 <!-- ===== Main -->
 <div class="container"><div class="row">
 <main id="wb-cont" role="main" class="col-xs-12">
-
+<div id="lang-announcement" class="wb-inv" aria-live="polite" aria-atomic="true" role="status"></div>
 
 
 <!-- INTRO -->
@@ -1243,6 +1243,11 @@ function toggleLanguage(lang) {
     el.setAttribute("aria-hidden", hide);
   });
 
+   // Toggle visibility of language toggle buttons
+  const showEnglishToggle = lang === 'fr';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !showEnglishToggle));
+  document.querySelectorAll('.lang-fr').forEach(el => el.classList.toggle('hidden', showEnglishToggle));
+
   // Update the Generate Summary button text bilingualy
   const genButton = document.querySelector('button[onclick="generateSummary()"]');
   if (genButton) {
@@ -1263,6 +1268,13 @@ if (printButton) {
   if (summaryVisible) {
     generateSummary();
   }
+  // Screen reader announcement for language switch
+const announcer = document.getElementById("lang-announcement");
+if (announcer) {
+  announcer.innerHTML = (lang === "en")
+    ? `<span lang="en">English content displayed.</span>`
+    : `<span lang="fr">Contenu en français affiché.</span>`;
+}
 }
 
 /* ===== Keep all questions expanded ===== */
